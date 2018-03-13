@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-sm
+        .input-group.mb-3
+          .input-group-prepend
+            label.input-group-text(for='marka') Марка
+          select#marka.custom-select.valid-btn
+            option(selected='')
+            option(value='One') One
+            option(value='Two') Two
+            option(value='Three') Three
+      .col-sm
+        .input-group.mb-3
+          .input-group-prepend
+            span.input-group-text Номер
+          input#number.form-control.valid-btn(type='text', aria-label='Default', aria-describedby='number')
+      .col-sm
+        .input-group.mb-3
+          .input-group-prepend
+            label.input-group-text(for='washer') Мойщик
+          select#washer.custom-select.valid-btn
+            option(selected='')
+            option(value='One') One
+            option(value='Two') Two
+            option(value='Three') Three
+      .col-sm
+        button.btn.btn-primary(type='button', data-toggle='modal', data-target='#modalService', id="modalOne", disabled)
+          | Услуги
+        include modalUslug
+  include table

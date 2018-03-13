@@ -1,0 +1,50 @@
+body {
+  padding: 50px;
+  font: 14px "Exo", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.service{
+  border-radius: 5px;
+  background-color: #1b1e21;
+  color: #f8f9fa;
+  margin: 5px;
+  height: 3em;
+  width: auto;
+  text-align: center;
+  font-size: 20px;
+  line-height: 2em;
+  cursor: pointer;
+}
+
+.service-ready{
+  border-radius: 5px;
+  background-color: #28a745;
+  color: #f8f9fa;
+  margin: 5px;
+  height: 3em;
+  width: auto;
+  text-align: center;
+  font-size: 20px;
+  line-height: 2em;
+  cursor: pointer;
+}
+.type-auto{
+  border-radius: 5px;
+  background-color: #17a2b8;
+  color: #f8f9fa;
+  margin: 5px;
+  height: 3em;
+  width: auto;
+  text-align: center;
+  font-size: 23px;
+  line-height: 2em;
+  cursor: pointer;
+}
+
+.activeType{
+  background: #1a6773;
+}

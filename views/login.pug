@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    .container
+        .row
+            .col-sm
+                form(method="POST", action="login")
+                    if message
+                        p=message
+                    .form-group
+                        label(for='login') Логин
+                        input#login.form-control(type='text' name="login" placeholder='Введите логин')
+                    .form-group
+                        label(for='password') Пароль
+                        input#password.form-control(type='password' name="password" placeholder='Пароль')
+                    button.btn.btn-primary(type='submit') Вход
