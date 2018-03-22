@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span#start-smena.input-group-text Остаток на начало смены
+                    input.form-control(type='text', aria-label='Default', aria-describedby='start-smena')
+            .col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span#end-smena.input-group-text Остаток на конец смены
+                    input.form-control(type='text', aria-label='Default', aria-describedby='end-smena')
+        .row
+            .col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span#coffe.input-group-text Кофе
+                    input.form-control(type='text', aria-label='Default', aria-describedby='coffe')
+            .col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span#snak.input-group-text Снэк
+                    input.form-control(type='text', aria-label='Default', aria-describedby='snak')
+        .row
+            .col-sm
+                p.lead Итого остаток на конец смены :
+        .row
+            .col-sm
+                p.lead Недостача :

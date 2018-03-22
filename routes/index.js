@@ -5,7 +5,9 @@ const ctrl = require('../controller/index');
 
 /* GET home page. */
 router.get('/', ctrl.main);
-
+router.get('/box', ctrl.box);
+router.get('/prepaid', ctrl.prepaid);
+router.get('/other', ctrl.other);
 //auth
 router.get('/login', (req, res, next) => {
     console.log(req.flash('message'));
@@ -24,6 +26,5 @@ router.get('/logout', (req, res, next) => {
     req.logout();
     res.redirect('/login');
 });
-
 
 module.exports = router;

@@ -15,7 +15,8 @@ gulp.task('concatCss', () => {
         .pipe(cleanCss())
         .pipe(gulp.dest('public/app/css/')) ,
         gulp.src([
-            'node_modules/bootstrap/dist/css/bootstrap.css'
+            'node_modules/bootstrap/dist/css/bootstrap.css',
+            'bower_components/snackbar/dist/snackbar.css'
         ])
             .pipe(concatCss('bundleOther.min.css'))
             .pipe(cleanCss())
@@ -29,10 +30,7 @@ gulp.task('clean', () => {
 
 gulp.task('scriptOther', () => {
     return gulp.src([
-        //'node_modules/jquery/dist/jquery.js',
-        //'node_modules/popper.js/dist/popper.min.js'
-        //'node_modules/bootstrap/dist/js/bootstrap.min.js',
-        'node_modules/socket.io-client/dist/socket.io.js'
+        'bower_components/snackbar/dist/snackbar.js'
 
     ])
         .pipe(concat('other.min.js'))

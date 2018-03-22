@@ -3,9 +3,23 @@
         .col-sm
             table.table.table-striped.table-bordered.table-hover.table-sm
                 thead.thead-dark
+                    th Время на заказ / ч.
                     th Марка
                     th Номер
                     th Услуги
+                    th Доп услуги
                     th Мойщик
                     th Сумма
+                    th Действие
                 tbody.tr-body
+                    each item in data
+                        tr.str
+                            td.time=item.time
+                            td.car=item.car
+                            td.number=item.number
+                            td.service-main=item.services
+                            td.dop=item.dopServices
+                            td=item.washer
+                            td.price=item.price
+                            td.d-flex.justify-content-center
+                                i.material-icons.delete(data-id=item._id) delete

@@ -1,0 +1,19 @@
+#modalDopService.modal.fade.bd-example-modal-lg(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    .modal-dialog.modal-lg(role='document')
+        .modal-content
+            .modal-header
+                h5#exampleModalLabel.modal-title Авто
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') ×
+            .modal-body
+                each item in dopAuto
+                    .d-inline-flex.p-2.type-dop-auto=item
+            .modal-header
+                h5.modal-title Услуги
+            .modal-body.set-dop-service
+            .modal-header
+                h5.modal-title.info-dop-service Выбрано 0
+            .modal-body.redy-dop-service
+            .modal-footer
+                button.btn.btn-secondary(type='button', data-dismiss='modal') Закрыть
+                button.btn.btn-primary(type='button', id="saveDop") Сохранить

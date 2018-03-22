@@ -23,6 +23,9 @@ const users = require('./routes/users');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+
+app.locals.moment = require('moment');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

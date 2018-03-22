@@ -1,0 +1,20 @@
+.container-fluid
+    .row
+        .col-sm
+            nav.navbar.navbar-expand-lg.navbar-light.bg-light(style="margin-bottom: 10px;")
+                a.navbar-brand(href='#') Автомойка
+                button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                    span.navbar-toggler-icon
+                #navbarSupportedContent.collapse.navbar-collapse
+                    ul.navbar-nav.mr-auto
+                        li.nav-item.active
+                            a.nav-link(href='/')
+                                | Заказ
+                                span.sr-only (current)
+                        li.nav-item
+                            a.nav-link(href='/prepaid')
+                                | Аванс
+                        li.nav-item
+                            a.nav-link(href='/other')
+                                | Другое
+
