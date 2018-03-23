@@ -9,29 +9,33 @@ block content
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text
-                            | 1 бокс #{box1.toFixed(2)}
-                        p.time.card-text=moment(box1.toFixed(2).toString(), 'h.mm').format('hh:mm:ss')
+                            | 1 бокс
+                        p.time.card-text(data-time=box1)=getTimeFromMins(box1)
                 .card.status(style='width: 18rem; margin: 0 20px;')
                     a(href="/box?number=2")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text
                             | 2 бокс
+                        p.time.card-text(data-time=box2)=getTimeFromMins(box2)
                 .card.status(style='width: 18rem; margin: 0 20px;')
                     a(href="/box?number=3")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text
                             | 3 бокс
+                        p.time.card-text(data-time=box3 || 0)=getTimeFromMins(box3)
                 .card.status(style='width: 18rem; margin: 0 20px;')
                     a(href="/box?number=4")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text
                             | 4 бокс
+                        p.time.card-text(data-time=box4)=getTimeFromMins(box4)
                 .card.status(style='width: 18rem; margin: 0 20px;')
                     a(href="/box?number=5")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text
                             | 5 бокс
+                        p.time.card-text(data-time=box5)=getTimeFromMins(box5)

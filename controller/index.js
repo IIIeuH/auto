@@ -8,8 +8,33 @@ module.exports.main = async (req, res, next) => {
          model.time('4'),
          model.time('5'),
     ]);
-    let box1 = data[0][0].time;
-    res.render('box', { title: 'Express', user: req.user, box1: box1});
+    let box1, box2, box3, box4, box5;
+    if(data[0][0]){
+        box1 = data[0][0].time;
+    }else{
+        box1 = 0;
+    }
+    if(data[1][0]){
+        box2 = data[1][0].time;
+    }else{
+        box2 = 0;
+    }
+    if(data[2][0]){
+        box3 = data[2][0].time;
+    }else{
+        box3 = 0;
+    }
+    if(data[3][0]){
+        box4 = data[3][0].time;
+    }else{
+        box4 = 0;
+    }
+    if(data[4][0]){
+        box5 = data[4][0].time;
+    }else{
+        box5 = 0;
+    }
+    res.render('box', { title: 'Express', user: req.user, box1: box1, box2: box2, box3: box3, box4: box4, box5: box5});
 };
 
 module.exports.box = async (req, res, next) => {

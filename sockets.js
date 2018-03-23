@@ -31,10 +31,10 @@ module.exports.init = function(socket){
                 data.inc = inc[0].inc + 1;
             }
             console.log(inc);
-            await db.collection('boxes').insert(data);
-            socket.emit('statusSave', {status: 200, msg: 'Сохранено!'});
+            return await db.collection('boxes').insert(data);
+            //socket.emit('statusSave', {status: 200, msg: 'Сохранено!'});
         }catch(err){
-            socket.emit('statusSave', {status: 500, msg: err});
+            return err
         }
     });
 
@@ -64,10 +64,33 @@ module.exports.init = function(socket){
     //удаление строки
     socket.on('delString', async (data) => {
         try{
+            let inc = await db.collection('boxes').aggregate([
+                {
+                    $match: {}
+                },
+                {
+                    $group: {
+                        _id: null,
+                        inc: {$max: "$inc"}
+                    }
+                }
+            ]).toArray();
             await db.collection('boxes').removeOne(data);
             socket.emit('statusDel', {status: 200, msg: 'Удалено!!'});
         }catch(err){
             socket.emit('statusDel', {status: 500, msg: err});
         }
     });
+
+
+    //Установка статуса при клике на кнопку
+    socket.on('setStatus', async (data, status) => {
+        try{
+            await db.collection('boxes').updateOne(data, {$set: {status: status}});
+            socket.emit('getStatus', {status: 200, msg: 'Статус изменен!'});
+        }catch(err){
+            console.log('err status');
+        }
+    });
+
 };

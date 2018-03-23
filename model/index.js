@@ -36,3 +36,27 @@ module.exports.time = async(number) => {
         return err;
     }
 };
+module.exports.timer = async() => {
+    try {
+        // let inc = await db.collection('boxes').aggregate([
+        //     {
+        //         $match: {status: 'wash'}
+        //     },
+        //     {
+        //         $group: {
+        //             _id: '$_id',
+        //             inc: {$min: "$inc"}
+        //         }
+        //     }
+        // ]).toArray();
+        // if(inc.length){
+        //     console.log(inc[0]._id);
+        //
+        // }
+        await db.collection('boxes').updateOne({ status: 'wash', time: {$ne: 0}}, {$inc: {time: -1}});
+        await db.collection('boxes').updateOne({ time: 0, status: 'wash'}, {$set: {status: 'ready'}});
+    }catch(err){
+        return err;
+    }
+};
+

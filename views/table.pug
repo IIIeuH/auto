@@ -13,8 +13,8 @@
                     th Действие
                 tbody.tr-body
                     each item in data
-                        tr.str
-                            td.time=item.time
+                        tr.str(data-status=item.status)
+                            td(data-minutes=item.time).time=getTimeFromMins(item.time)
                             td.car=item.car
                             td.number=item.number
                             td.service-main=item.services
@@ -22,4 +22,8 @@
                             td=item.washer
                             td.price=item.price
                             td.d-flex.justify-content-center
-                                i.material-icons.delete(data-id=item._id) delete
+                                button.btn.btn-dark.delete(type='button') Удалить
+                                button.btn.btn-primary.status-wash(type='button') Заехать
+                                button.btn.btn-success.status-ready(type='button') Готово
+                                button.btn.btn-warning.status-await(type='button') Отмена
+

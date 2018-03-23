@@ -14,6 +14,7 @@ const Promise = require("bluebird");
 const url = 'mongodb://localhost:27017/auto';
 const sockets = require('./sockets');
 const config = require('./config');
+const time = require('./model/index');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -25,6 +26,22 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.locals.moment = require('moment');
+app.locals.getTimeFromMins = function (mins) {
+    let hours = Math.trunc(mins / 60);
+    let minutes = mins % 60;
+    if (minutes.toString().length === 1) {
+        minutes = '0' + minutes;
+    }
+    if (hours.toString().length === 1) {
+        hours = '0' + hours;
+    }
+    return hours + ':' + minutes;
+};
+
+setInterval(function(){
+    time.timer();
+}, 1000);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
