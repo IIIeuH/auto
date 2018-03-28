@@ -17,4 +17,10 @@
                         li.nav-item
                             a.nav-link(href='/other')
                                 | Другое
+                        li.nav-item.dropdown
+                            a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Расходы
+                            .dropdown-menu
+                                a.dropdown-item(href='/costs') Основные
+                                a.dropdown-item(href='/score') Магазин
+                                a.dropdown-item(href='/dop') Дополнительные услуги
 

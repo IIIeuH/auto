@@ -15,8 +15,7 @@ gulp.task('concatCss', () => {
         .pipe(cleanCss())
         .pipe(gulp.dest('public/app/css/')) ,
         gulp.src([
-            'node_modules/bootstrap/dist/css/bootstrap.css',
-            'bower_components/snackbar/dist/snackbar.css'
+            'node_modules/bootstrap/dist/css/bootstrap.css'
         ])
             .pipe(concatCss('bundleOther.min.css'))
             .pipe(cleanCss())
@@ -30,13 +29,14 @@ gulp.task('clean', () => {
 
 gulp.task('scriptOther', () => {
     return gulp.src([
-        'bower_components/snackbar/dist/snackbar.js'
+        'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/popper.js/dist/umd/popper.min.js',
+        'node_modules/bootstrap/dist/js/bootstrap.bundle.js',
+        'node_modules/socket.io-client/dist/socket.io.js',
+        'bower_components/moment/moment.js'
 
     ])
         .pipe(concat('other.min.js'))
-        .pipe(babel({
-            presets: ['env']
-         }))
         .pipe(uglify())
         .pipe(gulp.dest('public/app/js/'));
 });

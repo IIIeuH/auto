@@ -51,3 +51,36 @@ module.exports.prepaid = async (req, res, next) => {
 module.exports.other = async (req, res, next) => {
     res.render('other', { title: 'Другое', user: req.user });
 };
+
+module.exports.score = async (req, res, next) => {
+    let data = await model.product();
+    let table = await model.productReady('scores');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table});
+};
+
+module.exports.dop = async (req, res, next) => {
+    let data = await model.productDop();
+    let table = await model.productReady('dops');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('dop', { title: 'Расходы', user: req.user, product: data, productReady: table});
+};
+
+module.exports.costs = async (req, res, next) => {
+    let data = await model.productMain();
+    let table = await model.productReady('costs');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('costs', { title: 'Расходы', user: req.user, product: data, productReady: table});
+};

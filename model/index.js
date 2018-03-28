@@ -60,3 +60,34 @@ module.exports.timer = async() => {
     }
 };
 
+module.exports.product = async() => {
+    try {
+        return await db.collection('products').find({}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
+module.exports.productMain = async() => {
+    try {
+        return await db.collection('productsMain').find({}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
+module.exports.productDop = async() => {
+    try {
+        return await db.collection('productsDop').find({}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
+module.exports.productReady = async(collection) => {
+    try {
+        return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}).toArray();
+    }catch(err){
+        return err;
+    }
+};

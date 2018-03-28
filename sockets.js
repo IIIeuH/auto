@@ -93,4 +93,40 @@ module.exports.init = function(socket){
         }
     });
 
+    //Продукты
+    socket.on('getProduct', async () => {
+        try{
+            let product = await db.collection('products').find({}).toArray();
+            socket.emit('setProduct', product);
+        }catch(err){
+            console.log('err product ', err);
+        }
+    });
+
+    socket.on('setCosts', async (data) => {
+        try{
+            await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+        }catch(err){
+            console.log(`err costs ${err}`);
+        }
+    });
+
+    socket.on('saveProductDop', async (data) => {
+        try{
+            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+        }catch(err){
+            console.log(`err costs ${err}`);
+        }
+    });
+
+    socket.on('saveProductMain', async (data) => {
+        try{
+            await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+        }catch(err){
+            console.log(`err costs ${err}`);
+        }
+    });
+
+
+
 };

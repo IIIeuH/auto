@@ -26,6 +26,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.locals.moment = require('moment');
+global.moment = require('moment');
 app.locals.getTimeFromMins = function (mins) {
     let hours = Math.trunc(mins / 60);
     let minutes = mins % 60;
@@ -40,7 +41,7 @@ app.locals.getTimeFromMins = function (mins) {
 
 setInterval(function(){
     time.timer();
-}, 1000);
+}, 1000 * 60);
 
 
 // view engine setup

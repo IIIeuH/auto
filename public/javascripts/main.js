@@ -1,10 +1,9 @@
 'use strict';
-const socket = io.connect('http://localhost:3000');
+var socket = io.connect('http://localhost:3000');
 $(function(){
     socket.on('connect', function() {
         console.log('Connected');
     });
-    timerService();
     statusColor();
     btnActive();
     service();
@@ -22,6 +21,7 @@ $(function(){
     statusBtnReady();
     statusBtnAwait();
     statusBox();
+    timerService();
 });
 
 
@@ -181,14 +181,6 @@ function save(){
         data.endDay = moment().endOf('day');
         data.status = 'await';
         socket.emit('saveServices', data);
-        console.log(socket.emit('saveServices', data));
-        socket.on('statusSave', (res) => {
-           if(res.status === 200){
-               console.log('ok');
-           }else{
-                console.log('error');
-           }
-        });
         tbody.append('' +
             '<tr class="str">' +
             '<td class="time" data-minutes="' +data.time +'">' +
@@ -397,20 +389,20 @@ function statusBtnAwait(){
 
 //TIMER
 function timerService(){
-    var tr = $('.str');
+    let tr = $('.str');
     tr.each(function(){
-        var that = $(this);
+        let that = $(this);
         setInterval(function(){
-            var time = that.find('.time').data('minutes');
+            let time = that.find('.time').data('minutes');
+            console.log(time);
             if(time === 0 || that.data('status') !== 'wash'){
                 return false;
             }
             time = time -1;
             that.find('.time').data('minutes', time);
-            var tim = getTimeFromMins(time);
+            let tim = getTimeFromMins(time);
             that.find('.time').empty();
             that.find('.time').text(tim);
         }, 1000 * 60);
-
     });
 }

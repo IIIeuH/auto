@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .d-inline-flex.p-2
+                each item in product
+                    .product.p-2(data-price=item.price, data-warehouse=item.warehouse)=item.name
+        .row
+            .col-md
+                table.table.product-table.table-hover
+                    thead
+                        th Приход со склада
+                        th Наименование товара
+                        th Цена реализации
+                        th Кол-во проданного товара
+                        th Остаток на витрине
+                    tbody.product-body
+                        each item in productReady
+                            tr.quantity-minus
+                                td.warehouse-table=item.warehouse
+                                td.product-name=item.name
+                                td.product-price=item.price
+                                td.quantity.qm=item.quantity
+                                td.remainder=item.remainder
+        .row
+            .col-md
+                button.btn.btn-info.float-right(type='button', id="saveCosts") Сохранить
+

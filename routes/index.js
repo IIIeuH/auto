@@ -8,6 +8,9 @@ router.get('/', ctrl.main);
 router.get('/box', ctrl.box);
 router.get('/prepaid', ctrl.prepaid);
 router.get('/other', ctrl.other);
+router.get('/score', ctrl.score);
+router.get('/dop', ctrl.dop);
+router.get('/costs', ctrl.costs);
 //auth
 router.get('/login', (req, res, next) => {
     console.log(req.flash('message'));
