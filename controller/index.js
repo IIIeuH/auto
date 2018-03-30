@@ -41,6 +41,7 @@ module.exports.box = async (req, res, next) => {
     let auto = await model.main();
     let dopAuto = await model.dopServices();
     let data = await model.data(req.query.number);
+    let persons = await model.getCollections('persons');
     res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data});
 };
 
@@ -84,3 +85,4 @@ module.exports.costs = async (req, res, next) => {
     }
     res.render('costs', { title: 'Расходы', user: req.user, product: data, productReady: table});
 };
+

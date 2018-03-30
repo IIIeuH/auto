@@ -21,11 +21,11 @@ block content
             option(value='Two') Two
             option(value='Three') Three
       .col-sm
-        button.btn.btn-primary(type='button', data-toggle='modal', data-target='#modalService', id="modalOne", disabled)
+        button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#modalService', id="modalOne", disabled)
           | Услуги
         include modalUslug
       .col-sm
-        button.btn.btn-primary(type='button', data-toggle='modal', data-target='#modalDopService', id="modalTwo")
+        button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#modalDopService', id="modalTwo")
           | Доп услуги
         include modalDopUslug
   include table

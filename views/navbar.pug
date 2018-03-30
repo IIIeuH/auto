@@ -1,26 +1,26 @@
-.container-fluid
-    .row
-        .col-sm
-            nav.navbar.navbar-expand-lg.navbar-light.bg-light(style="margin-bottom: 10px;")
-                a.navbar-brand(href='/') Автомойка
-                button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-                    span.navbar-toggler-icon
-                #navbarSupportedContent.collapse.navbar-collapse
-                    ul.navbar-nav.mr-auto
-                        li.nav-item.active
-                            a.nav-link(href='/')
-                                | Заказ
-                                span.sr-only (current)
-                        li.nav-item
-                            a.nav-link(href='/prepaid')
-                                | Аванс
-                        li.nav-item
-                            a.nav-link(href='/other')
-                                | Другое
-                        li.nav-item.dropdown
-                            a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Расходы
-                            .dropdown-menu
-                                a.dropdown-item(href='/costs') Основные
-                                a.dropdown-item(href='/score') Магазин
-                                a.dropdown-item(href='/dop') Дополнительные услуги
-
+nav.navbar.navbar-expand-lg.navbar-light.bg-light(style="margin-bottom: 10px;")
+    a.navbar-brand(href='/') Автомойка
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+            li.nav-item.active
+                a.nav-link(href='/')
+                    | Заказ
+                    span.sr-only (current)
+            li.nav-item
+                a.nav-link(href='/prepaid')
+                    | Аванс
+            li.nav-item
+                a.nav-link(href='/other')
+                    | Другое
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Расходы
+                .dropdown-menu
+                    a.dropdown-item(href='/costs') Основные
+                    a.dropdown-item(href='/score') Магазин
+                    a.dropdown-item(href='/dop') Дополнительные услуги
+        .form-inline.my-2.my-lg-0
+            if(user && user.username === 'admin')
+                button.btn.btn-outline-info.my-2.my-sm-0(type='submit', style="margin-right: 20px;", onclick="window.location.href='/admin'; return false;") Админка
+            button.btn.btn-outline-dark.my-2.my-sm-0(type='submit', onclick="window.location.href='/logout'; return false;") Выход

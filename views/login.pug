@@ -1,16 +1,26 @@
-extends layout
-
-block content
-    .container
-        .row
-            .col-sm
-                form(method="POST", action="login")
-                    if message
-                        p=message
-                    .form-group
-                        label(for='login') Логин
-                        input#login.form-control(type='text' name="login" placeholder='Введите логин')
-                    .form-group
-                        label(for='password') Пароль
-                        input#password.form-control(type='password' name="password" placeholder='Пароль')
-                    button.btn.btn-primary(type='submit') Вход
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=no")
+        title= title
+        link(rel='stylesheet', href='/app/css/bundleOther.min.css')
+        link(rel='stylesheet', href='/app/css/bundleMain.min.css')
+        link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+    body
+        script(src='/app/js/other.min.js')
+        script(src='/app/js/main.min.js')
+        block content
+            .container
+                .row
+                    .col-sm
+                        form(method="POST", action="login")
+                            if message
+                                p=message
+                            .form-group
+                                label(for='login') Логин
+                                input#login.form-control(type='text' name="login" placeholder='Введите логин')
+                            .form-group
+                                label(for='password') Пароль
+                                input#password.form-control(type='password' name="password" placeholder='Пароль')
+                            button.btn.btn-outline-primary(type='submit') Вход

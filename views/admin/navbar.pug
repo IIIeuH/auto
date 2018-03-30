@@ -1,0 +1,17 @@
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark(style="margin-bottom: 10px;")
+    a.navbar-brand(href='/admin') Администратор
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarText', aria-controls='navbarText', aria-expanded='false', aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+    #navbarText.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+            li.nav-item.active
+                a.nav-link(href='/admin/persons') Персонал
+            li.nav-item
+                a.nav-link(href='/admin/marks') Марки машин
+            li.nav-item
+                a.nav-link(href='/admin/services') Услуги
+            li.nav-item
+                a.nav-link(href='/admin/dopservices') Доп. услуги
+        span.navbar-text
+            | Navbar text with an inline element
+

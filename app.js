@@ -27,6 +27,7 @@ const io = require('socket.io')(http);
 
 app.locals.moment = require('moment');
 global.moment = require('moment');
+
 app.locals.getTimeFromMins = function (mins) {
     let hours = Math.trunc(mins / 60);
     let minutes = mins % 60;
@@ -58,7 +59,10 @@ app.use(session({
     secret: 'secret key for auto',
     resave: true,
     store:  new MongoStore({ url: 'mongodb://localhost:27017/auto' }),
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: null
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -67,7 +71,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/admin', users);
 
 io.on('connection', function(socket){
     sockets.init(socket);

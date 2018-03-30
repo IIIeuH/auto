@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text ФИО
+                    input#fio.form-control(type='text', aria-label='Default')
+                button.btn.btn-outline-info(type='button', id="addPersons") Добавить
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover.table-sm(style="margin-top: 20px")
+                    thead.thead-dark
+                        th ФИО
+                    tbody.persons
+                        each item in persons
+                            tr
+                                td.ref(contenteditable="true", data-id=item._id)=item.fio

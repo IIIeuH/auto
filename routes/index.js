@@ -4,18 +4,18 @@ const passport = require('../auth');
 const ctrl = require('../controller/index');
 
 /* GET home page. */
-router.get('/', ctrl.main);
-router.get('/box', ctrl.box);
-router.get('/prepaid', ctrl.prepaid);
-router.get('/other', ctrl.other);
-router.get('/score', ctrl.score);
-router.get('/dop', ctrl.dop);
-router.get('/costs', ctrl.costs);
+router.get('/', checkAuth, ctrl.main);
+router.get('/box', checkAuth, ctrl.box);
+router.get('/prepaid', checkAuth, ctrl.prepaid);
+router.get('/other', checkAuth, ctrl.other);
+router.get('/score', checkAuth, ctrl.score);
+router.get('/dop', checkAuth, ctrl.dop);
+router.get('/costs', checkAuth, ctrl.costs);
 //auth
 router.get('/login', (req, res, next) => {
-    console.log(req.flash('message'));
     res.render('login', {title: 'Авторизация', message: req.flash('message')});
 });
+
 
 router.post('/login',
     passport.authenticate('login', {
@@ -29,5 +29,13 @@ router.get('/logout', (req, res, next) => {
     req.logout();
     res.redirect('/login');
 });
+
+function checkAuth(req, res, next){
+    if(req.isAuthenticated()){
+        next();
+    }else{
+        res.redirect('/login');
+    }
+}
 
 module.exports = router;

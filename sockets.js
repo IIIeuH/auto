@@ -30,7 +30,6 @@ module.exports.init = function(socket){
             }else{
                 data.inc = inc[0].inc + 1;
             }
-            console.log(inc);
             return await db.collection('boxes').insert(data);
             //socket.emit('statusSave', {status: 200, msg: 'Сохранено!'});
         }catch(err){
@@ -128,5 +127,22 @@ module.exports.init = function(socket){
     });
 
 
+    //Сохранение персонала
+    socket.on('savePersons', async(data) => {
+       try{
+           return await db.collection('persons').insertOne(data);
+       }catch(err){
+           console.log(`err save persons ${err}`);
+       }
+    });
+
+    //Обновление персонала
+    socket.on('updatePersons', async(data) =>{
+       try{
+           return await db.collection('persons').updateOne({_id: ObjectId(data._id)}, {$set: {fio: data.fio}});
+       }catch(err){
+           console.log(`err update persons ${err}`);
+       }
+    });
 
 };

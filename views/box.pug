@@ -3,36 +3,36 @@ extends layout
 block content
     .container-fluid
         .row
-            .col-md.d-flex.align-content-stretch.flex-wrap.justify-content-center
-                .card.status(style='width: 18rem; margin: 0 20px;')
+            .col-md.d-flex.justify-content-between
+                .card.status(style='width: 18rem;')
                     a(href="/box?number=1")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text.lead
                             | 1 бокс
                         p.time.card-text.h1(data-time=box1)=getTimeFromMins(box1)
-                .card.status(style='width: 18rem; margin: 0 20px;')
+                .card.status(style='width: 18rem;')
                     a(href="/box?number=2")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text.lead
                             | 2 бокс
                         p.time.card-text.h1(data-time=box2)=getTimeFromMins(box2)
-                .card.status(style='width: 18rem; margin: 0 20px;')
+                .card.status(style='width: 18rem;')
                     a(href="/box?number=3")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text.lead
                             | 3 бокс
                         p.time.card-text.h1(data-time=box3 || 0)=getTimeFromMins(box3)
-                .card.status(style='width: 18rem; margin: 0 20px;')
+                .card.status(style='width: 18rem;')
                     a(href="/box?number=4")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
                         p.card-text.lead
                             | 4 бокс
                         p.time.card-text.h1(data-time=box4)=getTimeFromMins(box4)
-                .card.status(style='width: 18rem; margin: 0 20px;')
+                .card.status(style='width: 18rem;')
                     a(href="/box?number=5")
                         img.card-img-top(src='./img/1.png', alt='Card image cap')
                     .card-body
