@@ -6,8 +6,8 @@ module.exports.init = function(socket){
     });
 
     //получение сервисов доп услуг
-    socket.on('getDopService', async (data) => {
-        let services = await db.collection('dopservices').find({name: data.name}).toArray();
+    socket.on('setDopServiceTypeAuto', async (data) => {
+        let services = await db.collection('dopservices').find({name: data}).toArray();
         socket.emit('setDopService', services);
     });
 
@@ -39,20 +39,20 @@ module.exports.init = function(socket){
 
 
     //save dopServices
-    socket.on('saveDopServices', async (data) => {
+    socket.on('saveDopServices', async (data, query) => {
         try{
-            let inc = await db.collection('boxes').aggregate([
-                {
-                    $match: {}
-                },
-                {
-                    $group: {
-                        _id: null,
-                        inc: {$max: "$inc"}
-                    }
-                }
-            ]).toArray();
-            await db.collection('boxes').updateOne({inc: inc[0].inc}, {$set: {dopServices: data.services}, $inc: {price: data.price, time: data.time}});
+            // let inc = await db.collection('boxes').aggregate([
+            //     {
+            //         $match: {}
+            //     },
+            //     {
+            //         $group: {
+            //             _id: null,
+            //             inc: {$max: "$inc"}
+            //         }
+            //     }
+            // ]).toArray();
+            await db.collection('boxes').updateOne(query, {$set: {dopServices: data.services, dopPrice:  data.price, dopTime: data.time}, $inc: {price: data.price, time: data.time}});
             socket.emit('statusDopSave', {status: 200, msg: 'Сохранено!'});
         }catch(err){
             socket.emit('statusDopSave', {status: 500, msg: err});

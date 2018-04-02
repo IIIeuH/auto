@@ -13,17 +13,18 @@
                     th Действие
                 tbody.tr-body
                     each item in data
-                        tr.str(data-status=item.status)
-                            td(data-minutes=item.time).time=getTimeFromMins(item.time)
+                        tr.str(data-status=item.status, data-typeauto=item.typeAuto)
+                            td(data-minutes=item.time).time=getTimeFromMins(item.dopTime + item.mainTime)
                             td.car=item.car
                             td.number=item.number
-                            td.service-main=item.services
-                            td.dop=item.dopServices
+                            td.service-main(data-price=item.mainPrice, data-time=item.mainTime)=item.services
+                            td.dop(data-price=item.dopPrice, data-time=item.dopTime)=item.dopServices
                             td=item.washer
-                            td.price=item.price
+                            td.price=item.dopPrice + item.mainPrice
                             td.d-flex.justify-content-center
                                 button.btn.btn-dark.delete(type='button') Удалить
                                 button.btn.btn-primary.status-wash(type='button') Заехать
                                 button.btn.btn-success.status-ready(type='button') Готово
                                 button.btn.btn-warning.status-await(type='button') Отмена
+                                button.btn.btn-info.modalTwo(type='button') Доп. Услуги
 

@@ -3,29 +3,28 @@ extends layout
 block content
   .container-fluid
     .row
-      .col-sm
+      .col-sm-3
         .input-group.mb-3
           include select-marka
-      .col-sm
+      .col-sm-3
         .input-group.mb-3
           .input-group-prepend
             span.input-group-text Номер
           input#number.form-control.valid-btn(type='text', aria-label='Default', aria-describedby='number')
-      .col-sm
+      .col-sm-3
         .input-group.mb-3
           .input-group-prepend
             label.input-group-text(for='washer') Мойщик
           select#washer.custom-select.valid-btn
-            option(selected='')
-            option(value='One') One
-            option(value='Two') Two
-            option(value='Three') Three
-      .col-sm
+            option
+            each item in persons
+              option(value=item.fio)=item.fio
+      .col-sm-3
         button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#modalService', id="modalOne", disabled)
           | Услуги
         include modalUslug
-      .col-sm
-        button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#modalDopService', id="modalTwo")
-          | Доп услуги
-        include modalDopUslug
+      //.col-sm
+      //  button.btn.btn-outline-primary(type='button', data-toggle='modal', id="modalTwo")
+      //    | Доп услуги
+      include modalDopUslug
   include table

@@ -7,21 +7,18 @@ $(function(){
     statusColor();
     btnActive();
     service();
-    dopService();
     serviceReady();
-    serviceDopReady();
     checkService();
-    checkDopService();
     setService();
-    setDopService();
     save();
-    saveDop();
     del();
     statusBtnWash();
     statusBtnReady();
     statusBtnAwait();
     statusBox();
     timerService();
+    dopAllCar();
+    dopService();
 });
 
 
@@ -40,7 +37,8 @@ function setService(){
 
 
 //получение доп услуг при клике на тип авто
-function setDopService(){
+function setDopService(typeAuto){
+    socket.emit('setDopServiceTypeAuto', typeAuto);
     socket.on('setDopService', function(data){
         var el = $('.set-dop-service');
         el.empty();
@@ -180,9 +178,14 @@ function save(){
         data.startDay = moment().startOf('day');
         data.endDay = moment().endOf('day');
         data.status = 'await';
+        data.typeAuto = $('.type-auto.activeType').text();
+        data.mainPrice = data.price;
+        data.mainTime = data.time;
+        data.dopTime = 0;
+        data.dopPrice = 0;
         socket.emit('saveServices', data);
         tbody.append('' +
-            '<tr class="str">' +
+            '<tr class="str" data-typeauto="'+data.typeAuto+'">' +
             '<td class="time" data-minutes="' +data.time +'">' +
             getTimeFromMins(data.time)  +
             '</td>' +
@@ -192,7 +195,7 @@ function save(){
             '<td class="number">' +
             data.number +
             '</td>' +
-            '<td class="service-main">' +
+            '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
             data.services +
             '</td>' +
             '<td class="dop">' +
@@ -208,6 +211,7 @@ function save(){
             '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
             '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
             '  <button type="button" class="btn btn-warning">Отмена</button>\n' +
+            '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
             '</td>' +
             '</i>' +
             '</td>' +
@@ -218,11 +222,11 @@ function save(){
 }
 
 //Сохранение доп услуг
-function saveDop(){
-    var btn = $('#saveDop');
-    btn.click(function(){
-        var data = {};
-        var services = $('.service-dop-ready');
+function saveDop(tr, number, car, minutes){
+    $(document).on('click', '#saveDop', function(){
+        let data = {};
+        let query = {};
+        let services = $('.service-dop-ready');
         data.services = '';
         data.price = 0;
         data.time = 0;
@@ -231,25 +235,24 @@ function saveDop(){
             data.price += $(this).data('price');
             data.time += $(this).data('time');
         });
-        var dop = $('.dop').last();
-        var oldTime = $('.time').last();
-        var oldPrice = $('.price').last();
-        var p = +oldPrice.text() + +data.price;
-        var k = +oldTime.data('minutes') + +data.time;
-        socket.emit('saveDopServices', data);
-        socket.on('statusDopSave', (res) => {
-            if(res.status === 200){
-                oldTime.text(getTimeFromMins(k));
-                oldPrice.text(p);
-                dop.text(
-                    data.services
-                );
-                $('#modalDopService').modal('hide');
-            }else{
-                console.log('error');
-            }
-        });
-
+        query.number = number;
+        query.car = car;
+        query.time = minutes;
+        let dop = tr.find('.dop');
+        let oldTime = tr.find('.time');
+        let oldPrice = tr.find('.price');
+        let p = $('.service-main').data('price') + +data.price;
+        let k = $('.service-main').data('time') + +data.time;
+        socket.emit('saveDopServices', data, query);
+        oldTime.text(getTimeFromMins(k));
+        oldPrice.text(p);
+        dop.text(
+            data.services
+        );
+        console.log(dop);
+        dop.attr('data-price', data.price);
+        dop.attr('data-time', data.time);
+        $('#modalDopService').modal('hide');
     });
 }
 
@@ -404,5 +407,41 @@ function timerService(){
             that.find('.time').empty();
             that.find('.time').text(tim);
         }, 1000 * 60);
+    });
+}
+
+//Если доп услуги уже то они отображаются в модальном окне
+function dopServicesReadyModal(dopServices) {
+    $('.service-dop').each(function () {
+        var that = $(this);
+        dopServices.forEach(function (item) {
+           if(item === that.text()){
+               that.click();
+           }
+        });
+    });
+
+}
+//Доп услуги к любой машине
+function dopAllCar(){
+    let that;
+    let dopServices = [];
+    $(document).on('click', '.modalTwo', function () {
+        let modal = $('#modalDopService');
+        modal.modal('show');
+        setDopService($(this).parents('tr').data('typeauto'));
+        serviceDopReady();
+        checkDopService();
+        saveDop($(this).parents('tr'), $(this).parents('tr').find('.number').text(), $(this).parents('tr').find('.car').text(),  $(this).parents('tr').find('.time').data('minutes'));
+        that = $(this);
+    });
+    $('#modalDopService').on('shown.bs.modal', function (e) {
+        dopServices = _.compact(that.parents('tr').find('.dop').text().split('; '));
+        dopServicesReadyModal(dopServices);
+
+    }).on('hidden.bs.modal', function (e) {
+        $('.redy-dop-service').empty();
+        dopServices = [];
+        console.log(dopServices);
     });
 }

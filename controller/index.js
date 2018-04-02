@@ -9,6 +9,7 @@ module.exports.main = async (req, res, next) => {
          model.time('5'),
     ]);
     let box1, box2, box3, box4, box5;
+    console.log(data);
     if(data[0][0]){
         box1 = data[0][0].time;
     }else{
@@ -41,8 +42,9 @@ module.exports.box = async (req, res, next) => {
     let auto = await model.main();
     let dopAuto = await model.dopServices();
     let data = await model.data(req.query.number);
-    let persons = await model.getCollections('persons');
-    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data});
+    let persons = await model.getCollection('persons', {_id: 0});
+    console.log(persons);
+    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons});
 };
 
 module.exports.prepaid = async (req, res, next) => {
