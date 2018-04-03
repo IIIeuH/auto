@@ -11,6 +11,12 @@ module.exports.init = function(socket){
         socket.emit('setDopService', services);
     });
 
+    //получение сервисов услуг редактирование
+    socket.on('setRedactServiceTypeAuto', async (data) => {
+        let services = await db.collection('services').find({name: data}).toArray();
+        socket.emit('setRedactService', services);
+    });
+
     //save services
     socket.on('saveServices', async (data) => {
         try{
@@ -56,6 +62,17 @@ module.exports.init = function(socket){
             socket.emit('statusDopSave', {status: 200, msg: 'Сохранено!'});
         }catch(err){
             socket.emit('statusDopSave', {status: 500, msg: err});
+        }
+    });
+
+
+    //save dopServices
+    socket.on('saveRedactServices', async (data, query) => {
+        try{
+            await db.collection('boxes').updateOne(query, {$set: {services: data.services, mainPrice:  data.price, mainTime: data.time}});
+            socket.emit('statusRedactSave', {status: 200, msg: 'Сохранено!'});
+        }catch(err){
+            socket.emit('statusRedactSave', {status: 500, msg: err});
         }
     });
 

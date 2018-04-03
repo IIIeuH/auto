@@ -18,7 +18,9 @@ $(function(){
     statusBox();
     timerService();
     dopAllCar();
+    allCar();
     dopService();
+    redactService();
 });
 
 
@@ -45,6 +47,20 @@ function setDopService(typeAuto){
         data.forEach( (item) => {
             item['service'].forEach( (service) => {
                 el.append('<div class="d-inline-flex p-2 service-dop" data-price="'+service.price+'" data-time="'+ service.time +'">'+service.name+'</div>')
+            });
+        })
+    });
+}
+
+//получение услуг при клике на тип авто редактирование
+function setRedactService(typeAuto){
+    socket.emit('setRedactServiceTypeAuto', typeAuto);
+    socket.on('setRedactService', function(data){
+        var el = $('.set-redact-service');
+        el.empty();
+        data.forEach( (item) => {
+            item['service'].forEach( (service) => {
+                el.append('<div class="d-inline-flex p-2 service-redact" data-price="'+service.price+'" data-time="'+ service.time +'">'+service.name+'</div>')
             });
         })
     });
@@ -78,6 +94,20 @@ function dopService(){
     });
 }
 
+function redactService(){
+    $(document).on('click', '.service-redact', function() {
+        var price = 0;
+        var time = 0;
+        $('.redy-redact-service').append('<div class="d-inline-flex p-2 service-redact-ready" data-price="'+$(this).data('price')+'" data-time="'+$(this).data('time')+'">' + $(this).text() + '</div>');
+        var serviceReady = $('.service-redact-ready');
+        serviceReady.each(function(){
+            price += $(this).data('price');
+            time += $(this).data('time');
+        });
+        $('.info-redact-service').text('Выбрано '+(serviceReady.length) + ', Цена: ' + price + ', Время: ' + getTimeFromMins(time));
+    });
+}
+
 function serviceReady(){
     $(document).on('click', '.service-ready', function(){
         $(this).remove();
@@ -103,6 +133,20 @@ function serviceDopReady(){
             time += $(this).data('time');
         });
         $('.info-dop-service').text('Выбрано '+(serviceReady.length) + ', Цена: ' + price + ', Время: ' + getTimeFromMins(time));
+    });
+}
+
+function serviceRedactReady(){
+    $(document).on('click', '.service-redact-ready', function(){
+        $(this).remove();
+        var price = 0;
+        var time = 0;
+        var serviceReady = $('.service-redact-ready');
+        serviceReady.each(function(){
+            price += $(this).data('price');
+            time += $(this).data('time');
+        });
+        $('.info-redact-service').text('Выбрано '+(serviceReady.length) + ', Цена: ' + price + ', Время: ' + getTimeFromMins(time));
     });
 }
 
@@ -207,11 +251,12 @@ function save(){
             data.price +
             '</td>' +
             '<td class="d-flex justify-content-center">\n' +
-            '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
             '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
             '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
-            '  <button type="button" class="btn btn-warning">Отмена</button>\n' +
+            '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
             '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
+            '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
+            '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
             '</td>' +
             '</i>' +
             '</td>' +
@@ -223,7 +268,6 @@ function save(){
 
 //Сохранение доп услуг
 function saveDop(tr, number, car, minutes){
-    $(document).on('click', '#saveDop', function(){
         let data = {};
         let query = {};
         let services = $('.service-dop-ready');
@@ -237,24 +281,62 @@ function saveDop(tr, number, car, minutes){
         });
         query.number = number;
         query.car = car;
-        query.time = minutes;
         let dop = tr.find('.dop');
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');
-        let p = $('.service-main').data('price') + +data.price;
-        let k = $('.service-main').data('time') + +data.time;
         socket.emit('saveDopServices', data, query);
-        oldTime.text(getTimeFromMins(k));
-        oldPrice.text(p);
-        dop.text(
-            data.services
-        );
-        console.log(dop);
-        dop.attr('data-price', data.price);
-        dop.attr('data-time', data.time);
-        $('#modalDopService').modal('hide');
+        socket.on('statusDopSave', (res) => {
+           if(res.status === 200){
+               console.log('save!');
+               oldTime.text(getTimeFromMins(tr.find('.service-main').data('time') + data.time));
+               oldPrice.text(tr.find('.service-main').data('price') + data.price);
+               dop.text(
+                   data.services
+               );
+               dop.data('price', data.price);
+               dop.data('time', data.time);
+               $('#modalDopService').modal('hide');
+           }
+        });
+}
+
+//Сохранение услуг редактирование
+function saveRedact(that, number, car, minutes){
+    let data = {};
+    let query = {};
+    let services = $('.service-redact-ready');
+    data.services = '';
+    data.price = 0;
+    data.time = 0;
+    services.each(function(){
+        data.services += $(this).text() + '; ';
+        data.price += $(this).data('price');
+        data.time += $(this).data('time');
+    });
+    query.number = number;
+    query.car = car;
+    let serviceMain = that.parents('tr').find('.service-main');
+    let oldTime = that.parents('tr').find('.time');
+    let oldPrice = that.parents('tr').find('.price');
+    let p = data.price + that.parents('tr').find('.dop').data('price');
+    let k = data.time + that.parents('tr').find('.dop').data('time');
+    console.log(that.parents('tr').find('.dop'));
+    socket.emit('saveRedactServices', data, query);
+    socket.on('statusRedactSave', (res) => {
+        if(res.status === 200){
+            console.log('save!');
+            oldTime.text(getTimeFromMins(k));
+            oldPrice.text(p);
+            serviceMain.text(
+                data.services
+            );
+            serviceMain.data('price', data.price);
+            serviceMain.data('time', data.time);
+            $('#modalRedactService').modal('hide');
+        }
     });
 }
+
 
 //delete table
 function del(){
@@ -397,7 +479,6 @@ function timerService(){
         let that = $(this);
         setInterval(function(){
             let time = that.find('.time').data('minutes');
-            console.log(time);
             if(time === 0 || that.data('status') !== 'wash'){
                 return false;
             }
@@ -410,7 +491,7 @@ function timerService(){
     });
 }
 
-//Если доп услуги уже то они отображаются в модальном окне
+//Если доп услуги уже есть то они отображаются в модальном окне
 function dopServicesReadyModal(dopServices) {
     $('.service-dop').each(function () {
         var that = $(this);
@@ -420,28 +501,71 @@ function dopServicesReadyModal(dopServices) {
            }
         });
     });
-
 }
+
+//Если услуги уже есть то они отображаются в модальном окне
+function servicesReadyModal(services) {
+    $('.service-redact').each(function () {
+        var that = $(this);
+        services.forEach(function (item) {
+            if(item === that.text()){
+                that.click();
+            }
+        });
+    });
+}
+
 //Доп услуги к любой машине
 function dopAllCar(){
     let that;
     let dopServices = [];
+    let modal = $('#modalDopService');
     $(document).on('click', '.modalTwo', function () {
-        let modal = $('#modalDopService');
         modal.modal('show');
         setDopService($(this).parents('tr').data('typeauto'));
         serviceDopReady();
         checkDopService();
-        saveDop($(this).parents('tr'), $(this).parents('tr').find('.number').text(), $(this).parents('tr').find('.car').text(),  $(this).parents('tr').find('.time').data('minutes'));
         that = $(this);
     });
-    $('#modalDopService').on('shown.bs.modal', function (e) {
+    modal.on('shown.bs.modal', function (e) {
         dopServices = _.compact(that.parents('tr').find('.dop').text().split('; '));
         dopServicesReadyModal(dopServices);
 
     }).on('hidden.bs.modal', function (e) {
         $('.redy-dop-service').empty();
         dopServices = [];
-        console.log(dopServices);
     });
+
+
+    $(document).on('click', '#saveDop', function(){
+        saveDop(that.parents('tr'), that.parents('tr').find('.number').text(), that.parents('tr').find('.car').text(),  that.parents('tr').find('.time').data('minutes'));
+    });
+}
+
+//Редактирование услуг к любой машине
+function allCar(){
+    let that;
+    let services = [];
+    $(document).on('click', '.redact', function (e) {
+        e.preventDefault();
+        let modal = $('#modalRedactService');
+        modal.modal('show');
+        setRedactService($(this).parents('tr').data('typeauto'));
+        serviceRedactReady();
+        that = $(this);
+    });
+    $('#modalRedactService').on('shown.bs.modal', function (e) {
+        services = _.compact(that.parents('tr').find('.service-main').text().split('; '));
+        servicesReadyModal(services);
+
+    }).on('hidden.bs.modal', function (e) {
+        $('.redy-redact-service').empty();
+        services = [];
+    });
+
+    $(document).on('click', '#saveRedact', function(){
+        saveRedact(that, that.parents('tr').find('.number').text(), that.parents('tr').find('.car').text(),  that.parents('tr').find('.time').data('minutes'));
+    });
+
+
 }
