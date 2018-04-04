@@ -228,6 +228,7 @@ function save(){
         data.dopTime = 0;
         data.dopPrice = 0;
         socket.emit('saveServices', data);
+        socket.emit('cachbox');
         tbody.append('' +
             '<tr class="str" data-typeauto="'+data.typeAuto+'">' +
             '<td class="time" data-minutes="' +data.time +'">' +
@@ -242,7 +243,7 @@ function save(){
             '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
             data.services +
             '</td>' +
-            '<td class="dop">' +
+            '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
             '</td>' +
             '<td>' +
             data.washer +
@@ -285,6 +286,7 @@ function saveDop(tr, number, car, minutes){
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');
         socket.emit('saveDopServices', data, query);
+        socket.emit('cachbox');
         socket.on('statusDopSave', (res) => {
            if(res.status === 200){
                console.log('save!');
@@ -322,6 +324,7 @@ function saveRedact(that, number, car, minutes){
     let k = data.time + that.parents('tr').find('.dop').data('time');
     console.log(that.parents('tr').find('.dop'));
     socket.emit('saveRedactServices', data, query);
+    socket.emit('cachbox');
     socket.on('statusRedactSave', (res) => {
         if(res.status === 200){
             console.log('save!');
@@ -348,6 +351,7 @@ function del(){
         var that = $(this);
         if(p){
             socket.emit('delString', {car: marka, number: number, services: services});
+            socket.emit('cachbox');
             socket.on('statusDel', (data) => {
                 if(data.status === 200){
                     that.parents('.str').remove();

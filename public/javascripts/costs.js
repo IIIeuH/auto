@@ -119,6 +119,7 @@ $(function(){
     saveProductDop();
     saveProductMain();
     quantityMinus();
+    saveTea();
 });
 
 function saveCosts(){
@@ -130,9 +131,9 @@ function saveCosts(){
             let obj = {};
             obj.warehouse = $(this).find('.warehouse-table').text();
             obj.name = $(this).find('.product-name').text();
-            obj.price = $(this).find('.product-price').text();
-            obj.quantity = $(this).find('.quantity').text();
-            obj.remainder = $(this).find('.remainder').text();
+            obj.price = +$(this).find('.product-price').text();
+            obj.quantity = +$(this).find('.quantity').text();
+            obj.remainder = +$(this).find('.remainder').text();
             mas.push(obj);
         });
         socket.emit('setCosts', mas);
@@ -148,8 +149,8 @@ function saveProductDop(){
         tr.each(function () {
             let obj = {};
             obj.name = $(this).find('.product-dop-name').text();
-            obj.price = $(this).find('.product-dop-price').text();
-            obj.quantity = $(this).find('.quantity-dop').text();
+            obj.price = +$(this).find('.product-dop-price').text();
+            obj.quantity = +$(this).find('.quantity-dop').text();
             mas.push(obj);
         });
         socket.emit('saveProductDop', mas);
@@ -164,8 +165,8 @@ function saveProductMain(){
         tr.each(function () {
             let obj = {};
             obj.name = $(this).find('.product-main-name').text();
-            obj.price = $(this).find('.product-main-price').text();
-            obj.quantity = $(this).find('.quantity-main').text();
+            obj.price = +$(this).find('.product-main-price').text();
+            obj.quantity = +$(this).find('.quantity-main').text();
             mas.push(obj);
         });
         socket.emit('saveProductMain', mas);
@@ -181,5 +182,33 @@ function quantityMinus() {
             $(this).find('.qm').text( +$(this).find('.qm').text() - 1);
             $(this).find('.remainder').text( +$(this).find('.remainder').text() + 1) ;
         }
+    })
+}
+
+//Сохранение чая
+function saveTea(){
+    $(document).on('click', '#saveTea', function () {
+        let tea = {};
+        let sugar = {};
+        let stirrer = {};
+        let glasses = {};
+
+        tea.name = 'Чай';
+        tea.price = $('#tea-price').val();
+        tea.quantity = $('#tea-pieces').val();
+
+        sugar.name = 'Сахар';
+        sugar.price = $('#sugar-price').val();
+        sugar.quantity = $('#sugar-pieces').val();
+
+        stirrer.name = 'Размешиватели';
+        stirrer.price = $('#stirrer-price').val();
+        stirrer.quantity = $('#stirrer-pieces').val();
+
+        glasses.name = 'Стаканы';
+        glasses.price = $('#glasses-price').val();
+        glasses.quantity = $('#glasses-pieces').val();
+
+        console.log(tea, sugar, stirrer, glasses);
     })
 }

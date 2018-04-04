@@ -122,6 +122,21 @@ module.exports.init = function(socket){
     socket.on('setCosts', async (data) => {
         try{
             await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+            let price = await db.collection('scores').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $unwind: "$costs"
+                },
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashScore: price[0].cash}}, {upsert: true})
         }catch(err){
             console.log(`err costs ${err}`);
         }
@@ -130,6 +145,21 @@ module.exports.init = function(socket){
     socket.on('saveProductDop', async (data) => {
         try{
             await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+            let price = await db.collection('dops').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $unwind: "$costs"
+                },
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashDops: price[0].cash}}, {upsert: true})
         }catch(err){
             console.log(`err costs ${err}`);
         }
@@ -138,6 +168,21 @@ module.exports.init = function(socket){
     socket.on('saveProductMain', async (data) => {
         try{
             await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+            let price = await db.collection('costs').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $unwind: "$costs"
+                },
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCosts: price[0].cash}}, {upsert: true})
         }catch(err){
             console.log(`err costs ${err}`);
         }
@@ -159,6 +204,27 @@ module.exports.init = function(socket){
            return await db.collection('persons').updateOne({_id: ObjectId(data._id)}, {$set: {fio: data.fio}});
        }catch(err){
            console.log(`err update persons ${err}`);
+       }
+    });
+
+
+    //Цена в кассе
+    socket.on('cachbox', async () =>{
+       try{
+           let allPrice = await db.collection('boxes').aggregate([
+               {
+                   $match: {date: moment().format('DD.MM.YYYY')}
+               },
+               {
+                   $project: {_id: 0, cash: {$sum: ['$mainPrice', '$dopPrice']}}
+               },
+               {
+                   $group: {_id: null, cash: {$sum: '$cash'}}
+               }
+           ]).toArray();
+           await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCar: allPrice[0].cash}}, {upsert: true})
+       }catch(err){
+           console.log(err);
        }
     });
 

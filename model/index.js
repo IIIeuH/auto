@@ -38,6 +38,9 @@ module.exports.time = async(number) => {
             },
             {
                 $project: {_id: 0, time: {$sum: ['$mainTime', '$dopTime']}}
+            },
+            {
+                $group: {_id: null, time: {$sum: '$time'}}
             }
         ]).toArray();
     }catch(err){

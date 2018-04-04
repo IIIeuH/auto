@@ -88,3 +88,7 @@ module.exports.costs = async (req, res, next) => {
     res.render('costs', { title: 'Расходы', user: req.user, product: data, productReady: table});
 };
 
+module.exports.tea = async (req, res, next) => {
+    res.render('tea', { title: 'Чай', user: req.user});
+};
+

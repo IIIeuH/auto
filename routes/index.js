@@ -11,6 +11,7 @@ router.get('/other', checkAuth, ctrl.other);
 router.get('/score', checkAuth, ctrl.score);
 router.get('/dop', checkAuth, ctrl.dop);
 router.get('/costs', checkAuth, ctrl.costs);
+router.get('/tea', checkAuth, ctrl.tea);
 //auth
 router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Авторизация', message: req.flash('message')});

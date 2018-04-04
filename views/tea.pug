@@ -1,0 +1,52 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                label(for="tea-price") Чай
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text цена
+                    input#tea-price.form-control(type='number', min="1")
+                    .input-group-prepend
+                        span#tea-label.input-group-text шт.
+                    input#tea-pieces.form-control(type='number', min="1")
+            .col-md
+                label(for="sugar-price") Сахар
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text цена
+                    input#sugar-price.form-control(type='number', min="1")
+                    .input-group-prepend
+                        span#sugar-label.input-group-text шт.
+                    input#sugar-pieces.form-control(type='number', min="1")
+            .col-md
+                label(for="stirrer-price") Размешиватели
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text цена
+                    input#stirrer-price.form-control(type='number', min="1")
+                    .input-group-prepend
+                        span#stirrer-label.input-group-text шт.
+                    input#stirrer-pieces.form-control(type='number', min="1")
+            .col-md
+                label(for="glasses-price") Стаканы
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text цена
+                    input#glasses-price.form-control(type='number', min="1")
+                    .input-group-prepend
+                        span#glasses-label.input-group-text шт.
+                    input#glasses-pieces.form-control(type='number', min="1")
+        .row
+            .col-md
+                button.btn.btn-outline-info(type='button', id="saveTea") Сохранить
+        .row
+            .col-md
+                table.table.product-main-table.table-hover
+                    thead
+                        th Наименование услуги
+                        th Цена
+                        th Кол-во
+                    tbody.product-main-body
