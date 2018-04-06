@@ -43,8 +43,8 @@ module.exports.box = async (req, res, next) => {
     let dopAuto = await model.dopServices();
     let data = await model.data(req.query.number);
     let persons = await model.getCollection('persons', {_id: 0});
-    console.log(persons);
-    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons});
+    let marks = await model.getCollection('marks', {_id: 0});
+    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons, marks:marks});
 };
 
 module.exports.prepaid = async (req, res, next) => {
@@ -63,7 +63,19 @@ module.exports.score = async (req, res, next) => {
     }else{
         table = table[0].costs
     }
-    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table});
+    let coffee = await model.startCoffee();
+    if(!coffee.length){
+        coffee = [];
+    }else{
+        coffee = coffee[0].endCoffee;
+    }
+    let endCoffee = await model.coffee();
+    if(!endCoffee){
+        endCoffee = 0;
+    }else{
+        endCoffee = endCoffee.endCoffee;
+    }
+    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: coffee, endCoffee: endCoffee});
 };
 
 module.exports.dop = async (req, res, next) => {
@@ -89,6 +101,27 @@ module.exports.costs = async (req, res, next) => {
 };
 
 module.exports.tea = async (req, res, next) => {
-    res.render('tea', { title: 'Чай', user: req.user});
+    let data = await model.productReady('teas');
+    if(!data.length){
+        data = [];
+    }else{
+        data = data[0].costs
+    }
+    res.render('tea', { title: 'Чай', user: req.user, data: data});
+};
+module.exports.coffee = async (req, res, next) => {
+    let data = await model.productReady('coffees');
+    if(!data.length){
+        data = [];
+    }else{
+        data = data[0].costs
+    }
+    res.render('coffee', { title: 'Кофе', user: req.user, data: data});
+};
+
+module.exports.getJson = async (req, res, next) => {
+    let data = await db.collection('clients').find({number: {$regex: req.query.s}}, {_id: 0, number: 1, marka:1}).toArray();
+    console.log(data);
+    res.json(data);
 };
 

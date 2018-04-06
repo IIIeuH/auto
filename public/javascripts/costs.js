@@ -120,6 +120,12 @@ $(function(){
     saveProductMain();
     quantityMinus();
     saveTea();
+    redactTea();
+    saveCoffee();
+    redactCoffee();
+    btnDisabled();
+    coffeeMachine();
+    validCoffee();
 });
 
 function saveCosts(){
@@ -136,7 +142,21 @@ function saveCosts(){
             obj.remainder = +$(this).find('.remainder').text();
             mas.push(obj);
         });
-        socket.emit('setCosts', mas);
+        socket.emit('setCosts', mas, function (res) {
+            if(res.status === 200) {
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
     })
 }
 
@@ -153,7 +173,21 @@ function saveProductDop(){
             obj.quantity = +$(this).find('.quantity-dop').text();
             mas.push(obj);
         });
-        socket.emit('saveProductDop', mas);
+        socket.emit('saveProductDop', mas, function (res) {
+            if(res.status === 200) {
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
     })
 }
 
@@ -169,7 +203,21 @@ function saveProductMain(){
             obj.quantity = +$(this).find('.quantity-main').text();
             mas.push(obj);
         });
-        socket.emit('saveProductMain', mas);
+        socket.emit('saveProductMain', mas, function (res) {
+            if(res.status === 200) {
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
     })
 }
 
@@ -194,21 +242,268 @@ function saveTea(){
         let glasses = {};
 
         tea.name = 'Чай';
-        tea.price = $('#tea-price').val();
-        tea.quantity = $('#tea-pieces').val();
+        tea.price = +$('#tea-price').val();
+        tea.quantity = +$('#tea-pieces').val();
 
         sugar.name = 'Сахар';
-        sugar.price = $('#sugar-price').val();
-        sugar.quantity = $('#sugar-pieces').val();
+        sugar.price = +$('#sugar-price').val();
+        sugar.quantity = +$('#sugar-pieces').val();
 
         stirrer.name = 'Размешиватели';
-        stirrer.price = $('#stirrer-price').val();
-        stirrer.quantity = $('#stirrer-pieces').val();
+        stirrer.price = +$('#stirrer-price').val();
+        stirrer.quantity = +$('#stirrer-pieces').val();
 
         glasses.name = 'Стаканы';
-        glasses.price = $('#glasses-price').val();
-        glasses.quantity = $('#glasses-pieces').val();
+        glasses.price = +$('#glasses-price').val();
+        glasses.quantity = +$('#glasses-pieces').val();
 
-        console.log(tea, sugar, stirrer, glasses);
+        let costs = [];
+        costs.push(tea, sugar, stirrer, glasses);
+        socket.emit('saveTea', costs, function (res) {
+            if(res.status === 200) {
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                $('.tea-table').append(
+                    '<tr class="elev">' +
+                    '<td>' +
+                    tea.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    tea.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    tea.quantity +
+                    '</td>' +
+                    '</tr>' +
+                    '<tr class="elev">' +
+                    '<td>' +
+                    sugar.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    sugar.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    sugar.quantity +
+                    '</td>' +
+                    '</tr>'+
+                    '<tr class="elev">' +
+                    '<td>' +
+                    stirrer.name +
+                    '</td>' +
+                    '<td contenteditable="true"> ' +
+                    stirrer.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    stirrer.quantity +
+                    '</td>' +
+                    '</tr>'+
+                    '<tr class="elev">' +
+                    '<td>' +
+                    glasses.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    glasses.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    glasses.quantity +
+                    '</td>' +
+                    '</tr>'
+                );
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
+        btnDisabled();
     })
+}
+
+//Редактирование tea
+function redactTea(){
+    $(document).on('blur', '.teaRed', function () {
+        let id = $(this).prev('.id').text();
+        let el = $('.elev');
+        let costs = [];
+        el.each(function () {
+           let obj = {};
+           obj.name = $(this).find('.id').text();
+           obj.price = +$(this).find('.price').text();
+           obj.quantity = +$(this).find('.quantity').text();
+           costs.push(obj);
+        });
+        socket.emit('redactorTea', costs, function (res) {
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
+        });
+    })
+}
+
+//Сохранение кофе
+function saveCoffee(){
+    $(document).on('click', '#saveCoffee', function () {
+        let tea = {};
+        let sugar = {};
+        let stirrer = {};
+        let glasses = {};
+        let water = {};
+
+        tea.name = 'Кофе';
+        tea.price = +$('#coffee-price').val();
+        tea.quantity = +$('#coffee-pieces').val();
+
+        sugar.name = 'Сахар';
+        sugar.price = +$('#sugar-price').val();
+        sugar.quantity = +$('#sugar-pieces').val();
+
+        stirrer.name = 'Размешиватели';
+        stirrer.price = +$('#stirrer-price').val();
+        stirrer.quantity = +$('#stirrer-pieces').val();
+
+        glasses.name = 'Стаканы';
+        glasses.price = +$('#glasses-price').val();
+        glasses.quantity = +$('#glasses-pieces').val();
+
+        water.name = 'Вода';
+        water.price = +$('#water-price').val();
+        water.quantity = +$('#water-pieces').val();
+
+        let costs = [];
+        costs.push(tea, sugar, stirrer, glasses, water);
+        socket.emit('saveCoffee', costs, function (res) {
+            if(res.status === 200){
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                $('.coffee-body').append(
+                    '<tr class="elev">' +
+                    '<td>' +
+                    tea.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    tea.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    tea.quantity +
+                    '</td>' +
+                    '</tr>' +
+                    '<tr class="elev">' +
+                    '<td>' +
+                    sugar.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    sugar.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    sugar.quantity +
+                    '</td>' +
+                    '</tr>'+
+                    '<tr class="elev">' +
+                    '<td>' +
+                    stirrer.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    stirrer.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    stirrer.quantity +
+                    '</td>' +
+                    '</tr>'+
+                    '<tr class="elev">' +
+                    '<td>' +
+                    glasses.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    glasses.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    glasses.quantity +
+                    '</td>' +
+                    '</tr>'+
+                    '<tr class="elev">' +
+                    '<td>' +
+                    water.name +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    water.price +
+                    '</td>' +
+                    '<td contenteditable="true">' +
+                    water.quantity +
+                    '</td>' +
+                    '</tr>'
+                );
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
+        btnDisabled();
+    })
+}
+
+
+//Редактирование кофе
+function redactCoffee(){
+    $(document).on('blur', '.cofeeRed', function () {
+        let el = $('.elev');
+        let costs = [];
+        el.each(function () {
+            let obj = {};
+            obj.name = $(this).find('.id').text();
+            obj.price = +$(this).find('.price').text();
+            obj.quantity = +$(this).find('.quantity').text();
+            costs.push(obj);
+        });
+        socket.emit('redactorCoffee', costs, function (res) {
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
+        });
+    })
+}
+
+//Блокирование кнопки если есть кофе или чай
+function btnDisabled(){
+    if($('tr').is('.elev')){
+        $('#saveTea').prop('disabled', true);
+        $('#saveCoffee').prop('disabled', true);
+    }
+}
+
+//Сохранение Кофе машины
+function coffeeMachine(){
+    $(document).on('click', '#saveAutomat', function () {
+        let start = +$('#coffee-start').val();
+        let end = +$('#coffee-end').val();
+        socket.emit('saveMachines', start, end, function (res) {
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
+        });
+    })
+}
+
+//Если на начло дня у кофемашины уже есть цифра то ее нельзя изменить
+function validCoffee(){
+    let start = $('#coffee-start');
+    if(start.val()){
+        start.prop('disabled', true);
+    }
 }

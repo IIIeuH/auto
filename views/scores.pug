@@ -3,6 +3,19 @@ extends layout
 block content
     .container-fluid
         .row
+            .col-md.col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text Кофе на начало смены
+                    input#coffee-start.form-control(type='number', value=startCoffee)
+            .col-md.col-sm
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text Кофе на конец смены
+                    input#coffee-end.form-control(type='number', value=endCoffee)
+            .col-md.col-sm
+                button.btn.btn-outline-info(type='button', id="saveAutomat") Сохранить
+        .row
             .d-inline-flex.p-2
                 each item in product
                     .product.p-2(data-price=item.price, data-warehouse=item.warehouse)=item.name

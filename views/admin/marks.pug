@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text Марка
+                    input#marks.form-control(type='text', aria-label='Default')
+                button.btn.btn-outline-info(type='button', id="addMarks") Добавить
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Марка
+                    tbody.marks
+                        each item in marks
+                            tr
+                                td.refMarks(contenteditable="true", data-id=item._id)=item.marka

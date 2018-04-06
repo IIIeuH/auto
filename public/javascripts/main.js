@@ -21,6 +21,7 @@ $(function(){
     allCar();
     dopService();
     redactService();
+    autoNumber();
 });
 
 
@@ -227,43 +228,65 @@ function save(){
         data.mainTime = data.time;
         data.dopTime = 0;
         data.dopPrice = 0;
-        socket.emit('saveServices', data);
-        socket.emit('cachbox');
-        tbody.append('' +
-            '<tr class="str" data-typeauto="'+data.typeAuto+'">' +
-            '<td class="time" data-minutes="' +data.time +'">' +
-            getTimeFromMins(data.time)  +
-            '</td>' +
-            '<td class="car">' +
-            data.car +
-            '</td>' +
-            '<td class="number">' +
-            data.number +
-            '</td>' +
-            '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
-            data.services +
-            '</td>' +
-            '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
-            '</td>' +
-            '<td>' +
-            data.washer +
-            '</td>' +
-            '<td class="price">' +
-            data.price +
-            '</td>' +
-            '<td class="d-flex justify-content-center">\n' +
-            '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
-            '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
-            '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
-            '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
-            '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
-            '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
-            '</td>' +
-            '</i>' +
-            '</td>' +
-            '</tr>'
-        );
-        $('#modalService').modal('hide');
+        socket.emit('saveServices', data, function (res) {
+            if(res.status === 200){
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                tbody.append('' +
+                    '<tr class="str" data-typeauto="'+data.typeAuto+'">' +
+                    '<td class="time" data-minutes="' +data.time +'">' +
+                    getTimeFromMins(data.time)  +
+                    '</td>' +
+                    '<td class="car">' +
+                    data.car +
+                    '</td>' +
+                    '<td class="number">' +
+                    data.number +
+                    '</td>' +
+                    '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
+                    data.services +
+                    '</td>' +
+                    '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
+                    '</td>' +
+                    '<td>' +
+                    data.washer +
+                    '</td>' +
+                    '<td class="price">' +
+                    data.price +
+                    '</td>' +
+                    '<td class="d-flex justify-content-center">\n' +
+                    '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
+                    '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
+                    '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
+                    '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
+                    '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
+                    '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
+                    '</td>' +
+                    '</i>' +
+                    '</td>' +
+                    '</tr>'
+                );
+                $('#modalService').modal('hide');
+                socket.emit('cachbox',function (res) {
+                    if(res.status === 500){
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
     });
 }
 
@@ -285,20 +308,37 @@ function saveDop(tr, number, car, minutes){
         let dop = tr.find('.dop');
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');
-        socket.emit('saveDopServices', data, query);
-        socket.emit('cachbox');
-        socket.on('statusDopSave', (res) => {
-           if(res.status === 200){
-               console.log('save!');
-               oldTime.text(getTimeFromMins(tr.find('.service-main').data('time') + data.time));
-               oldPrice.text(tr.find('.service-main').data('price') + data.price);
-               dop.text(
-                   data.services
-               );
-               dop.data('price', data.price);
-               dop.data('time', data.time);
-               $('#modalDopService').modal('hide');
-           }
+        socket.emit('saveDopServices', data, query, function (res) {
+            if(res.status === 200){
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                oldTime.text(getTimeFromMins(tr.find('.service-main').data('time') + data.time));
+                oldPrice.text(tr.find('.service-main').data('price') + data.price);
+                dop.text(
+                    data.services
+                );
+                dop.data('price', data.price);
+                dop.data('time', data.time);
+                $('#modalDopService').modal('hide');
+                socket.emit('cachbox',function (res) {
+                    if(res.status === 500){
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
         });
 }
 
@@ -323,11 +363,13 @@ function saveRedact(that, number, car, minutes){
     let p = data.price + that.parents('tr').find('.dop').data('price');
     let k = data.time + that.parents('tr').find('.dop').data('time');
     console.log(that.parents('tr').find('.dop'));
-    socket.emit('saveRedactServices', data, query);
-    socket.emit('cachbox');
-    socket.on('statusRedactSave', (res) => {
+    socket.emit('saveRedactServices', data, query, function (res) {
         if(res.status === 200){
-            console.log('save!');
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
             oldTime.text(getTimeFromMins(k));
             oldPrice.text(p);
             serviceMain.text(
@@ -336,6 +378,21 @@ function saveRedact(that, number, car, minutes){
             serviceMain.data('price', data.price);
             serviceMain.data('time', data.time);
             $('#modalRedactService').modal('hide');
+            socket.emit('cachbox',function (res) {
+                if(res.status === 500){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
         }
     });
 }
@@ -350,15 +407,31 @@ function del(){
         var p = confirm('Вы действительно хотите удалить машину ' + marka + ' с номером ' + number +'?');
         var that = $(this);
         if(p){
-            socket.emit('delString', {car: marka, number: number, services: services});
-            socket.emit('cachbox');
-            socket.on('statusDel', (data) => {
-                if(data.status === 200){
+            socket.emit('delString', {car: marka, number: number, services: services}, function (res) {
+                if(res.status === 200){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
                     that.parents('.str').remove();
+                    socket.emit('cachbox',function (res) {
+                        if(res.status === 500){
+                            Snackbar.show({
+                                text: res.msg,
+                                pos: 'bottom-right',
+                                actionText: null
+                            });
+                        }
+                    });
                 }else{
-                    console.log(data.err);
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
                 }
-            })
+            });
         }
     });
 }
@@ -428,11 +501,23 @@ function statusBtnWash(){
         var that = $(this);
         var p = confirm('Загнать машину ' + marka + ' с номером ' + number +' в бокс ' + box + '?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash');
-            socket.on('getStatus', function(){
-                that.parents('.str').data("status", "wash");
-                statusColor();
-                statusBox();
+            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    that.parents('.str').data("status", "wash");
+                    statusColor();
+                    statusBox();
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
             });
         }
     });
@@ -447,11 +532,23 @@ function statusBtnReady(){
         var that = $(this);
         var p = confirm('Машина ' + marka + ' с номером ' + number +' готова?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready');
-            socket.on('getStatus', function(){
-                that.parents('.str').data('status', 'ready');
-                statusColor();
-                statusBox();
+            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    that.parents('.str').data('status', 'ready');
+                    statusColor();
+                    statusBox();
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
             });
         }
     });
@@ -466,11 +563,26 @@ function statusBtnAwait(){
         var that = $(this);
         var p = confirm('Отменить машину ' + marka + ' с номером ' + number +'?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'await');
+            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'await', function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    that.parents('.str').data('status', 'await');
+                    statusColor();
+                    statusBox();
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
             socket.on('getStatus', function(){
-                that.parents('.str').data('status', 'await');
-                statusColor();
-                statusBox();
+
             });
         }
     });
@@ -570,6 +682,28 @@ function allCar(){
     $(document).on('click', '#saveRedact', function(){
         saveRedact(that, that.parents('tr').find('.number').text(), that.parents('tr').find('.car').text(),  that.parents('tr').find('.time').data('minutes'));
     });
+}
 
-
+//автозаполнение номера
+function autoNumber() {
+    $(document).on('input', '#number', function () {
+        let that = $(this);
+        that.autocomplete({
+            source:function( request, response ) {
+                socket.emit('autocomplete', request.term, function (data) {
+                    let res =  data.map(function (item) {
+                        return item.number;
+                    });
+                    response(res);
+                });
+            },
+            select: function (event, ui) {
+                socket.emit('autocomplete', ui.item.value, function (data) {
+                    if(data.length){
+                        $('#marka').val(data[0].marka);
+                    }
+                });
+            }
+        });
+    })
 }

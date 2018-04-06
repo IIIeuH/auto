@@ -1,0 +1,46 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text Номер машины
+                    input#clients-number-car.form-control(type='text', aria-label='Default')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='clients-marka') Марка
+                    select#clients-marka.custom-select
+                        option(selected='')
+                        each item in marks
+                            option(value=item.marka)=item.marka
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text ФИО
+                    input#clients-fio.form-control(type='text', aria-label='Default')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text Телефон
+                    input#clients-phone.form-control(type='text', aria-label='Default')
+        .row
+            .col-md
+                button.btn.btn-outline-info(type='button', id="addClients") Добавить
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Номер
+                        th Марка
+                        th ФИО
+                        th Телефон
+                    tbody.clietns
+                        each item in clients
+                            tr
+                                td.refClients.number(contenteditable="true", data-id=item._id)=item.number
+                                td.refClients.marka(contenteditable="true", data-id=item._id)=item.marka
+                                td.refClients.fio(contenteditable="true", data-id=item._id)=item.fio
+                                td.refClients.phone(contenteditable="true", data-id=item._id)=item.phone

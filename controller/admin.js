@@ -8,3 +8,14 @@ module.exports.persons = async function(req, res, next) {
     let persons = await model.getCollections('persons');
     res.render('admin/persons', {title: "Персонал", persons: persons})
 };
+
+module.exports.marks = async function(req, res, next) {
+    let marks = await model.getCollections('marks');
+    res.render('admin/marks', {title: "Марки машин", marks: marks})
+};
+
+module.exports.clients = async function(req, res, next) {
+    let clients = await model.getCollections('clients');
+    let marks = await model.getCollections('marks');
+    res.render('admin/clients', {title: "Клиенты", clients: clients, marks:marks})
+};

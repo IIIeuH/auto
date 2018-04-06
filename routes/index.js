@@ -7,11 +7,12 @@ const ctrl = require('../controller/index');
 router.get('/', checkAuth, ctrl.main);
 router.get('/box', checkAuth, ctrl.box);
 router.get('/prepaid', checkAuth, ctrl.prepaid);
-router.get('/other', checkAuth, ctrl.other);
 router.get('/score', checkAuth, ctrl.score);
 router.get('/dop', checkAuth, ctrl.dop);
 router.get('/costs', checkAuth, ctrl.costs);
 router.get('/tea', checkAuth, ctrl.tea);
+router.get('/coffee', checkAuth, ctrl.coffee);
+router.get('/getJson', checkAuth, ctrl.getJson);
 //auth
 router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Авторизация', message: req.flash('message')});

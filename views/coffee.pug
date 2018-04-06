@@ -4,14 +4,14 @@ block content
     .container-fluid
         .row
             .col-md
-                label(for="tea-price") Чай
+                label(for="coffee-price") Кофе
                 .input-group.mb-3
                     .input-group-prepend
                         span.input-group-text цена
-                    input#tea-price.form-control(type='number', min="1")
+                    input#coffee-price.form-control(type='number', min="1")
                     .input-group-prepend
                         span#tea-label.input-group-text шт.
-                    input#tea-pieces.form-control(type='number', min="1")
+                    input#coffee-pieces.form-control(type='number', min="1")
             .col-md
                 label(for="sugar-price") Сахар
                 .input-group.mb-3
@@ -39,19 +39,28 @@ block content
                     .input-group-prepend
                         span#glasses-label.input-group-text шт.
                     input#glasses-pieces.form-control(type='number', min="1")
+            .col-md
+                label(for="water-price") Вода
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text цена
+                    input#water-price.form-control(type='number', min="1")
+                    .input-group-prepend
+                        span#water-label.input-group-text шт.
+                    input#water-pieces.form-control(type='number', min="1")
         .row
             .col-md
-                button.btn.btn-outline-info(type='button', id="saveTea") Сохранить
+                button.btn.btn-outline-info(type='button', id="saveCoffee") Сохранить
         .row
             .col-md
-                table.table.tea-table.table-hover(style="margin-top:20px;")
+                table.table.coffee-table.table-hover(style="margin-top:20px;")
                     thead
                         th Наименование услуги
                         th Цена
                         th Кол-во
-                    tbody.product-main-body
+                    tbody.coffee-body
                         each item in data
                             tr.elev
                                 td.id=item.name
-                                td.teaRed.price(contenteditable="true")=item.price
-                                td.teaRed.quantity(contenteditable="true")=item.quantity
+                                td.cofeeRed.price(contenteditable="true")=item.price
+                                td.cofeeRed.quantity(contenteditable="true")=item.quantity
