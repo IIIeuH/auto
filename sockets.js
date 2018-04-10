@@ -384,4 +384,66 @@ module.exports.init = function(socket){
            console.log(`err update autocomplete ${err}`);
        }
     });
+
+    //Админка удаление
+    socket.on('delete', async (collection, id, cb) => {
+        try{
+            await db.collection(collection).removeOne({_id: ObjectId(id)});
+            cb({status:200, msg: 'Удалено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Админка удаление услуг
+    socket.on('deleteNameService', async (name, type, cb) => {
+        try{
+            await db.collection('services').updateOne({name: type}, {$pull: {service: {name: name}}});
+            cb({status:200, msg: 'Удалено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Админка Сохранение полей услуг
+    socket.on('saveField', async (type, data, cb) => {
+        try{
+            console.log(data);
+            await db.collection('services').updateOne({name: type}, {$addToSet: {service: data}});
+            cb({status:200, msg: 'Добавлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Админка Обновление типа авто
+    socket.on('updateType', async (id, name, cb) => {
+        try{
+            await db.collection('services').updateOne({_id: ObjectId(id)}, {$set: {name: name}});
+            cb({status:200, msg: 'Обновлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Админка Обновление полей услуг
+    socket.on('updateFiled', async (type, index, data, cb) => {
+        try{
+            await db.collection('services').updateOne({name: type, "service.name":  data.name}, {$set: {'service.$': data}});
+            cb({status:200, msg: 'Обновлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
+    //Админка Добавление типа авто
+    socket.on('addTypeAuto', async (data, cb) => {
+        try{
+            await db.collection('services').insert(data);
+            cb({status:200, msg: 'Добавлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
 };

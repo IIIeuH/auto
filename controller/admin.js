@@ -19,3 +19,15 @@ module.exports.clients = async function(req, res, next) {
     let marks = await model.getCollections('marks');
     res.render('admin/clients', {title: "Клиенты", clients: clients, marks:marks})
 };
+
+module.exports.services = async function(req, res, next) {
+    let services = await model.getCollections('services');
+    res.render('admin/services', {title: "Клиенты", services: services})
+};
+
+module.exports.dopservices = async function(req, res, next) {
+    let services = await model.getCollections('dopservices');
+    let type = await model.getType();
+    console.log(type);
+    res.render('admin/dopservices', {title: "Клиенты", services: services, type: type})
+};

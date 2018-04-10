@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='typeDopAuto') Тип Авто
+                    select#typeDopAuto.custom-select.valid-btn
+                        option(selected='')
+                        each item in type
+                            option(value=item)=item
