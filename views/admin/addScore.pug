@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addScoreName') Наименование
+                    input.form-control(type='text', id="addScoreName")
+                button.btn.btn-outline-info(type='button', id="btnAddScore") Добавить
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addScorePrice') Цена
+                    input.form-control(type='number', id="addScorePrice")
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addScoreWarehouse') Кол-во
+                    input.form-control(type='number', id="addScoreWarehouse")
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Наименовение
+                        th Цена
+                        th Кол-во
+                        th Действие
+                    tbody.addScore
+                        each item in product
+                            tr
+                                td.redactaddScore.nameAddScore(contenteditable="true")=item.name
+                                td.redactaddScore.priceAddScore(contenteditable="true")=item.price
+                                td.redactaddScore.warehouseAddScore(contenteditable="true")=item.warehouse
+                                td
+                                    button#delAddScore.btn.btn-outline-dark(type='button', data-id=item._id) Удалить

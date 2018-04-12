@@ -305,6 +305,7 @@ function saveDop(tr, number, car, minutes){
         });
         query.number = number;
         query.car = car;
+        query.date = moment().format('DD.MM.YYYY');
         let dop = tr.find('.dop');
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');

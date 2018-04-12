@@ -1,0 +1,45 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-5.col-md-6
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='personsFine') Персонал
+                    select#personsFine.custom-select
+                        option(selected='')
+                        each item in persons
+                            option(value=item.fio)=item.fio
+                    input.form-control(type='text', id="fine")
+                button.btn.btn-outline-info(type='button', id="prepaidDoFine") Штраф
+        .row(style="margin-top:20px")
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDateFine.form-control(type='date')
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDateFine.form-control(type='date')
+            .col-md-4
+                button.btn.btn-outline-info(type='button', id="lookFineDate") Показать
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Дата
+                        th Персонал
+                        th Штраф
+                        th Действие
+                    tbody.fine
+                        each item in addCosts
+                            tr.tr-fine
+                                td=item.date
+                                td=item.person
+                                td=item.fine
+                                td
+                                    button#delFine.btn.btn-outline-dark(type='button', data-id=item._id) Удалить
+

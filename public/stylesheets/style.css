@@ -101,7 +101,7 @@ td.d-flex.justify-content-center button{
 }
 
 /*admin service*/
-.service-admin-wrap, .services-admin-wrap{
+.service-admin-wrap, .services-admin-wrap, .service-dop-admin-wrap, .services-dop-admin-wrap{
   position: relative;
   margin: 10px 0;
   padding: 30px;
@@ -109,7 +109,7 @@ td.d-flex.justify-content-center button{
   border-radius: 5px;
 }
 
-.service-admin-wrap .close{
+.service-admin-wrap .close, .service-dop-admin-wrap .close{
   position: absolute;
   top: 0;
   right: 5px;

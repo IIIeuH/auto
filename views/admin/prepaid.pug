@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-3.col-md-6
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='personsPrepaid') Персонал
+                    select#personsPrepaid.custom-select.valid-btn
+                        option(selected='')
+                        each item in persons
+                            option(value=item.fio)=item.fio
+                button.btn.btn-outline-info(type='button', id="prepaidTo") Выдать аванс
+            .col-lg-3.col-md-6
+                p.lead.cashWasher
+            .col-lg-3.col-md-6
+        .row(style="margin-top:20px")
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDatePrep.form-control(type='date')
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDatePrep.form-control(type='date')
+            .col-md-4
+                button.btn.btn-outline-info(type='button', id="lookPredDate") Показать
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Дата
+                        th Персонал
+                        th Аванс
+                        th Действие
+                    tbody.prepaid
+                        each item in prepaid
+                            tr.tr-prep
+                                td.date-prep=item.date
+                                td=item.person
+                                td.pricePrepTable=item.prepaid
+                                td
+                                    button.btn.btn-outline-dark.del-prepaid(type="button", id=item._id) Удалить
+

@@ -64,29 +64,6 @@ module.exports.product = async() => {
     }
 };
 
-module.exports.productMain = async() => {
-    try {
-        return await db.collection('productsMain').find({}).toArray();
-    }catch(err){
-        return err;
-    }
-};
-
-module.exports.productDop = async() => {
-    try {
-        return await db.collection('productsDop').find({}).toArray();
-    }catch(err){
-        return err;
-    }
-};
-
-module.exports.productReady = async(collection) => {
-    try {
-        return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}).toArray();
-    }catch(err){
-        return err;
-    }
-};
 
 module.exports.startCoffee = async() => {
     try {
@@ -99,6 +76,14 @@ module.exports.startCoffee = async() => {
 module.exports.coffee = async() => {
     try {
         return await db.collection('scores').findOne({date: moment().format('DD.MM.YYYY')}, {endCoffee: 1, _id: 0});
+    }catch(err){
+        return err;
+    }
+};
+
+module.exports.productReady = async(collection) => {
+    try {
+        return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}).toArray();
     }catch(err){
         return err;
     }

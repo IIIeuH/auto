@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addCosts') Наименование
+                    input.form-control(type='text', id="addCosts")
+                button.btn.btn-outline-info(type='button', id="btnAddCosts") Добавить
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addCostsPrice') Цена
+                    input.form-control(type='number', id="addCostsPrice")
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Наименовение
+                        th Цена
+                        th Действие
+                    tbody.addCosts
+                        each item in addCosts
+                            tr
+                                td.redactaddCosts.nameAdd(contenteditable="true")=item.name
+                                td.redactaddCosts.priceAdd(contenteditable="true")=item.price
+                                td
+                                    button#delAddCosts.btn.btn-outline-dark(type='button', data-id=item._id) Удалить

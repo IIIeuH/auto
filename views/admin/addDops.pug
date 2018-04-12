@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addDops') Наименование
+                    input.form-control(type='text', id="addDops")
+                button.btn.btn-outline-info(type='button', id="btnAddDops") Добавить
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addDopsPrice') Цена
+                    input.form-control(type='number', id="addDopsPrice")
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Наименовение
+                        th Цена
+                        th Действие
+                    tbody.addDops
+                        each item in addDops
+                            tr
+                                td.redactaddDops.nameAddDops(contenteditable="true")=item.name
+                                td.redactaddDops.priceAddDops(contenteditable="true")=item.price
+                                td
+                                    button#delAddDops.btn.btn-outline-dark(type='button', data-id=item._id) Удалить

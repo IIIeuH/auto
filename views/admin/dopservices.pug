@@ -11,3 +11,33 @@ block content
                         option(selected='')
                         each item in type
                             option(value=item)=item
+                button.btn.btn-outline-info(type='button', id="addDopServices") Добавить
+        .row.services-dop-wrap
+            each item in services
+                .col-lg-4.col-md-12.col-sm-12
+                    .service-dop-admin-wrap
+                        button.close.removeDopServices(type='button', aria-label='Close', id=item._id)
+                            span(aria-hidden='true') ×
+                        .input-group.mb-3
+                            .input-group-prepend
+                                span.input-group-text Тип авто
+                            input.typeDop.form-control(type='text', value=item.name, id=item._id)
+                        button.btn.btn-outline-dark.look-dop-service(type="button") Показать
+                        button.btn.btn-outline-primary.addDopFiled(type="button" style="margin-left: 10px;") Добавить
+                        each service, i in item.service
+                            .services-dop-admin-wrap(id=i)
+                                button.close.removeNameServiceDop(type='button', aria-label='Close')
+                                    span(aria-hidden='true') ×
+                                .input-group.mb-3
+                                    .input-group-prepend
+                                        span.input-group-text Название
+                                    input.name.form-control(type='text', value=service.name)
+                                .input-group.mb-3
+                                    .input-group-prepend
+                                        span.input-group-text Цена
+                                    input.price.form-control(type='number', value=service.price)
+                                .input-group.mb-3
+                                    .input-group-prepend
+                                        span.input-group-text Время
+                                    input.time.form-control(type='number', value=service.time)
+                                button.btn.btn-outline-info.updateField(type="button") Сохранить

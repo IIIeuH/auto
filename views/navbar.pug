@@ -7,15 +7,9 @@ nav.navbar.navbar-expand-lg.navbar-expand-md.navbar-expand-sm.navbar-light.bg-li
             li.nav-item.active
                 a.nav-link(href='/')
                     | Заказ
-                    span.sr-only (current)
-            li.nav-item.dropdown
-                a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Расходы
-                .dropdown-menu
-                    a.dropdown-item(href='/costs') Основные
-                    a.dropdown-item(href='/score') Магазин
-                    a.dropdown-item(href='/dop') Дополнительные услуги
-                    a.dropdown-item(href='/tea') Чай
-                    a.dropdown-item(href='/coffee') Кофе
+            li.nav-item.active
+                a.nav-link(href='/score')
+                    | Магазин
         .form-inline.my-2.my-lg-0
             if(user && user.username === 'admin')
                 button.btn.btn-outline-info.my-2.my-sm-0(type='submit', style="margin-right: 20px;", onclick="window.location.href='/admin'; return false;") Админка

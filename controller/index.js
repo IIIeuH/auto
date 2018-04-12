@@ -78,47 +78,6 @@ module.exports.score = async (req, res, next) => {
     res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: coffee, endCoffee: endCoffee});
 };
 
-module.exports.dop = async (req, res, next) => {
-    let data = await model.productDop();
-    let table = await model.productReady('dops');
-    if(!table.length){
-        table = [];
-    }else{
-        table = table[0].costs
-    }
-    res.render('dop', { title: 'Расходы', user: req.user, product: data, productReady: table});
-};
-
-module.exports.costs = async (req, res, next) => {
-    let data = await model.productMain();
-    let table = await model.productReady('costs');
-    if(!table.length){
-        table = [];
-    }else{
-        table = table[0].costs
-    }
-    res.render('costs', { title: 'Расходы', user: req.user, product: data, productReady: table});
-};
-
-module.exports.tea = async (req, res, next) => {
-    let data = await model.productReady('teas');
-    if(!data.length){
-        data = [];
-    }else{
-        data = data[0].costs
-    }
-    res.render('tea', { title: 'Чай', user: req.user, data: data});
-};
-module.exports.coffee = async (req, res, next) => {
-    let data = await model.productReady('coffees');
-    if(!data.length){
-        data = [];
-    }else{
-        data = data[0].costs
-    }
-    res.render('coffee', { title: 'Кофе', user: req.user, data: data});
-};
-
 module.exports.getJson = async (req, res, next) => {
     let data = await db.collection('clients').find({number: {$regex: req.query.s}}, {_id: 0, number: 1, marka:1}).toArray();
     console.log(data);
