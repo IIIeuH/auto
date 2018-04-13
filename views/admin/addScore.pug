@@ -12,7 +12,12 @@ block content
             .col-lg-3.col-md-3
                 .input-group.mb-3
                     .input-group-prepend
-                        label.input-group-text(for='addScorePrice') Цена
+                        label.input-group-text(for='addScorePrice') Закупочная цена
+                    input.form-control(type='number', id="addScoreSalePrice")
+            .col-lg-3.col-md-3
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='addScorePrice') Цена Продажи
                     input.form-control(type='number', id="addScorePrice")
             .col-lg-3.col-md-3
                 .input-group.mb-3
@@ -24,13 +29,15 @@ block content
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
                         th Наименовение
-                        th Цена
+                        th Цена закупочная
+                        th Цена продажи
                         th Кол-во
                         th Действие
                     tbody.addScore
                         each item in product
                             tr
                                 td.redactaddScore.nameAddScore(contenteditable="true")=item.name
+                                td.redactaddScore.salePriceAddScore(contenteditable="true")=item.salePrice
                                 td.redactaddScore.priceAddScore(contenteditable="true")=item.price
                                 td.redactaddScore.warehouseAddScore(contenteditable="true")=item.warehouse
                                 td

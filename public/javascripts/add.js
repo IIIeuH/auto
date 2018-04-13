@@ -106,8 +106,9 @@ function saveScore() {
     $(document).on('click', '#btnAddScore', function () {
         let data = {};
         data.name = $('#addScoreName').val();
-        data.price = $('#addScorePrice').val();
-        data.warehouse = $('#addScoreWarehouse').val();
+        data.price = +$('#addScorePrice').val();
+        data.salePrice = +$('#addScoreSalePrice').val();
+        data.warehouse = +$('#addScoreWarehouse').val();
         socket.emit('saveDopScore', data, function (res) {
             if(res.status === 200){
                 Snackbar.show({
@@ -119,6 +120,9 @@ function saveScore() {
                     '<tr>' +
                         '<td class="redactaddScore nameAddScore" contenteditable="true">' +
                             data.name +
+                        '</td>' +
+                        '<td class="redactaddScore salePriceAddScore" contenteditable="true">' +
+                            data.salePrice +
                         '</td>' +
                         '<td class="redactaddScore priceAddScore" contenteditable="true">' +
                             data.price +
@@ -148,6 +152,7 @@ function redAddScore() {
         let data = {};
         let query = $(this).parents('tr').find('button').data('id');
         data.name = $(this).parents('tr').find('.nameAddScore').text();
+        data.salePrice = +$(this).parents('tr').find('.salePriceAddScore').text();
         data.price = +$(this).parents('tr').find('.priceAddScore').text();
         data.warehouse = +$(this).parents('tr').find('.warehouseAddScore').text();
         socket.emit('redactAddScore', data, query, function (res) {

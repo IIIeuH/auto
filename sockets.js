@@ -120,7 +120,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashScore: price}}, {upsert: true})
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashScore: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -149,7 +149,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashDops: price}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashDops: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -179,7 +179,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCosts: price}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCosts: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -190,7 +190,7 @@ module.exports.init = function(socket){
     //Цена в кассе
     socket.on('cachbox', async (cb) =>{
         try{
-            let allPrice = await db.collection('boxes').aggregate([
+            let price = await db.collection('boxes').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
                 },
@@ -201,7 +201,13 @@ module.exports.init = function(socket){
                     $group: {_id: null, cash: {$sum: '$cash'}}
                 }
             ]).toArray();
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashCar: allPrice[0].cash}}, {upsert: true});
+            if(price.length){
+                price = price[0].cash;
+            }else{
+                price = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCar: price}}, {upsert: true});
+            await db.collection('cashes').updateOne({}, {$set: {cash: price}}, {upsert: true});
         }catch(err){
             cb({status:500, msg: 'Касса не обновлена!'});
         }
@@ -231,7 +237,13 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashTea: price}}, {upsert: true});
+
+            let dataPrice = 0;
+            data.forEach(function (item)  {
+                dataPrice += item.price * item.quantity;
+            });
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashTea: price}}, {upsert: true});
+            await db.collection('cashes').updateOne({}, {$inc: {cash: -dataPrice}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:200, msg: err});
@@ -262,7 +274,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashTea: price}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashTea: price}}, {upsert: true});
             cb({status:200, msg: 'Обновлено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -293,7 +305,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCoffee: price}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCoffee: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -324,7 +336,7 @@ module.exports.init = function(socket){
             }else{
                 price = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCoffee: price}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCoffee: price}}, {upsert: true});
             cb({status:200, msg: 'Обновлено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -344,7 +356,7 @@ module.exports.init = function(socket){
                     $project: {_id: 0, cash: {$multiply : [{$subtract: ['$startCoffee', '$endCoffee']}, 100]}}
                 }
             ]).toArray();
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), cashCoffeeMachine: price[0].cash}}, {upsert: true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCoffeeMachine: price[0].cash}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -553,7 +565,7 @@ module.exports.init = function(socket){
                 }else{
                     cashReal = 0;
                 }
-                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashPrepaid: cashReal}});
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}});
                 cb({status:200, msg: 'Добавлено!', cash: cash, id: id});
             }
         }catch(err){
@@ -579,7 +591,7 @@ module.exports.init = function(socket){
            }else{
                cashReal = 0;
            }
-           await db.collection('cashboxes').updateOne({date: query.date}, {$set: {cashPrepaid: cashReal}});
+           await db.collection('cashboxes').updateOne({date: query.date}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}});
            cb({status:200, msg: 'Удалено!'});
        }catch(err){
            cb({status:500, msg: err});
@@ -617,7 +629,7 @@ module.exports.init = function(socket){
             }else{
                 cashFine = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashFine: cashFine}}, {upsert:true});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashFine: cashFine}}, {upsert:true});
             cb({status:200, msg: 'Штраф добавлен!', id: id});
         }catch(err){
             cb({status:500, msg: err});
@@ -641,7 +653,7 @@ module.exports.init = function(socket){
             }else{
                 cashFine = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {cashFine: cashFine}});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashFine: cashFine}});
             cb({status:200, msg: 'Штраф удален!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -728,6 +740,21 @@ module.exports.init = function(socket){
     socket.on('saveDopScore', async (data, cb) => {
         try{
             let id = await db.collection('products').insert(data);
+            console.log(123);
+            let cash = await db.collection('products').aggregate([
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$salePrice', '$warehouse']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            if(cash.length){
+                cash = -cash[0].cash;
+            }else{
+                cash = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashStore: cash}}, {upsert: true});
             cb({status:200, msg: 'Добавлено!', id: id});
         }catch(err){
             cb({status:500, msg: err});
@@ -738,6 +765,20 @@ module.exports.init = function(socket){
     socket.on('delAddScore', async (data, cb) => {
         try{
             await db.collection('products').removeOne({_id: ObjectId(data)});
+            let cash = await db.collection('products').aggregate([
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$salePrice', '$warehouse']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            if(cash.length){
+                cash = -cash[0].cash;
+            }else{
+                cash = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashStore: cash}}, {upsert: true});
             cb({status:200, msg: 'Удалено!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -749,6 +790,20 @@ module.exports.init = function(socket){
         try{
             query = {_id: ObjectId(query)};
             await db.collection('products').updateOne(query, {$set: data});
+            let cash = await db.collection('products').aggregate([
+                {
+                    $project: {_id: 0, cash: {$sum: {$multiply: ['$salePrice', '$warehouse']}}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            if(cash.length){
+                cash = -cash[0].cash;
+            }else{
+                cash = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashStore: cash}}, {upsert: true});
             cb({status:200, msg: 'Обновлено!'});
         }catch(err){
             cb({status:500, msg: err});

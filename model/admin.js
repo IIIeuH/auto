@@ -37,6 +37,13 @@ module.exports.getCollectionsMonth = async function(persons){
     return await db.collection(persons).find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}}).toArray();
 };
 
+module.exports.mainPrice = async function(){
+    return await db.collection('cashboxes').find().toArray();
+};
+
+
+
+
 function getMonthDateRange(year, month) {
     let startDate = moment([year, month]);
     let endDate = moment(startDate).endOf('month');

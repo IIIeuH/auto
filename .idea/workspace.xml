@@ -2,34 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="61b8f1ed-4499-470a-bbcc-a23383bcffa3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/add.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/fine.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/prepaid.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/addCosts.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/addDops.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/addScore.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/cashbox.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/fine.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/prepaid.pug" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/admin/store.pug" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/coffee.pug" afterPath="$PROJECT_DIR$/views/admin/coffee.pug" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/costs.pug" afterPath="$PROJECT_DIR$/views/admin/costs.pug" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/dop.pug" afterPath="$PROJECT_DIR$/views/admin/dop.pug" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/tea.pug" afterPath="$PROJECT_DIR$/views/admin/tea.pug" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/admin.js" afterPath="$PROJECT_DIR$/controller/admin.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controller/index.js" afterPath="$PROJECT_DIR$/controller/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/admin.js" afterPath="$PROJECT_DIR$/model/admin.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/index.js" afterPath="$PROJECT_DIR$/model/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/admin.js" afterPath="$PROJECT_DIR$/public/javascripts/admin.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/main.js" afterPath="$PROJECT_DIR$/public/javascripts/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/users.js" afterPath="$PROJECT_DIR$/routes/users.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/add.js" afterPath="$PROJECT_DIR$/public/javascripts/add.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sockets.js" afterPath="$PROJECT_DIR$/sockets.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/dopservices.pug" afterPath="$PROJECT_DIR$/views/admin/dopservices.pug" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/addScore.pug" afterPath="$PROJECT_DIR$/views/admin/addScore.pug" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/cashbox.pug" afterPath="$PROJECT_DIR$/views/admin/cashbox.pug" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/navbar.pug" afterPath="$PROJECT_DIR$/views/admin/navbar.pug" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/navbar.pug" afterPath="$PROJECT_DIR$/views/navbar.pug" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -43,61 +22,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="navbar.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/navbar.pug">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="62" lean-forward="true" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/users.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="18" column="28" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="84" column="35" lean-forward="true" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="add.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/add.js">
+      <file leaf-file-name="admin.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/controller/admin.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="231">
-              <caret line="117" column="38" lean-forward="true" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
+              <caret line="92" column="40" lean-forward="true" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addScore.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/addScore.pug">
+      <file leaf-file-name="cashbox.pug" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/admin/cashbox.pug">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="32" column="85" lean-forward="false" selection-start-line="32" selection-start-column="63" selection-end-line="32" selection-end-column="85" />
+            <state relative-caret-position="388">
+              <caret line="27" column="48" lean-forward="false" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addDops.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/addDops.pug">
+      <file leaf-file-name="admin.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/admin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="26" column="60" lean-forward="false" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="60" />
+            <state relative-caret-position="267">
+              <caret line="40" column="49" lean-forward="false" selection-start-line="40" selection-start-column="49" selection-end-line="40" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -106,41 +55,8 @@
       <file leaf-file-name="sockets.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sockets.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="747" column="60" lean-forward="true" selection-start-line="747" selection-start-column="60" selection-end-line="747" selection-end-column="60" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="admin.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/controller/admin.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="store.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/store.pug">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding>
-                <marker date="1523529513780" expanded="true" signature="21:51" ph="..." />
-                <marker date="1523529513780" expanded="true" signature="50:51" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dop.pug" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/dop.pug">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="11" column="25" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="23" selection-end-column="101" />
+            <state relative-caret-position="329">
+              <caret line="807" column="20" lean-forward="true" selection-start-line="807" selection-start-column="20" selection-end-line="807" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -158,9 +74,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>saveFieldService</find>
-      <find>price</find>
-      <find>distinc</find>
       <find>aggre</find>
       <find>.price</find>
       <find>serviceShow</find>
@@ -188,6 +101,9 @@
       <find>saveProductMain</find>
       <find>redactaddCosts</find>
       <find>redactAddCosts</find>
+      <find>multi</find>
+      <find>cashCar</find>
+      <find>cashboxes</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -221,11 +137,9 @@
         <option value="$PROJECT_DIR$/views/admin/prepaid.pug" />
         <option value="$PROJECT_DIR$/public/javascripts/prepaid.js" />
         <option value="$PROJECT_DIR$/public/javascripts/fine.js" />
-        <option value="$PROJECT_DIR$/views/admin/cashbox.pug" />
         <option value="$PROJECT_DIR$/views/navbar.pug" />
         <option value="$PROJECT_DIR$/routes/index.js" />
         <option value="$PROJECT_DIR$/controller/index.js" />
-        <option value="$PROJECT_DIR$/model/admin.js" />
         <option value="$PROJECT_DIR$/views/admin/coffee.pug" />
         <option value="$PROJECT_DIR$/views/admin/costs.pug" />
         <option value="$PROJECT_DIR$/views/admin/dop.pug" />
@@ -240,13 +154,15 @@
         <option value="$PROJECT_DIR$/views/admin/fine.pug" />
         <option value="$PROJECT_DIR$/views/admin/addCosts.pug" />
         <option value="$PROJECT_DIR$/views/admin/addDops.pug" />
+        <option value="$PROJECT_DIR$/routes/users.js" />
+        <option value="$PROJECT_DIR$/views/admin/sore.pug" />
         <option value="$PROJECT_DIR$/views/admin/addScore.pug" />
-        <option value="$PROJECT_DIR$/sockets.js" />
         <option value="$PROJECT_DIR$/public/javascripts/add.js" />
         <option value="$PROJECT_DIR$/views/admin/navbar.pug" />
-        <option value="$PROJECT_DIR$/routes/users.js" />
+        <option value="$PROJECT_DIR$/model/admin.js" />
+        <option value="$PROJECT_DIR$/sockets.js" />
         <option value="$PROJECT_DIR$/controller/admin.js" />
-        <option value="$PROJECT_DIR$/views/admin/sore.pug" />
+        <option value="$PROJECT_DIR$/views/admin/cashbox.pug" />
       </list>
     </option>
   </component>
@@ -267,8 +183,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="70" />
-    <option name="y" value="48" />
+    <option name="x" value="60" />
+    <option name="y" value="45" />
     <option name="width" value="1718" />
     <option name="height" value="953" />
   </component>
@@ -400,17 +316,18 @@
       <workItem from="1522824473613" duration="30000" />
       <workItem from="1522824834563" duration="6986000" />
       <workItem from="1522923496376" duration="25565000" />
-      <workItem from="1523256283579" duration="55257000" />
+      <workItem from="1523256283579" duration="62963000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="238284000" />
+    <option name="totallyTimeSpent" value="245990000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="70" y="48" width="1718" height="953" extended-state="0" />
+    <frame x="60" y="45" width="1718" height="953" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19646017" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="516" y="232" width="343" height="353" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19646017" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="516" y="232" width="343" height="353" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32729626" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -579,14 +496,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/admin/cashbox.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="19" lean-forward="true" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/prepaid.pug">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -677,14 +586,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/admin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/add.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -765,42 +666,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sockets.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="747" column="60" lean-forward="true" selection-start-line="747" selection-start-column="60" selection-end-line="747" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="84" column="35" lean-forward="true" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/admin/addScore.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="32" column="85" lean-forward="false" selection-start-line="32" selection-start-column="63" selection-end-line="32" selection-end-column="85" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/add.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="117" column="38" lean-forward="true" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/admin/navbar.pug">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="62" lean-forward="true" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="62" />
           <folding />
         </state>
       </provider>
@@ -824,18 +693,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/admin/addScore.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="568">
+          <caret line="39" column="67" lean-forward="false" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/add.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="167" column="40" lean-forward="true" selection-start-line="167" selection-start-column="40" selection-end-line="167" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/admin/navbar.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="27" column="52" lean-forward="true" selection-start-line="27" selection-start-column="52" selection-end-line="27" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="18" column="28" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
+        <state relative-caret-position="234">
+          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sockets.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="807" column="20" lean-forward="true" selection-start-line="807" selection-start-column="20" selection-end-line="807" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/admin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="40" column="49" lean-forward="false" selection-start-line="40" selection-start-column="49" selection-end-line="40" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controller/admin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+        <state relative-caret-position="231">
+          <caret line="92" column="40" lean-forward="true" selection-start-line="92" selection-start-column="40" selection-end-line="92" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/admin/cashbox.pug">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="388">
+          <caret line="27" column="48" lean-forward="false" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
           <folding />
         </state>
       </provider>

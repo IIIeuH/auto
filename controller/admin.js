@@ -90,8 +90,8 @@ module.exports.fine = async function(req, res, next) {
 };
 
 module.exports.cashbox = async function(req, res, next) {
-    let cashbox = await model.getCollectionsMonth('cashboxes');
-    res.render('admin/cashbox', {title: "Касса", cashbox:cashbox})
+    let price = await model.mainPrice();
+    res.render('admin/cashbox', {title: "Касса", price: price})
 };
 
 //add

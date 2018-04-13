@@ -7,7 +7,27 @@ block content
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
                         th Дата
-                        th Магазин
+                        th Магазин(доход)
+                        th Магазин(расход)
                         th Мойка(услуги)
-                        th Действие
+                        th Основные расходы
+                        th Дополнительные расходы
+                        th Чай(расходы)
+                        th Кофе(расходы)
+                        th Кофемашина(доход)
+                        th Авансы
+                        th Штрафы
                     tbody.cashbox
+                        each item in price
+                            tr
+                                td=item.date
+                                td=item.cashScore
+                                td=item.cashStore
+                                td=item.cashCar
+                                td=item.cashCosts
+                                td=item.cashDops
+                                td=item.cashTea
+                                td=item.cashCoffee
+                                td=item.cashCoffeeMachine
+                                td=item.cashPrepaid
+                                td=item.cashFine
