@@ -1,13 +1,8 @@
 'use strict';
 var socket = io.connect('http://localhost:3000');
 $(function(){
-    socket.on('connect', function() {
-        console.log('Connected');
-    });
     $('.services-admin-wrap').hide();
     $('.services-dop-admin-wrap').hide();
-    savePersons();
-    refactorFio();
     saveMarks();
     refactorMarks();
     saveClients();
@@ -48,51 +43,7 @@ $(function(){
     addTypeAuto('#addDopServices', '#typeDopAuto', 'dopservices', 'service-dop-admin-wrap', 'removeDopServices', 'look-dop-service', 'addDopFiled', '.services-dop-wrap');
 });
 
-//////////////////////////////////////ПЕРСОНАЛ///////////////////////////
-//Сохранение персонала
-function savePersons(){
-    var btn = $('#addPersons');
-    btn.click(function(){
-        var fio = $('#fio').val();
-        socket.emit('savePersons', {fio: fio}, function (res) {
-            if(res.status === 200){
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-                addPersonsInTable(fio);
-            }else{
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-            }
-        });
-    });
-}
 
-//После нажатие на кнопку сохранить добавить в табоицу
-function addPersonsInTable(fio){
-    var el = $('.persons');
-    el.append(
-        '<tr><td>'+fio+'</td></tr>'
-    )
-}
-
-//Изменение текста
-function refactorFio() {
-    $(document).on('blur', '.ref', function(){
-        socket.emit('updatePersons', {_id: $(this).data('id'), fio: $(this).text()}, function (res) {
-            Snackbar.show({
-                text: res.msg,
-                pos: 'bottom-right',
-                actionText: null
-            });
-        });
-    });
-}
 
 //////////////////////////////////////МАРКИ///////////////////////////
 //Сохранение марки

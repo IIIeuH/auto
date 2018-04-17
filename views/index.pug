@@ -3,20 +3,22 @@ extends layout
 block content
   .container-fluid
     .row
-      .col-sm-3
-        .input-group.mb-3
-          .input-group-prepend
-            span.input-group-text Номер
-          input#number.form-control.valid-btn(type='text', aria-label='Default', aria-describedby='number')
-      .col-sm-3
-        .input-group.mb-3
+      .col-md
+        .form-group
+          select#administrator.custom-select.valid-btn
+            option Администратор
+            each item in administrators
+              option(value=item.fio)=item.fio
+      .col-md
+        .form-group
+          input#number.form-control.valid-btn(type='text', placeholder="Номер")
+      .col-md
+        .form-group
           include select-marka
-      .col-sm-3
-        .input-group.mb-3
-          .input-group-prepend
-            label.input-group-text(for='washer') Мойщик
+      .col-md
+        .form-group
           select#washer.custom-select.valid-btn
-            option
+            option Мойщик
             each item in persons
               option(value=item.fio)=item.fio
       .col-sm-3

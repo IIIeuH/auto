@@ -565,7 +565,7 @@ module.exports.init = function(socket){
                 }else{
                     cashReal = 0;
                 }
-                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}});
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}}, {upsert: true});
                 cb({status:200, msg: 'Добавлено!', cash: cash, id: id});
             }
         }catch(err){
@@ -591,7 +591,7 @@ module.exports.init = function(socket){
            }else{
                cashReal = 0;
            }
-           await db.collection('cashboxes').updateOne({date: query.date}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}});
+           await db.collection('cashboxes').updateOne({date: query.date}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}}, {upsert: true});
            cb({status:200, msg: 'Удалено!'});
        }catch(err){
            cb({status:500, msg: err});
@@ -653,7 +653,7 @@ module.exports.init = function(socket){
             }else{
                 cashFine = 0;
             }
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashFine: cashFine}});
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashFine: cashFine}}, {upsert: true});
             cb({status:200, msg: 'Штраф удален!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -804,6 +804,36 @@ module.exports.init = function(socket){
                 cash = 0;
             }
             await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashStore: cash}}, {upsert: true});
+            cb({status:200, msg: 'Обновлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //del Persons
+    socket.on('delPersons', async (data, cb) => {
+        try{
+            await db.collection('persons').removeOne({_id: ObjectId(data)});
+            cb({status:200, msg: 'Удалено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //administrator Persons
+    socket.on('administrPersons', async (data, cb) => {
+        try{
+            await db.collection('persons').updateOne({_id: ObjectId(data)}, {$set: {administrator: true}});
+            cb({status:200, msg: 'Обновлено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //del administrator Persons
+    socket.on('delAdministrPersons', async (data, cb) => {
+        try{
+            await db.collection('persons').updateOne({_id: ObjectId(data)}, {$set: {administrator: false}});
             cb({status:200, msg: 'Обновлено!'});
         }catch(err){
             cb({status:500, msg: err});

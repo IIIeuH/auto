@@ -228,6 +228,7 @@ function save(){
         data.mainTime = data.time;
         data.dopTime = 0;
         data.dopPrice = 0;
+        data.administrator = $('#administrator').val();
         socket.emit('saveServices', data, function (res) {
             if(res.status === 200){
                 Snackbar.show({
@@ -305,7 +306,7 @@ function saveDop(tr, number, car, minutes){
         });
         query.number = number;
         query.car = car;
-        query.date = moment().format('DD.MM.YYYY');
+        query.date = moment().format;
         let dop = tr.find('.dop');
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');

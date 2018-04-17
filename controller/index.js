@@ -44,7 +44,8 @@ module.exports.box = async (req, res, next) => {
     let data = await model.data(req.query.number);
     let persons = await model.getCollection('persons', {_id: 0});
     let marks = await model.getCollection('marks', {_id: 0});
-    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons, marks:marks});
+    let administrators = await model.administrator();
+    res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons, marks:marks, administrators:administrators});
 };
 
 module.exports.prepaid = async (req, res, next) => {

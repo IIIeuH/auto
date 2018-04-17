@@ -30,6 +30,15 @@ module.exports.getCollection = async(collection, params) => {
     }
 };
 
+
+module.exports.administrator = async() => {
+    try {
+        return await db.collection('persons').find({administrator: true}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
 module.exports.time = async(number) => {
     try {
         return await db.collection('boxes').aggregate([

@@ -14,7 +14,18 @@ block content
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
                         th ФИО
+                        th Действие
                     tbody.persons
                         each item in persons
-                            tr
-                                td.ref(contenteditable="true", data-id=item._id)=item.fio
+                            if item.administrator
+                                tr.table-info
+                                    td.ref(contenteditable="true", data-id=item._id)=item.fio
+                                    td
+                                        button.btn.btn-outline-info.mr-5.administrPersons(type='button', data-id=item._id) Администратор
+                                        button.btn.btn-outline-dark.delPersons(type='button', data-id=item._id) Удалить
+                            else
+                                tr
+                                    td.ref(contenteditable="true", data-id=item._id)=item.fio
+                                    td
+                                        button.btn.btn-outline-info.mr-5.administrPersons(type='button', data-id=item._id) Администратор
+                                        button.btn.btn-outline-dark.delPersons(type='button', data-id=item._id) Удалить
