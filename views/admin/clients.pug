@@ -24,6 +24,11 @@ block content
             .col-md
                 .input-group.mb-3
                     .input-group-prepend
+                        span.input-group-text Дата рождения
+                    input#clients-birthDay.form-control(type='text')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
                         span.input-group-text Телефон
                     input#clients-phone.form-control(type='text', aria-label='Default')
         .row
@@ -36,6 +41,7 @@ block content
                         th Номер
                         th Марка
                         th ФИО
+                        th День рождения
                         th Телефон
                     tbody.clietns
                         each item in clients
@@ -43,4 +49,5 @@ block content
                                 td.refClients.number(contenteditable="true", data-id=item._id)=item.number
                                 td.refClients.marka(contenteditable="true", data-id=item._id)=item.marka
                                 td.refClients.fio(contenteditable="true", data-id=item._id)=item.fio
+                                td.refClients.birthday(contenteditable="true", data-id=item._id)=item.birthday
                                 td.refClients.phone(contenteditable="true", data-id=item._id)=item.phone

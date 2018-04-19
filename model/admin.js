@@ -37,10 +37,30 @@ module.exports.getCollectionsMonth = async function(persons){
     return await db.collection(persons).find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}}).toArray();
 };
 
+module.exports.getGraphicJob = async function(){
+    let date = getMonthDateRange(moment().year(), moment().month());
+    return await db.collection('boxes').find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1}).toArray();
+};
+
 module.exports.mainPrice = async function(){
     return await db.collection('cashboxes').find().toArray();
 };
 
+module.exports.administrator = async() => {
+    try {
+        return await db.collection('persons').find({administrator: true}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
+module.exports.washers = async() => {
+    try {
+        return await db.collection('persons').find({$or: [{administrator: false}, {administrator: {$exists: false}}]}).toArray();
+    }catch(err){
+        return err;
+    }
+};
 
 
 

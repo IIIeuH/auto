@@ -4,7 +4,9 @@ $(function() {
     getCash();
     prepaidTo();
     delPrepaid();
+    prepaidToDay();
     datePrep();
+    validBtnPrepaid();
 });
 
 function getCash() {
@@ -38,6 +40,42 @@ function prepaidTo(){
                     '</td>' +
                     '<td class="pricePrepTable">' +
                     Math.round(price*30/100)+
+                    '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn btn-outline-dark del-prepaid" id="'+res.id.insertedIds[0]+'">Удалить</button>'+
+                    '</td>' +
+                    '</tr>'
+                );
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        })
+    })
+}
+
+function prepaidToDay(){
+    $(document).on('click', '#prepaidToDay', function () {
+        socket.emit('cashPrepaidDay', $('#personsPrepaid').val(), function (res) {
+            if(res.status === 200){
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                $('.prepaid').append(
+                    '<tr class="tr-prep">' +
+                    '<td class="date-prep">' +
+                    moment().format('DD.MM.YYYY') +
+                    '</td>' +
+                    '<td>' +
+                    $('#personsPrepaid').val() +
+                    '</td>' +
+                    '<td class="pricePrepTable">' +
+                    400+
                     '</td>' +
                     '<td>' +
                     '<button type="button" class="btn btn-outline-dark del-prepaid" id="'+res.id.insertedIds[0]+'">Удалить</button>'+
@@ -108,5 +146,22 @@ function datePrep() {
                 });
             }
         })
+    })
+}
+
+//Неактивные кнопки выдать аванс и выдать ежедневный аванс
+function validBtnPrepaid(){
+    let btn1 = $('#prepaidTo');
+    let btn2 = $('#prepaidToDay');
+    btn1.prop('disabled', true);
+    btn2.prop('disabled', true);
+    $(document).on('change', '#personsPrepaid', function () {
+        if($(this).val() !== ''){
+            btn1.prop('disabled', false);
+            btn2.prop('disabled', false);
+        }else{
+            btn1.prop('disabled', true);
+            btn2.prop('disabled', true);
+        }
     })
 }

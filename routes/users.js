@@ -20,5 +20,6 @@ router.get('/store',  ctrl.store);
 router.get('/add/costs',  ctrl.addCosts);
 router.get('/add/dop',  ctrl.addDop);
 router.get('/add/score',  ctrl.addScore);
+router.get('/graphicjob',  ctrl.graphicjob);
 
 module.exports = router;

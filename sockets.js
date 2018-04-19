@@ -573,6 +573,32 @@ module.exports.init = function(socket){
         }
     });
 
+
+    //При клике на кнопку выдать ежедневный аванс
+    socket.on('cashPrepaidDay', async (person, cb) => {
+        try{
+            let cash = 400;
+            let id = await db.collection('prepaides').insert({person: person, date: moment().format('DD.MM.YYYY'), dateD: new Date(), prepaid: Math.round(cash)});
+            let cashReal = await db.collection('prepaides').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$prepaid'}}
+                }
+            ]).toArray();
+            if(cashReal.length){
+                cashReal = -cashReal[0].cash;
+            }else{
+                cashReal = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrepaid: cashReal}}, {upsert: true});
+            cb({status:200, msg: 'Добавлено!', cash: cash, id: id});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
     //Удаление Аванс
     socket.on('delPrepaid', async (query, cb) => {
        try{
@@ -839,4 +865,18 @@ module.exports.init = function(socket){
             cb({status:500, msg: err});
         }
     });
+
+
+    //График работ по дате
+    socket.on('getJobDate', async (startDate, endDate, cb) => {
+        try{
+            let start = moment(startDate).toDate();
+            let end =  moment(endDate).toDate();
+            let data = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1}).toArray();
+            cb({status:200, msg: 'Найдено!', arr: data});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
 };

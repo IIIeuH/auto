@@ -43,7 +43,7 @@ module.exports.time = async(number) => {
     try {
         return await db.collection('boxes').aggregate([
             {
-                $match: {box: number, date: moment().format('DD.MM.YYYY')}
+                $match: {box: number, date: moment().format('DD.MM.YYYY'), status: {$ne: "ready"}}
             },
             {
                 $project: {_id: 0, time: {$sum: ['$mainTime', '$dopTime']}}

@@ -1,0 +1,58 @@
+extends layout
+
+block content
+    .container-fluid
+        .row(style="margin-top:20px")
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDateJob.form-control(type='date')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDateJob.form-control(type='date')
+            .col-md
+                button.btn.btn-outline-info(type='button', id="lookJobDate") Показать
+        .row
+            .col-md
+                h3.h3 Фильтры
+        .row
+            .col-md
+
+                .form-group
+                    label Администратор
+                    select.searchAdmin.custom-select.valid-btn
+                        option
+                        each item in administrators
+                            option(value=item.fio)=item.fio
+            .col-md
+                .form-group
+                    label Мойщик
+                    select.searchWasher.custom-select.valid-btn
+                        option
+                        each item in persons
+                            option(value=item.fio)=item.fio
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Дата
+                        th Администратор
+                        th Мойщик
+                        th Услуги
+                        th Цена за услуги
+                        th Доп. услуги
+                        th Цена за доп. услуги
+                    tbody.graphicJob
+                        each item in personsJob
+                            tr
+                                td=item.date
+                                td.fieldSearchAdmin=item.administrator
+                                td.fieldSearchWasher=item.washer
+                                td=item.services
+                                td=item.mainPrice
+                                td=item.dopServices
+                                td=item.dopPrice
+

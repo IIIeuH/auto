@@ -110,4 +110,11 @@ module.exports.addScore = async function(req, res, next) {
     res.render('admin/addScore', {title: "Добавить товар", product:product})
 };
 
+module.exports.graphicjob = async function(req, res, next) {
+    let personsJob = await model.getGraphicJob();
+    let administrators = await model.administrator();
+    let persons = await model.washers();
+    res.render('admin/graphicjob', {title: "График работ", personsJob:personsJob, administrators:administrators, persons:persons})
+};
+
 
