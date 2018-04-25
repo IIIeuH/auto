@@ -22,6 +22,9 @@ $(function(){
     dopService();
     redactService();
     autoNumber();
+    $(document).on('click', '#print', function () {
+        window.print();
+    });
 });
 
 
@@ -229,65 +232,129 @@ function save(){
         data.dopTime = 0;
         data.dopPrice = 0;
         data.administrator = $('#administrator').val();
-        socket.emit('saveServices', data, function (res) {
-            if(res.status === 200){
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-                tbody.append('' +
-                    '<tr class="str" data-typeauto="'+data.typeAuto+'">' +
-                    '<td class="time" data-minutes="' +data.time +'">' +
-                    getTimeFromMins(data.time)  +
-                    '</td>' +
-                    '<td class="car">' +
-                    data.car +
-                    '</td>' +
-                    '<td class="number">' +
-                    data.number +
-                    '</td>' +
-                    '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
-                    data.services +
-                    '</td>' +
-                    '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
-                    '</td>' +
-                    '<td>' +
-                    data.washer +
-                    '</td>' +
-                    '<td class="price">' +
-                    data.price +
-                    '</td>' +
-                    '<td class="d-flex justify-content-center">\n' +
-                    '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
-                    '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
-                    '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
-                    '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
-                    '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
-                    '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
-                    '</td>' +
-                    '</i>' +
-                    '</td>' +
-                    '</tr>'
-                );
-                $('#modalService').modal('hide');
-                socket.emit('cachbox',function (res) {
-                    if(res.status === 500){
-                        Snackbar.show({
-                            text: res.msg,
-                            pos: 'bottom-right',
-                            actionText: null
-                        });
-                    }
-                });
-            }else{
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-            }
-        });
+        if($('#vip').prop('checked')){
+            data.vip = true;
+            socket.emit('saveServices', data, function (res) {
+                if(res.status === 200){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    tbody.append('' +
+                        '<tr class="str table-warning" data-typeauto="'+data.typeAuto+'" data-vip="1" data-id="'+res.id+'">' +
+                        '<td class="time" data-minutes="' +data.time +'">' +
+                        getTimeFromMins(data.time)  +
+                        '</td>' +
+                        '<td class="car">' +
+                        data.car +
+                        '</td>' +
+                        '<td class="number">' +
+                        data.number +
+                        '</td>' +
+                        '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
+                        data.services +
+                        '</td>' +
+                        '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
+                        '</td>' +
+                        '<td>' +
+                        data.washer +
+                        '</td>' +
+                        '<td class="price">' +
+                        data.price +
+                        '</td>' +
+                        '<td class="d-flex justify-content-center">\n' +
+                        '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
+                        '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
+                        '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-danger status-await">Отмена</button>\n' +
+                        '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
+                        '</td>' +
+                        '</i>' +
+                        '</td>' +
+                        '</tr>'
+                    );
+                    $('#modalService').modal('hide');
+                    socket.emit('cachbox',function (res) {
+                        if(res.status === 500){
+                            Snackbar.show({
+                                text: res.msg,
+                                pos: 'bottom-right',
+                                actionText: null
+                            });
+                        }
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            data.vip = false;
+            socket.emit('saveServices', data, function (res) {
+                if(res.status === 200){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    tbody.append('' +
+                        '<tr class="str" data-typeauto="'+data.typeAuto+'" data-id="'+res.id+'">' +
+                        '<td class="time" data-minutes="' +data.time +'">' +
+                        getTimeFromMins(data.time)  +
+                        '</td>' +
+                        '<td class="car">' +
+                        data.car +
+                        '</td>' +
+                        '<td class="number">' +
+                        data.number +
+                        '</td>' +
+                        '<td class="service-main" data-price="'+ data.mainPrice +'" data-time="'+ data.mainTime +'">' +
+                        data.services +
+                        '</td>' +
+                        '<td class="dop" data-price="'+ 0 +'" data-time="'+ 0 +'">' +
+                        '</td>' +
+                        '<td>' +
+                        data.washer +
+                        '</td>' +
+                        '<td class="price">' +
+                        data.price +
+                        '</td>' +
+                        '<td class="d-flex justify-content-center">\n' +
+                        '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
+                        '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
+                        '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
+                        '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
+                        '</td>' +
+                        '</i>' +
+                        '</td>' +
+                        '</tr>'
+                    );
+                    $('#modalService').modal('hide');
+                    socket.emit('cachbox',function (res) {
+                        if(res.status === 500){
+                            Snackbar.show({
+                                text: res.msg,
+                                pos: 'bottom-right',
+                                actionText: null
+                            });
+                        }
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }
     });
 }
 
@@ -307,6 +374,9 @@ function saveDop(tr, number, car, minutes){
         query.number = number;
         query.car = car;
         query.date = moment().format;
+        if($('#vip').prop('checked')){
+            data.vip = true;
+        }
         let dop = tr.find('.dop');
         let oldTime = tr.find('.time');
         let oldPrice = tr.find('.price');
@@ -359,12 +429,14 @@ function saveRedact(that, number, car, minutes){
     });
     query.number = number;
     query.car = car;
+    if($('#vip').prop('checked')){
+        data.vip = true;
+    }
     let serviceMain = that.parents('tr').find('.service-main');
     let oldTime = that.parents('tr').find('.time');
     let oldPrice = that.parents('tr').find('.price');
     let p = data.price + that.parents('tr').find('.dop').data('price');
     let k = data.time + that.parents('tr').find('.dop').data('time');
-    console.log(that.parents('tr').find('.dop'));
     socket.emit('saveRedactServices', data, query, function (res) {
         if(res.status === 200){
             Snackbar.show({
@@ -503,24 +575,56 @@ function statusBtnWash(){
         var that = $(this);
         var p = confirm('Загнать машину ' + marka + ' с номером ' + number +' в бокс ' + box + '?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
-                if(res.status === 200) {
-                    Snackbar.show({
-                        text: res.msg,
-                        pos: 'bottom-right',
-                        actionText: null
-                    });
-                    that.parents('.str').data("status", "wash");
-                    statusColor();
-                    statusBox();
-                }else{
-                    Snackbar.show({
-                        text: res.msg,
-                        pos: 'bottom-right',
-                        actionText: null
-                    });
-                }
-            });
+            if(that.parents('tr').data('vip')){
+                socket.emit('chackCashVIP', that.parents('.str').find('.number').text(), that.parents('.str').find('.car').text(), that.parents('.str').find('.price').text(),function (res) {
+                    if(res.status === 200) {
+                        socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
+                            if(res.status === 200) {
+                                Snackbar.show({
+                                    text: res.msg,
+                                    pos: 'bottom-right',
+                                    actionText: null
+                                });
+                                that.parents('.str').data("status", "wash");
+                                statusColor();
+                                statusBox();
+                            }else{
+                                Snackbar.show({
+                                    text: res.msg,
+                                    pos: 'bottom-right',
+                                    actionText: null
+                                });
+                            }
+                        });
+                    }else{
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-center',
+                            actionText: null
+                        });
+                        return false
+                    }
+                });
+            }else{
+                socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
+                    if(res.status === 200) {
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                        that.parents('.str').data("status", "wash");
+                        statusColor();
+                        statusBox();
+                    }else{
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }
+                });
+            }
         }
     });
 }
@@ -534,24 +638,60 @@ function statusBtnReady(){
         var that = $(this);
         var p = confirm('Машина ' + marka + ' с номером ' + number +' готова?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
-                if(res.status === 200) {
-                    Snackbar.show({
-                        text: res.msg,
-                        pos: 'bottom-right',
-                        actionText: null
-                    });
-                    that.parents('.str').data('status', 'ready');
-                    statusColor();
-                    statusBox();
-                }else{
-                    Snackbar.show({
-                        text: res.msg,
-                        pos: 'bottom-right',
-                        actionText: null
-                    });
-                }
-            });
+            if(that.parents('tr').data('vip')){
+                socket.emit('cashVIP',  that.parents('.str').find('.number').text(), that.parents('.str').find('.car').text(), that.parents('.str').find('.price').text(), function (res) {
+                    if(res.status === 200) {
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                        socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
+                            if(res.status === 200) {
+                                Snackbar.show({
+                                    text: res.msg,
+                                    pos: 'bottom-right',
+                                    actionText: null
+                                });
+                            }else{
+                                Snackbar.show({
+                                    text: res.msg,
+                                    pos: 'bottom-right',
+                                    actionText: null
+                                });
+                            }
+                        });
+                        that.parents('.str').data('status', 'ready');
+                        statusColor();
+                        statusBox();
+                    }else{
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-center',
+                            actionText: null
+                        });
+                    }
+                });
+            }else{
+                socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
+                    if(res.status === 200) {
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                        that.parents('.str').data('status', 'ready');
+                        statusColor();
+                        statusBox();
+                    }else{
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }
+                });
+            }
         }
     });
 }
@@ -703,6 +843,19 @@ function autoNumber() {
                 socket.emit('autocomplete', ui.item.value, function (data) {
                     if(data.length){
                         $('#marka').val(data[0].marka);
+                        if(data[0].balance){
+                            Snackbar.show({
+                                text: 'Баланс клиента составляет: ' + data[0].balance + ' руб.',
+                                pos: 'top-center',
+                                actionText: 'OK',
+                                duration: null
+                            });
+                            $('#vip').trigger('click');
+                            $('.vip').append('<div class="alert alert-warning" role="alert"> VIP - клиент</div>')
+                        }else{
+                            $('#vip').trigger('click');
+                            $('.vip').empty();
+                        }
                     }
                 });
             }

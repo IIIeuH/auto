@@ -117,4 +117,10 @@ module.exports.graphicjob = async function(req, res, next) {
     res.render('admin/graphicjob', {title: "График работ", personsJob:personsJob, administrators:administrators, persons:persons})
 };
 
+module.exports.encashment = async function(req, res, next) {
+    let encahment = await model.getEncashment();
+    console.log(encahment);
+    res.render('admin/encashment', {title: "Инкассация", encahment: encahment})
+};
+
 

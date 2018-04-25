@@ -5,32 +5,25 @@ block content
         .row
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text Номер машины
-                    input#clients-number-car.form-control(type='text', aria-label='Default')
+                    input#clients-number-car.form-control(type='text', placeholder="Номер машины")
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        label.input-group-text(for='clients-marka') Марка
                     select#clients-marka.custom-select
-                        option(selected='')
+                        option(selected='') Марка
                         each item in marks
                             option(value=item.marka)=item.marka
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text ФИО
-                    input#clients-fio.form-control(type='text', aria-label='Default')
+                    input#clients-fio.form-control(type='text', placeholder="ФИО")
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text Дата рождения
-                    input#clients-birthDay.form-control(type='text')
+                    input#clients-birthDay.form-control(type='text', placeholder="Дата рождения")
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text Телефон
-                    input#clients-phone.form-control(type='text', aria-label='Default')
+                    input#clients-phone.form-control(type='text', placeholder="Телефон")
+            .col-md
+                .input-group.mb-3
+                    input#clients-balance.form-control(type='text', placeholder="Баланс")
         .row
             .col-md
                 button.btn.btn-outline-info(type='button', id="addClients") Добавить
@@ -43,6 +36,7 @@ block content
                         th ФИО
                         th День рождения
                         th Телефон
+                        th Баланс
                     tbody.clietns
                         each item in clients
                             tr
@@ -51,3 +45,4 @@ block content
                                 td.refClients.fio(contenteditable="true", data-id=item._id)=item.fio
                                 td.refClients.birthday(contenteditable="true", data-id=item._id)=item.birthday
                                 td.refClients.phone(contenteditable="true", data-id=item._id)=item.phone
+                                td.refClients.balance(contenteditable="true", data-id=item._id)=item.balance

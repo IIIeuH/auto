@@ -16,7 +16,8 @@ function saveClients(){
             marka :$('#clients-marka').val(),
             fio : $('#clients-fio').val(),
             phone : $('#clients-phone').val(),
-            birthday : $('#clients-birthDay').val()
+            birthday : $('#clients-birthDay').val(),
+            balance : +$('#clients-balance').val()
         };
         socket.emit('saveClients', data, function (res) {
             if(res.status === 200){
@@ -46,7 +47,8 @@ function addClietnsInTable(data){
         '<td>'+data.marka+'</td>'+
         '<td>'+data.fio+'</td>'+
         '<td>'+data.birthday+'</td>'+
-        '<td>'+data.phone+'</td></tr>'
+        '<td>'+data.phone+'</td></tr>' +
+        '<td>'+data.balance+'</td></tr>'
     )
 }
 
@@ -58,7 +60,8 @@ function refactorClietns() {
             marka :$(this).parents('tr').find('.marka').text(),
             fio : $(this).parents('tr').find('.fio').text(),
             birthday : $(this).parents('tr').find('.birthday').text(),
-            phone : $(this).parents('tr').find('.phone').text()
+            phone : $(this).parents('tr').find('.phone').text(),
+            balance : +$(this).parents('tr').find('.balance').text()
         };
         socket.emit('updateClients', $(this).data('id'), data, function (res) {
             Snackbar.show({

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    .container-fluid
+        .row(style="margin-top:20px")
+            .col-md
+                .input-group.mb-3
+                    input#encashment.form-control(type='number', placeholder="Сумма")
+                    button.btn.btn-outline-info.ml-2(type="button", id="saveEncashment") Сохранить
+        .row(style="margin-top:20px")
+            .col-md
+                table.table.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Дата
+                        th Сумма инкассации
+                    tbody.encashment
+                        each item in encahment
+                            tr.encash
+                                td=item.date
+                                td=item.encashment

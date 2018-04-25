@@ -62,6 +62,15 @@ module.exports.washers = async() => {
     }
 };
 
+module.exports.getEncashment = async() => {
+    try {
+        let date = getMonthDateRange(moment().year(), moment().month());
+        return await db.collection('cashboxes').find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}, encashment: {$exists: true}}, {encashment: 1, date: 1}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
 
 
 function getMonthDateRange(year, month) {

@@ -2,7 +2,20 @@ extends layout
 
 block content
     .container-fluid
-        .row
+        .row.no-print(style="margin-top:20px")
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDateCashbox.form-control(type='date')
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDateCashbox.form-control(type='date')
+            .col-md-4
+                button.btn.btn-outline-info(type='button', id="lookCashboxDate") Показать
+        .row.print
             .col-md
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
@@ -16,18 +29,21 @@ block content
                         th Кофе(расходы)
                         th Кофемашина(доход)
                         th Авансы
+                        th Инкассация
                         th Штрафы
                     tbody.cashbox
                         each item in price
                             tr
                                 td=item.date
-                                td=item.cashScore
-                                td=item.cashStore
-                                td=item.cashCar
-                                td=item.cashCosts
-                                td=item.cashDops
-                                td=item.cashTea
-                                td=item.cashCoffee
-                                td=item.cashCoffeeMachine
-                                td=item.cashPrepaid
-                                td=item.cashFine
+                                td=item.cashScore || 0
+                                td=item.cashStore || 0
+                                td=item.cashCar || 0
+                                td=item.cashCosts || 0
+                                td=item.cashDops || 0
+                                td=item.cashTea || 0
+                                td=item.cashCoffee || 0
+                                td=item.cashCoffeeMachine || 0
+                                td=item.cashPrepaid || 0
+                                td=item.encashment || 0
+                                td=item.cashFine || 0
+                button.btn.btn-outline-dark.no-print(type="button", id="print") Печать

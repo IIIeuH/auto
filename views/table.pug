@@ -13,19 +13,36 @@
                     th Действие
                 tbody.tr-body
                     each item in data
-                        tr.str(data-status=item.status, data-typeauto=item.typeAuto)
-                            td(data-minutes=item.time).time=getTimeFromMins(item.dopTime + item.mainTime)
-                            td.car=item.car
-                            td.number=item.number
-                            td.service-main(data-price=item.mainPrice, data-time=item.mainTime)=item.services
-                            td.dop(data-price=item.dopPrice, data-time=item.dopTime)=item.dopServices
-                            td=item.washer
-                            td.price=item.dopPrice + item.mainPrice
-                            td.d-flex.justify-content-center
-                                button.btn.btn-primary.status-wash(type='button') Заехать
-                                button.btn.btn-success.status-ready(type='button') Готово
-                                button.btn.btn-warning.redact(type='button') Услуги
-                                button.btn.btn-info.modalTwo(type='button') Доп. Услуги
-                                button.btn.btn-danger.status-await(type='button') Отмена
-                                button.btn.btn-dark.delete(type='button') Удалить
+                        if item.vip
+                            tr.str.table-warning(data-status=item.status, data-typeauto=item.typeAuto, data-vip=1, data-id=item._id)
+                                td(data-minutes=item.time).time=getTimeFromMins(item.dopTime + item.mainTime)
+                                td.car=item.car
+                                td.number=item.number
+                                td.service-main(data-price=item.mainPrice, data-time=item.mainTime)=item.services
+                                td.dop(data-price=item.dopPrice, data-time=item.dopTime)=item.dopServices
+                                td=item.washer
+                                td.price=item.dopPrice + item.mainPrice
+                                td.d-flex.justify-content-center
+                                    button.btn.btn-primary.status-wash(type='button') Заехать
+                                    button.btn.btn-success.status-ready(type='button') Готово
+                                    button.btn.btn-warning.redact(type='button') Услуги
+                                    button.btn.btn-info.modalTwo(type='button') Доп. Услуги
+                                    button.btn.btn-danger.status-await(type='button') Отмена
+                                    button.btn.btn-dark.delete(type='button') Удалить
+                        else
+                            tr.str(data-status=item.status, data-typeauto=item.typeAuto, data-vip=item.vip)
+                                td(data-minutes=item.time).time=getTimeFromMins(item.dopTime + item.mainTime)
+                                td.car=item.car
+                                td.number=item.number
+                                td.service-main(data-price=item.mainPrice, data-time=item.mainTime)=item.services
+                                td.dop(data-price=item.dopPrice, data-time=item.dopTime)=item.dopServices
+                                td=item.washer
+                                td.price=item.dopPrice + item.mainPrice
+                                td.d-flex.justify-content-center
+                                    button.btn.btn-primary.status-wash(type='button') Заехать
+                                    button.btn.btn-success.status-ready(type='button') Готово
+                                    button.btn.btn-warning.redact(type='button') Услуги
+                                    button.btn.btn-info.modalTwo(type='button') Доп. Услуги
+                                    button.btn.btn-danger.status-await(type='button') Отмена
+                                    button.btn.btn-dark.delete(type='button') Удалить
 

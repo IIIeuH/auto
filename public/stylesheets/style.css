@@ -114,3 +114,12 @@ td.d-flex.justify-content-center button{
   top: 0;
   right: 5px;
 }
+
+@media print {
+  .no-print{
+    display: none;
+  }
+  .print{
+    display: block;
+  }
+}

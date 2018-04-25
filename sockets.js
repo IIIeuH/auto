@@ -20,6 +20,7 @@ module.exports.init = function(socket){
     //save services
     socket.on('saveServices', async (data, cb) => {
         try{
+            console.log(data);
             let inc = await db.collection('boxes').aggregate([
                 {
                     $match: {}
@@ -37,13 +38,12 @@ module.exports.init = function(socket){
                 data.inc = inc[0].inc + 1;
             }
             data.dateD = new Date();
-            await db.collection('boxes').insert(data);
-            cb({status:200, msg: 'Услуги сохранены!'});
+            let res =await db.collection('boxes').insert(data);
+            cb({status:200, msg: 'Услуги сохранены!', id: res.insertedIds[0]});
         }catch(err){
             cb({status:500, msg: err});
         }
     });
-
 
     //save dopServices
     socket.on('saveDopServices', async (data, query, cb) => {
@@ -59,7 +59,9 @@ module.exports.init = function(socket){
     //save redactServices
     socket.on('saveRedactServices', async (data, query, cb) => {
         try{
-            await db.collection('boxes').updateOne(query, {$set: {services: data.services, mainPrice:  data.price, mainTime: data.time}});
+            if(!data.vip) {
+                await db.collection('boxes').updateOne(query, {$set: {services: data.services, mainPrice:  data.price, mainTime: data.time}});
+            }
             cb({status:200, msg: 'Услуги отредактированы!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -192,7 +194,7 @@ module.exports.init = function(socket){
         try{
             let price = await db.collection('boxes').aggregate([
                 {
-                    $match: {date: moment().format('DD.MM.YYYY')}
+                    $match: {date: moment().format('DD.MM.YYYY'), vip: false}
                 },
                 {
                     $project: {_id: 0, cash: {$sum: ['$mainPrice', '$dopPrice']}}
@@ -201,13 +203,13 @@ module.exports.init = function(socket){
                     $group: {_id: null, cash: {$sum: '$cash'}}
                 }
             ]).toArray();
+            console.log(price);
             if(price.length){
                 price = price[0].cash;
             }else{
                 price = 0;
             }
             await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCar: price}}, {upsert: true});
-            await db.collection('cashes').updateOne({}, {$set: {cash: price}}, {upsert: true});
         }catch(err){
             cb({status:500, msg: 'Касса не обновлена!'});
         }
@@ -427,7 +429,7 @@ module.exports.init = function(socket){
     //автозаполнение номера
     socket.on('autocomplete', async (data, cb) => {
        try{
-           let number = await db.collection('clients').find({number: {$regex: data}}, {_id: 0, number: 1, marka: 1}).toArray();
+           let number = await db.collection('clients').find({number: {$regex: data}}).toArray();
            cb(number);
        }catch(err){
            console.log(`err update autocomplete ${err}`);
@@ -699,6 +701,19 @@ module.exports.init = function(socket){
         }
     });
 
+
+    //Касса по дате
+    socket.on('getCashboxDate', async (startDate, endDate, cb) => {
+        try{
+            let start = moment(startDate).toDate();
+            let end =  moment(endDate).toDate();
+            let data = await db.collection('cashboxes').find({dateD: {$gte: start, $lte: end}}).toArray();
+            cb({status:200, msg: 'Найдено!', arr: data});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
     //Save add Costs
     socket.on('saveAddCosts', async (data, cb) => {
         try{
@@ -878,5 +893,51 @@ module.exports.init = function(socket){
             cb({status:500, msg: err});
         }
     });
+
+
+    //инкассация
+    socket.on('saveEncashmanet', async (val, cb) => {
+        try{
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), encashment: +val}}, {upsert: true});
+            cb({status:200, msg: 'Сохранено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
+    //Списание денег у вип клиента при нажатии на кнопку готово
+    socket.on('cashVIP', async (number, car, price, cb) => {
+        try{
+            console.log(number, car);
+            let balance = await db.collection('clients').findOne({number: number, marka: car}, {balance: 1});
+            if(+balance.balance <  +price){
+                cb({status:500, msg: 'У клиента не достаточно средств! Баланс клиента составляет: ' + balance.balance + 'руб.'});
+            }else{
+                let res = +balance.balance - +price;
+                await db.collection('clients').updateOne({number: number, marka: car}, {$set: {balance: res}});
+                cb({status:200, msg: 'Сохранено!'});
+            }
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
+    //проверка денег у VIP перед заездом
+    socket.on('chackCashVIP', async (number, car, price, cb) => {
+        try{
+            let balance = await db.collection('clients').findOne({number: number, marka: car}, {balance: 1});
+            console.log(balance.balance, +price);
+            if(+balance.balance <  +price){
+                cb({status:500, msg: 'У клиента не достаточно средств! Баланс клиента составляет: ' + balance.balance + 'руб.'});
+            }else{
+                cb({status:200});
+            }
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
 
 };

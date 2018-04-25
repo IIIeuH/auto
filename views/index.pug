@@ -21,13 +21,13 @@ block content
             option Мойщик
             each item in persons
               option(value=item.fio)=item.fio
-      .col-sm-3
+      .col-md
         button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#modalService', id="modalOne", disabled)
           | Услуги
+      .col-md
+        .vip
+        input(type="checkbox", id="vip" hidden)
         include modalUslug
-      //.col-sm
-      //  button.btn.btn-outline-primary(type='button', data-toggle='modal', id="modalTwo")
-      //    | Доп услуги
       include modalDopUslug
       include modalRedactUslug
   include table
