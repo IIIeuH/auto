@@ -189,12 +189,13 @@ module.exports.init = function(socket){
     });
 
 
+
     //Цена в кассе
     socket.on('cachbox', async (cb) =>{
         try{
             let price = await db.collection('boxes').aggregate([
                 {
-                    $match: {date: moment().format('DD.MM.YYYY'), vip: false}
+                    $match: {date: moment().format('DD.MM.YYYY'), vip: false, nonCash: false}
                 },
                 {
                     $project: {_id: 0, cash: {$sum: ['$mainPrice', '$dopPrice']}}
@@ -203,17 +204,49 @@ module.exports.init = function(socket){
                     $group: {_id: null, cash: {$sum: '$cash'}}
                 }
             ]).toArray();
-            console.log(price);
             if(price.length){
                 price = price[0].cash;
             }else{
                 price = 0;
             }
             await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCar: price}}, {upsert: true});
+
+            let nonprice = await db.collection('boxes').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY'), vip: false, nonCash: true}
+                },
+                {
+                    $project: {_id: 0, cash: {$sum: ['$mainPrice', '$dopPrice']}}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$cash'}}
+                }
+            ]).toArray();
+            if(nonprice.length){
+                nonprice = nonprice[0].cash;
+            }else{
+                nonprice = 0;
+            }
+            console.log(`price ${nonprice}`);
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), nonCashCar: nonprice}}, {upsert: true});
         }catch(err){
             cb({status:500, msg: 'Касса не обновлена!'});
         }
     });
+
+
+
+    //Отметkа безнал
+    socket.on('getNonCash', async (id, flag, cb) =>{
+        try{
+            console.log(id, flag);
+            await db.collection('boxes').updateOne({_id: ObjectId(id)}, {$set: {nonCash: flag}})
+            cb({status:200, msg: 'Обновлено!'})
+        }catch(err){
+            cb({status:500, msg: 'Ошибка сохранения!'});
+        }
+    });
+
 
     //Сохранение чая
     socket.on('saveTea', async (data, cb) => {
@@ -355,10 +388,15 @@ module.exports.init = function(socket){
                     $match: {$and: [{date: moment().format('DD.MM.YYYY')}, {andCoffee: {$ne: 0}}]}
                 },
                 {
-                    $project: {_id: 0, cash: {$multiply : [{$subtract: ['$startCoffee', '$endCoffee']}, 100]}}
+                    $project: {_id: 0, cash: {$multiply : [{$subtract: ['$endCoffee', '$startCoffee']}, 100]}}
                 }
             ]).toArray();
-            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCoffeeMachine: price[0].cash}}, {upsert: true});
+            if(price.length){
+                price = price[0].cash;
+            }else{
+                price = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCoffeeMachine: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});

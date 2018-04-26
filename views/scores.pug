@@ -7,7 +7,10 @@ block content
                 .input-group.mb-3
                     .input-group-prepend
                         span.input-group-text Кофе на начало смены
-                    input#coffee-start.form-control(type='number', value=startCoffee)
+                    if startCoffee !== 0
+                        input#coffee-start.form-control(type='number', value=startCoffee)
+                    else
+                        input#coffee-start.form-control(type='number')
             .col-md.col-sm
                 .input-group.mb-3
                     .input-group-prepend

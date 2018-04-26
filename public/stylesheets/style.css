@@ -115,6 +115,10 @@ td.d-flex.justify-content-center button{
   right: 5px;
 }
 
+.checkbox-non-cash{
+  width: 35px;
+  height: 35px;
+}
 @media print {
   .no-print{
     display: none;

@@ -76,7 +76,7 @@ module.exports.product = async() => {
 
 module.exports.startCoffee = async() => {
     try {
-        return await db.collection('scores').find({date: moment().subtract(1, 'days').format('DD.MM.YYYY')}, {endCoffee: 1, _id: 0, startCoffee: 1}).toArray();
+        return await db.collection('scores').findOne({date: moment().subtract(1, 'days').format('DD.MM.YYYY')}, {_id: 0, startCoffee: 1});
     }catch(err){
         return err;
     }
@@ -92,7 +92,7 @@ module.exports.coffee = async() => {
 
 module.exports.productReady = async(collection) => {
     try {
-        return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}).toArray();
+        return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}, {costs: 1}).toArray();
     }catch(err){
         return err;
     }

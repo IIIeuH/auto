@@ -25,6 +25,7 @@ $(function(){
     $(document).on('click', '#print', function () {
         window.print();
     });
+    nonСash();
 });
 
 
@@ -231,6 +232,7 @@ function save(){
         data.mainTime = data.time;
         data.dopTime = 0;
         data.dopPrice = 0;
+        data.nonCash = false;
         data.administrator = $('#administrator').val();
         if($('#vip').prop('checked')){
             data.vip = true;
@@ -262,6 +264,8 @@ function save(){
                         '</td>' +
                         '<td class="price">' +
                         data.price +
+                        '</td>' +
+                        '<td>' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
                         '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
@@ -323,6 +327,9 @@ function save(){
                         '</td>' +
                         '<td class="price">' +
                         data.price +
+                        '</td>' +
+                        '<td>' +
+                        '<input class="checkbox-non-cash" type="checkbox">' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
                         '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
@@ -860,5 +867,41 @@ function autoNumber() {
                 });
             }
         });
+    })
+}
+
+//безнал
+function nonСash(){
+    $(document).on('click', '.checkbox-non-cash', function () {
+        var p = confirm('Подтвердите свои действия!');
+        if(p){
+            var id = $(this).parents('tr').data('id');
+            var flag = $(this).prop('checked');
+            socket.emit('getNonCash', id, flag ,function (res) {
+                if(res.status === 500){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }else {
+                    socket.emit('cachbox', function (res) {
+                        if (res.status === 500) {
+                            Snackbar.show({
+                                text: res.msg,
+                                pos: 'bottom-right',
+                                actionText: null
+                            });
+                        } else {
+                            Snackbar.show({
+                                text: res.msg,
+                                pos: 'bottom-right',
+                                actionText: null
+                            });
+                        }
+                    });
+                }
+            });
+        }
     })
 }
