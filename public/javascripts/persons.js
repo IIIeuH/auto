@@ -12,15 +12,17 @@ $(function() {
 function savePersons(){
     var btn = $('#addPersons');
     btn.click(function(){
-        var fio = $('#fio').val();
-        socket.emit('savePersons', {fio: fio}, function (res) {
+        let data = {};
+        data.fio = $('#fio').val();
+        data.administrator = false;
+        socket.emit('savePersons', data, function (res) {
             if(res.status === 200){
                 Snackbar.show({
                     text: res.msg,
                     pos: 'bottom-right',
                     actionText: null
                 });
-                addPersonsInTable(fio);
+                addPersonsInTable(data.fio, res.id);
             }else{
                 Snackbar.show({
                     text: res.msg,
@@ -33,16 +35,16 @@ function savePersons(){
 }
 
 //После нажатие на кнопку сохранить добавить в табоицу
-function addPersonsInTable(fio){
+function addPersonsInTable(fio, id){
     var el = $('.persons');
     el.append(
         '<tr>' +
-            '<td>' +
+            '<td contenteditable="true" data-id="'+id+'">' +
                 fio +
             '</td>' +
             '<td>' +
                 '<button type="button" class="btn btn-outline-info mr-5 administrPersons">Администратор</button>' +
-                '<button type="button" class="btn btn-outline-dark delPersons">Удалить</button>' +
+                '<button type="button" class="btn btn-outline-dark delPersons" data-id="'+id+'">Удалить</button>' +
             '</td>' +
         '</tr>'
     )

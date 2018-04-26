@@ -5,16 +5,18 @@ block content
         .row
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text Марка
-                    input#marks.form-control(type='text', aria-label='Default')
+                    input#marks.form-control(type='text', placeholder="Марка")
+            .col-md
                 button.btn.btn-outline-info(type='button', id="addMarks") Добавить
         .row
             .col-md
-                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                table.table.table-hover.table-sm.mt-3
                     thead.thead-dark
                         th Марка
+                        th Действие
                     tbody.marks
                         each item in marks
                             tr
                                 td.refMarks(contenteditable="true", data-id=item._id)=item.marka
+                                td
+                                    button.btn.btn-outline-dark.delMarks(type="button", data-id=item._id) Удалить

@@ -4,6 +4,7 @@ $(function(){
     saveMarks();
     refactorMarks();
     validBtnMarks();
+    delMarks();
 });
 
 
@@ -21,7 +22,7 @@ function saveMarks(){
                     pos: 'bottom-right',
                     actionText: null
                 });
-                addMarksInTable(marka);
+                addMarksInTable(marka, res.id);
             }else{
                 Snackbar.show({
                     text: res.msg,
@@ -34,10 +35,17 @@ function saveMarks(){
 }
 
 //После нажатие на кнопку сохранить добавить в табоицу
-function addMarksInTable(marka){
+function addMarksInTable(marka, id){
     var el = $('.marks');
     el.append(
-        '<tr><td>'+marka+'</td></tr>'
+        '<tr>' +
+        '<td class="refMarks" contenteditable="true" data-id="'+id+'">' +
+        marka +
+        '</td>' +
+        '<td>' +
+        '<button class="btn btn-outline-dark delMarks" data-id="'+id+'">Удалить</button>' +
+        '</td>'+
+        '</tr>'
     )
 }
 
@@ -51,6 +59,32 @@ function refactorMarks() {
                 actionText: null
             });
         });
+    });
+}
+
+//Удаление марок
+function delMarks() {
+    $(document).on('click', '.delMarks', function(){
+        let that = $(this);
+        let c = confirm("Вы действительно хотите удалить " + $(this).parents('tr').find('.refMarks').text() + "?");
+        if(c){
+            socket.emit('delMarks', $(this).data('id'), function (res) {
+                if(res.status === 200){
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                    that.parents('tr').hide('fast');
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }
     });
 }
 

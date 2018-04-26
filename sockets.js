@@ -406,8 +406,8 @@ module.exports.init = function(socket){
     //Сохранение персонала
     socket.on('savePersons', async(data, cb) => {
        try{
-           await db.collection('persons').insertOne(data);
-           cb({status:200, msg: 'Сохранено!'});
+           let id = await db.collection('persons').insertOne(data);
+           cb({status:200, msg: 'Сохранено!' , id: id.insertedId});
        }catch(err){
            cb({status:500, msg: err});
        }
@@ -426,13 +426,23 @@ module.exports.init = function(socket){
     //Сохранение Марки
     socket.on('saveMarks', async(data, cb) => {
         try{
-            await db.collection('marks').insertOne(data);
-            cb({status:200, msg: 'Сохранено!'});
+            let id = await db.collection('marks').insertOne(data);
+            cb({status:200, msg: 'Сохранено!', id: id.insertedId});
         }catch(err){
             cb({status:500, msg: err});
         }
     });
 
+
+    //Удаление марок
+    socket.on('delMarks', async(id, cb) => {
+        try{
+            await db.collection('marks').removeOne({_id: ObjectId(id)});
+            cb({status:200, msg: 'Удалено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
 
     //Обновление марки
     socket.on('updateMarks', async(data, cb) =>{

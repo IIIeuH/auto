@@ -5,13 +5,12 @@ block content
         .row
             .col-md
                 .input-group.mb-3
-                    .input-group-prepend
-                        span.input-group-text ФИО
-                    input#fio.form-control(type='text', aria-label='Default')
+                    input#fio.form-control(type='text', placeholder="ФИО")
+            .col-md
                 button.btn.btn-outline-info(type='button', id="addPersons") Добавить
         .row
             .col-md
-                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                table.table.table-hover.table-sm.mt-3
                     thead.thead-dark
                         th ФИО
                         th Действие

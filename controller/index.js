@@ -42,7 +42,7 @@ module.exports.box = async (req, res, next) => {
     let auto = await model.main();
     let dopAuto = await model.dopServices();
     let data = await model.data(req.query.number);
-    let persons = await model.getCollection('persons', {_id: 0});
+    let persons = await model.getPerson();
     let marks = await model.getCollection('marks', {_id: 0});
     let administrators = await model.administrator();
     res.render('index', { title: 'Express', user: req.user, typeAuto: auto, dopAuto:  dopAuto, data: data, persons: persons, marks:marks, administrators:administrators});
