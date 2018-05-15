@@ -1,5 +1,4 @@
 'use strict';
-var socket = io.connect('http://localhost:3000');
 $(function() {
     saveAddCosts('#btnAddCosts', '#addCosts', '#addCostsPrice', 'saveAddCosts', '.addCosts', 'nameAdd', 'priceAdd', 'delAddCosts');
     saveAddCosts('#btnAddDops', '#addDops', '#addDopsPrice', 'saveAddDops', '.addDops', 'nameAddDops', 'priceAddDops', 'delAddDops');
