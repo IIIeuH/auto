@@ -20,7 +20,6 @@ module.exports.init = function(socket){
     //save services
     socket.on('saveServices', async (data, cb) => {
         try{
-            console.log(data);
             let inc = await db.collection('boxes').aggregate([
                 {
                     $match: {}
@@ -160,7 +159,6 @@ module.exports.init = function(socket){
 
     socket.on('saveProductMain', async (data, cb) => {
         try{
-            console.log(data);
             await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {costs: data} }, {upsert: true});
             let price = await db.collection('costs').aggregate([
                 {
@@ -227,7 +225,6 @@ module.exports.init = function(socket){
             }else{
                 nonprice = 0;
             }
-            console.log(`price ${nonprice}`);
             await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), nonCashCar: nonprice}}, {upsert: true});
         }catch(err){
             cb({status:500, msg: 'Касса не обновлена!'});
@@ -239,7 +236,6 @@ module.exports.init = function(socket){
     //Отметkа безнал
     socket.on('getNonCash', async (id, flag, cb) =>{
         try{
-            console.log(id, flag);
             await db.collection('boxes').updateOne({_id: ObjectId(id)}, {$set: {nonCash: flag}})
             cb({status:200, msg: 'Обновлено!'})
         }catch(err){
@@ -507,7 +503,6 @@ module.exports.init = function(socket){
     //Админка Сохранение полей услуг
     socket.on('saveField', async (collection,type, data, cb) => {
         try{
-            console.log(data);
             await db.collection(collection).updateOne({name: type}, {$addToSet: {service: data}});
             cb({status:200, msg: 'Добавлено!'});
         }catch(err){
@@ -550,7 +545,6 @@ module.exports.init = function(socket){
     socket.on('getCash', async (person, cb) => {
         try{
             let date = getMonthDateRange(moment().year(), moment().month());
-            console.log(date.start.toDate());
             let cash = await db.collection('boxes').aggregate(
                 {
                     $match: {washer: person, dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}}
@@ -829,7 +823,6 @@ module.exports.init = function(socket){
     socket.on('saveDopScore', async (data, cb) => {
         try{
             let id = await db.collection('products').insert(data);
-            console.log(123);
             let cash = await db.collection('products').aggregate([
                 {
                     $project: {_id: 0, cash: {$sum: {$multiply: ['$salePrice', '$warehouse']}}}
@@ -957,7 +950,6 @@ module.exports.init = function(socket){
     //Списание денег у вип клиента при нажатии на кнопку готово
     socket.on('cashVIP', async (number, car, price, cb) => {
         try{
-            console.log(number, car);
             let balance = await db.collection('clients').findOne({number: number, marka: car}, {balance: 1});
             if(+balance.balance <  +price){
                 cb({status:500, msg: 'У клиента не достаточно средств! Баланс клиента составляет: ' + balance.balance + 'руб.'});

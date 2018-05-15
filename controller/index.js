@@ -9,7 +9,6 @@ module.exports.main = async (req, res, next) => {
          model.time('5'),
     ]);
     let box1, box2, box3, box4, box5;
-    console.log(data);
     if(data[0][0]){
         box1 = data[0][0].time;
     }else{
@@ -69,7 +68,6 @@ module.exports.score = async (req, res, next) => {
 
 module.exports.getJson = async (req, res, next) => {
     let data = await db.collection('clients').find({number: {$regex: req.query.s}}, {_id: 0, number: 1, marka:1}).toArray();
-    console.log(data);
     res.json(data);
 };
 

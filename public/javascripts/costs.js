@@ -12,7 +12,6 @@ $(function(){
             tdName.each(function(){
                 if($(this).text() === name) {
                     flag = false;
-                    console.log($(this));
                     var number = $(this).parents('tr').find('.quantity').text();
                     if ((number) == $(this).parents('tr').find('.warehouse-table').text()) {
                         return false;
@@ -57,7 +56,6 @@ $(function(){
         tdName.each(function(){
             if($(this).text() === name) {
                 flag = false;
-                console.log($(this));
                 var number = $(this).parents('tr').find('.quantity-dop').text();
                 $(this).parents('tr').find('.quantity-dop').text(+number + 1);
             }
@@ -90,7 +88,6 @@ $(function(){
         tdName.each(function(){
             if($(this).text() === name) {
                 flag = false;
-                console.log($(this));
                 var number = $(this).parents('tr').find('.quantity-main').text();
                 $(this).parents('tr').find('.quantity-main').text(+number + 1);
             }

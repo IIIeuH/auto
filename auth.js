@@ -18,7 +18,6 @@ passport.use('login', new LocalStrategy({
             }
             return done(null, user);
         }catch(err){
-            console.log(err);
             if (err) { return done(err); }
         }
     }

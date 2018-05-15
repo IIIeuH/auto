@@ -2,7 +2,6 @@
 var socket = io.connect('http://localhost:3000');
 $(function(){
     socket.on('connect', function() {
-        console.log('Connected');
     });
     statusColor();
     btnActive();

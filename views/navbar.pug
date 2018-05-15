@@ -11,6 +11,6 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
                 a.nav-link(href='/score')
                     | Магазин
         .form-inline.my-2.my-lg-0
-            if(user && user.username === 'admin')
+            if(user && user.username === 'AndryAdmin')
                 button.btn.btn-outline-info.my-2.my-sm-0(type='submit', style="margin-right: 20px;", onclick="window.location.href='/admin'; return false;") Админка
             button.btn.btn-outline-dark.my-2.my-sm-0(type='submit', onclick="window.location.href='/logout'; return false;") Выход

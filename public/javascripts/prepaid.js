@@ -123,7 +123,6 @@ function delPrepaid(){
 function datePrep() {
     $(document).on('click', '#lookPredDate', function () {
         socket.emit('getPrepDate', $('#startDatePrep').val(), $('#endDatePrep').val(), function (res) {
-            console.log(res);
             if(res.status === 200){
                 $('.prepaid').empty();
                 res.arr.forEach(function(item){

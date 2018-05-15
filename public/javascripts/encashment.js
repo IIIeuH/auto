@@ -6,7 +6,6 @@ $(function(){
 
 function saveEncashment() {
     $(document).on('click', '#saveEncashment', function () {
-        console.log($('#encashment').val());
         socket.emit('saveEncashmanet', $('#encashment').val(), function (res) {
             if(res.status === 200){
                 Snackbar.show({

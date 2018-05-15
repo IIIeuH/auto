@@ -25,7 +25,6 @@ $(function(){
         obj.name = parent.find('.name').val();
         obj.price = +parent.find('.price').val();
         obj.time = +parent.find('.time').val();
-        console.log(obj);
         socket.emit('updateFiled', type, index, obj, function (res) {
             Snackbar.show({
                 text: res.msg,
@@ -196,7 +195,6 @@ function addTypeAuto(btn, input, collection, parent, btnRemove, btnShow, btnAdd,
         let obj = {};
         obj.name = $(input).val();
         obj.service = [];
-        console.log(obj);
         socket.emit('addTypeAuto', collection, obj, function (res) {
             if(res.status === 200){
                 Snackbar.show({
