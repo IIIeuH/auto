@@ -1,5 +1,5 @@
 'use strict';
-var socket = io.connect('http://192.168.1.70:3000');
+var socket = io.connect('http://localhost:3000');
 $(function(){
     socket.on('connect', function() {
     });
