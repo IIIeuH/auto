@@ -531,6 +531,7 @@ module.exports.init = function(socket){
     //Админка Сохранение полей услуг
     socket.on('saveField', async (collection,type, data, cb) => {
         try{
+            console.log(collection,type, data);
             await db.collection(collection).updateOne({name: type}, {$addToSet: {service: data}});
             cb({status:200, msg: 'Добавлено!'});
         }catch(err){
