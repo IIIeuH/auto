@@ -1,4 +1,5 @@
 const model = require('../model/index');
+const modelA = require('../model/admin');
 
 module.exports.main = async (req, res, next) => {
     let data = await Promise.all([
@@ -60,14 +61,64 @@ module.exports.score = async (req, res, next) => {
     let table = await model.productReady('scores');
     let startCoffee = await model.startCoffee();
     let endCoffee = await model.coffee();
-    table = table[0].costs || [];
-    startCoffee = startCoffee === null ?  0:  startCoffee.startCoffee;
-    endCoffee = endCoffee.endCoffee || 0;
+    if(table.length){
+        table = table[0].costs;
+    }else{
+        table = [];
+    }
+    if(startCoffee){
+        startCoffee = startCoffee.startCoffee;
+    }else{
+        startCoffee = 0
+    }
+    if(endCoffee){
+        endCoffee = endCoffee.endCoffee;
+    }else{
+        endCoffee = 0;
+    }
     res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: startCoffee, endCoffee: endCoffee});
 };
 
 module.exports.getJson = async (req, res, next) => {
     let data = await db.collection('clients').find({number: {$regex: req.query.s}}, {_id: 0, number: 1, marka:1}).toArray();
     res.json(data);
+};
+
+module.exports.defer = async (req, res, next) =>{
+    let data = await model.getDeferCash();
+    res.render('defer', {title: 'Отложенна оплата', data: data});
+};
+
+module.exports.costs = async (req, res, next) => {
+    let data = await modelA.productMain();
+    let table = await model.productReady('costs');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('costs', { title: 'Расходы', user: req.user, product: data, productReady: table});
+};
+
+
+module.exports.dop = async (req, res, next) => {
+    let data = await modelA.productDop();
+    let table = await model.productReady('dops');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('dop', { title: 'Расходы', user: req.user, product: data, productReady: table});
+};
+
+module.exports.arbitrary = async (req, res, next) => {
+    let table = await model.productReady('arbitrarys');
+    if(!table.length){
+        table = [];
+    }else{
+        table = table[0].costs
+    }
+    res.render('arbitrary', { title: 'Расходы', user: req.user, productReady: table});
 };
 

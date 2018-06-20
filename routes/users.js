@@ -16,6 +16,7 @@ router.get('/dop',  ctrl.dop);
 router.get('/costs',  ctrl.costs);
 router.get('/tea',  ctrl.tea);
 router.get('/coffee',  ctrl.coffee);
+router.get('/prize',  ctrl.prize);
 router.get('/store',  ctrl.store);
 router.get('/add/costs',  ctrl.addCosts);
 router.get('/add/dop',  ctrl.addDop);

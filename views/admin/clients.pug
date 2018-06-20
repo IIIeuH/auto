@@ -25,6 +25,20 @@ block content
                 .input-group.mb-3
                     input#clients-balance.form-control(type='text', placeholder="Баланс")
         .row
+            .col-md-3
+                .input-group.mb-3
+                    input#clients-discount.form-control(type='text', placeholder="Сумма")
+            .col-md-3
+                .checkbox
+                    label
+                        input#clients-proc(type='checkbox')
+                        |  Проценты
+            .col-md-3
+                .checkbox
+                    label
+                        input#clients-vip(type='checkbox')
+                        |  VIP
+        .row
             .col-md
                 button.btn.btn-outline-info(type='button', id="addClients") Добавить
         .row
@@ -37,6 +51,9 @@ block content
                         th День рождения
                         th Телефон
                         th Баланс
+                        th Скидка
+                        th Проценты
+                        th VIP
                     tbody.clietns
                         each item in clients
                             tr
@@ -46,3 +63,14 @@ block content
                                 td.refClients.birthday(contenteditable="true", data-id=item._id)=item.birthday
                                 td.refClients.phone(contenteditable="true", data-id=item._id)=item.phone
                                 td.refClients.balance(contenteditable="true", data-id=item._id)=item.balance
+                                td.refClients.discount(contenteditable="true", data-id=item._id)=item.discount
+                                td.refClients.proc(data-id=item._id)
+                                    if item.proc
+                                        |Да
+                                    else
+                                        |Нет
+                                td.refClients.vip(data-id=item._id)
+                                    if item.vip
+                                        | Да
+                                    else
+                                        | Нет

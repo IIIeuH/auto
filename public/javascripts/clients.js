@@ -16,7 +16,10 @@ function saveClients(){
             fio : $('#clients-fio').val(),
             phone : $('#clients-phone').val(),
             birthday : $('#clients-birthDay').val(),
-            balance : +$('#clients-balance').val()
+            balance : +$('#clients-balance').val(),
+            discount : +$('#clients-discount').val(),
+            proc : $('#clients-proc').prop('checked'),
+            vip : $('#clients-vip').prop('checked')
         };
         socket.emit('saveClients', data, function (res) {
             if(res.status === 200){
@@ -42,12 +45,17 @@ function saveClients(){
 function addClietnsInTable(data){
     var el = $('.clietns');
     el.append(
-        '<tr><td>'+data.number+'</td>'+
-        '<td>'+data.marka+'</td>'+
-        '<td>'+data.fio+'</td>'+
-        '<td>'+data.birthday+'</td>'+
-        '<td>'+data.phone+'</td></tr>' +
-        '<td>'+data.balance+'</td></tr>'
+        '<tr>' +
+        '<td class="refClients number">'+data.number+'</td>'+
+        '<td class="refClients marka">'+data.marka+'</td>'+
+        '<td class="refClients fio">'+data.fio+'</td>'+
+        '<td class="refClients birthday">'+data.birthday+'</td>'+
+        '<td class="refClients phone">'+data.phone+'</td>' +
+        '<td class="refClients balance">'+data.balance+'</td>' +
+        '<td class="refClients discount">'+data.discount+'</td>' +
+        '<td class="refClients proc">'+data.proc+'</td>' +
+        '<td class="refClients vip">'+data.vip+'</td>' +
+        '</tr>'
     )
 }
 

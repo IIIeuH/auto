@@ -30,6 +30,14 @@ module.exports.getCollection = async(collection, params) => {
     }
 };
 
+module.exports.getDeferCash = async() => {
+    try {
+        return await db.collection('boxes').find({deferCash: true}).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
 module.exports.getPerson = async() => {
     try {
         return await db.collection('persons').find({administrator: false}).toArray();

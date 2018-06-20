@@ -1,0 +1,45 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-lg-5.col-md-6
+                .input-group.mb-3
+                    .input-group-prepend
+                        label.input-group-text(for='personsPrize') Персонал
+                    select#personsPrize.custom-select
+                        option(selected='')
+                        each item in persons
+                            option(value=item.fio)=item.fio
+                    input.form-control(type='text', id="prize")
+                button.btn.btn-outline-info(type='button', id="prepaidDoPrize") Премия
+        .row(style="margin-top:20px")
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDatePrize.form-control(type='date')
+            .col-md-4
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDatePrize.form-control(type='date')
+            .col-md-4
+                button.btn.btn-outline-info(type='button', id="lookPrizeDate") Показать
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Дата
+                        th Персонал
+                        th Премия
+                        th Действие
+                    tbody.prize
+                        each item in prize
+                            tr.tr-prize
+                                td=item.date
+                                td=item.person
+                                td=item.prize
+                                td
+                                    button#delPrize.btn.btn-outline-dark(type='button', data-id=item._id) Удалить
+

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md
+                table.table
+                    thead.thead-dark
+                        th Дата
+                        th Мойщик
+                        th Номер авто
+                        th Авто
+                        th Цена
+                        th
+                    tbody
+                        each item in data
+                            tr
+                                td.date=item.date
+                                td=item.washer
+                                td=item.number
+                                td=item.car
+                                td.price=item.mainPrice+item.dopPrice
+                                td
+                                    button.btn.btn-primary.status-defer(type='button', id=item._id) Оплатил

@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .d-inline-flex.p-2
+                each item in product
+                    .product-dop.p-2(data-price=item.price)=item.name
+        .row
+            .col-md
+                table.table.product-dop-table.table-hover
+                    thead
+                        th Наименование услуги
+                        th Цена
+                        th Кол-во
+                    tbody.product-dop-body
+                        each item in productReady
+                            tr.quantity-minus
+                                td.product-dop-name=item.name
+                                td.product-dop-price=item.price
+                                td.quantity-dop.qm=item.quantity
+        .row
+            .col-md
+                button.btn.btn-outline-info.float-right(type='button', id="saveProductDop") Сохранить

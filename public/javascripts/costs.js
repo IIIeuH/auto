@@ -118,6 +118,9 @@ $(function(){
     btnDisabled();
     coffeeMachine();
     validCoffee();
+    addArbitrary();
+    saveArbitrary();
+    delArbitrary();
 });
 
 function saveCosts(){
@@ -125,6 +128,7 @@ function saveCosts(){
     btn.click(function () {
         let mas = [];
         let tr = $('.product-body').find('tr');
+        let name = get_cookie('washer');
         tr.each(function () {
             let obj = {};
             obj.warehouse = $(this).find('.warehouse-table').text();
@@ -134,7 +138,7 @@ function saveCosts(){
             obj.remainder = +$(this).find('.remainder').text();
             mas.push(obj);
         });
-        socket.emit('setCosts', mas, function (res) {
+        socket.emit('setCosts', mas,name,  function (res) {
             if(res.status === 200) {
                 Snackbar.show({
                     text: res.msg,
@@ -158,6 +162,7 @@ function saveProductDop(){
     btn.click(function () {
         let mas = [];
         let tr = $('.product-dop-body').find('tr');
+        let name = get_cookie('washer');
         tr.each(function () {
             let obj = {};
             obj.name = $(this).find('.product-dop-name').text();
@@ -165,7 +170,7 @@ function saveProductDop(){
             obj.quantity = +$(this).find('.quantity-dop').text();
             mas.push(obj);
         });
-        socket.emit('saveProductDop', mas, function (res) {
+        socket.emit('saveProductDop', mas,name, function (res) {
             if(res.status === 200) {
                 Snackbar.show({
                     text: res.msg,
@@ -188,6 +193,7 @@ function saveProductMain(){
     btn.click(function () {
         let mas = [];
         let tr = $('.product-main-body').find('tr');
+        let name = get_cookie('washer');
         tr.each(function () {
             let obj = {};
             obj.name = $(this).find('.product-main-name').text();
@@ -195,7 +201,7 @@ function saveProductMain(){
             obj.quantity = +$(this).find('.quantity-main').text();
             mas.push(obj);
         });
-        socket.emit('saveProductMain', mas, function (res) {
+        socket.emit('saveProductMain', mas,name,function (res) {
             if(res.status === 200) {
                 Snackbar.show({
                     text: res.msg,
@@ -211,6 +217,16 @@ function saveProductMain(){
             }
         });
     })
+}
+
+function get_cookie ( cookie_name )
+{
+    var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+    if ( results )
+        return ( results[2]);
+    else
+        return null;
 }
 
 //Уменьшение количества товара
@@ -498,4 +514,63 @@ function validCoffee(){
     if(start.val()){
         start.prop('disabled', true);
     }
+}
+
+//Произвольные расходы ДОавление в табоицу
+function addArbitrary() {
+    let btn = $('#saveArbitrary');
+    btn.click(function () {
+        let data = {};
+        data.name = $('#arbitrary-name').val();
+        data.price = $('#arbitrary-price').val();
+        let table = $('.product-arbitrary-body');
+        console.log(data);
+        table.append(
+            '<tr class="arbitrary-table">' +
+            '<td class="arbitrary-name">' +
+            data.name +
+            '</td>' +
+            '<td class="arbitrary-price">' +
+            data.price +
+            '</td>' +
+            '</tr>'
+        );
+    })
+}
+
+//Произвольные расходы сохранение
+function saveArbitrary() {
+    $(document).on('click', '#saveProductArbitrary', (function () {
+        let el = $('.arbitrary-table');
+        let costs = [];
+        let name = get_cookie('washer');
+        el.each(function () {
+            let obj = {};
+            obj.name = $(this).find('.arbitrary-name').text();
+            obj.price = +$(this).find('.arbitrary-price').text();
+            costs.push(obj);
+        });
+        socket.emit('saveArbitrary', costs, name, function (res) {
+            Snackbar.show({
+                text: res.msg,
+                pos: 'bottom-right',
+                actionText: null
+            });
+        });
+    }));
+}
+
+//Удаление произвольные расходы
+
+function delArbitrary() {
+    $(document).on('click', '.arbitrary-table', function (e) {
+        let p = confirm('Подтвердите свои действия!');
+        let that = $(this);
+        if(p){
+            that.hide('fast');
+            that.remove();
+        }else{
+            e.preventDefault();
+        }
+    })
 }

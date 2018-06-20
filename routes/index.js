@@ -9,6 +9,10 @@ router.get('/box', checkAuth, ctrl.box);
 router.get('/prepaid', checkAuth, ctrl.prepaid);
 router.get('/score', checkAuth, ctrl.score);
 router.get('/getJson', checkAuth, ctrl.getJson);
+router.get('/defer', checkAuth, ctrl.defer);
+router.get('/costs', checkAuth, ctrl.costs);
+router.get('/dop', checkAuth, ctrl.dop);
+router.get('/arbitrary', checkAuth, ctrl.arbitrary);
 //auth
 router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Авторизация', message: req.flash('message')});

@@ -46,6 +46,12 @@ module.exports.coffee = async (req, res, next) => {
     res.render('admin/coffee', { title: 'Кофе', user: req.user, data: data});
 };
 
+module.exports.prize = async (req, res, next) => {
+    let persons = await model.getCollections('persons');
+    let data = await model.productReady('prizes');
+    res.render('admin/prize', { title: 'Премии', user: req.user, prize: data, persons:persons});
+};
+
 module.exports.store = async (req, res, next) => {
     res.render('admin/store', { title: 'Магазин', user: req.user});
 };

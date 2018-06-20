@@ -18,7 +18,10 @@ block content
       .col-md
         .form-group
           select#washer.custom-select.valid-btn
-            option Мойщик
+            if data.length
+              option(value=data[0].washer selected)=data[0].washer
+            else
+              option Мойщик
             each item in persons
               option(value=item.fio)=item.fio
       .col-md

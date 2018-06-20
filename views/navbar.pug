@@ -10,6 +10,18 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
             li.nav-item.active
                 a.nav-link(href='/score')
                     | Магазин
+            li.nav-item.active
+                a.nav-link(href='/defer')
+                    | Отложенна оплата
+            li.nav-item.active
+                a.nav-link(href='/costs')
+                    |  Основные расходы
+            li.nav-item.active
+                a.nav-link(href='/dop')
+                    |  Дополнительные расходы
+            li.nav-item.active
+                a.nav-link(href='/arbitrary')
+                    |  Произвольные расходы
         .form-inline.my-2.my-lg-0
             if(user && user.username === 'AndryAdmin')
                 button.btn.btn-outline-info.my-2.my-sm-0(type='submit', style="margin-right: 20px;", onclick="window.location.href='/admin'; return false;") Админка

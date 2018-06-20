@@ -99,9 +99,9 @@ module.exports.init = function(socket){
         }
     });
 
-    socket.on('setCosts', async (data, cb) => {
+    socket.on('setCosts', async (data,name, cb) => {
         try{
-            await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+            await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data } }, {upsert: true});
             let price = await db.collection('scores').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -128,9 +128,9 @@ module.exports.init = function(socket){
         }
     });
 
-    socket.on('saveProductDop', async (data, cb) => {
+    socket.on('saveProductDop', async (data,name, cb) => {
         try{
-            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data } }, {upsert: true});
+            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data } }, {upsert: true});
             let price = await db.collection('dops').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -157,9 +157,9 @@ module.exports.init = function(socket){
         }
     });
 
-    socket.on('saveProductMain', async (data, cb) => {
+    socket.on('saveProductMain', async (data,name,  cb) => {
         try{
-            await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {costs: data} }, {upsert: true});
+            await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data} }, {upsert: true});
             let price = await db.collection('costs').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -181,6 +181,34 @@ module.exports.init = function(socket){
             }
             await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashCosts: price}}, {upsert: true});
             cb({status:200, msg: 'Сохранено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Save arbitrary
+    socket.on('saveArbitrary', async (data,name,  cb) => {
+        try{
+            console.log(data, name);
+            await db.collection('arbitrarys').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data} }, {upsert: true});
+            let price = await db.collection('arbitrarys').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $unwind: "$costs"
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$costs.price'}}
+                }
+            ]).toArray();
+            if(price.length){
+                price = -price[0].cash;
+            }else{
+                price = 0;
+            }
+            let res = await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), arbitrary: price}}, {upsert: true});
+            cb({status:200, msg: 'Сохранено!', arr: res});
         }catch(err){
             cb({status:500, msg: err});
         }
@@ -706,6 +734,35 @@ module.exports.init = function(socket){
         }
     });
 
+
+
+    //Премия персонала
+    //Штраф персоналу
+    socket.on('personPrize', async (data, cb) => {
+        try{
+            data.date = moment().format('DD.MM.YYYY');
+            data.dateD = new Date();
+            let id = await db.collection('prizes').insert(data);
+            let cashPrize = await db.collection('prizes').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$prize'}}
+                }
+            ]).toArray();
+            if(cashPrize.length){
+                cashPrize = -cashPrize[0].cash;
+            }else{
+                cashPrize = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrize: cashPrize}}, {upsert:true});
+            cb({status:200, msg: 'Премия добавлена!', id: id});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
     //удаление штрафа
     socket.on('delFine', async (data, cb) => {
         try{
@@ -731,12 +788,51 @@ module.exports.init = function(socket){
     });
 
 
+    //удаление Премии
+    socket.on('delPrize', async (data, cb) => {
+        try{
+            await db.collection('prizes').removeOne({_id: ObjectId(data)});
+            let cashPrize = await db.collection('prizes').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $group: {_id: null, cash: {$sum: '$prize'}}
+                }
+            ]).toArray();
+            if(cashPrize.length){
+                cashPrize = -cashPrize[0].cash;
+            }else{
+                cashPrize = 0;
+            }
+            await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashPrize: cashPrize}}, {upsert: true});
+            cb({status:200, msg: 'Премия удалена!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
     //Штраф по дате
     socket.on('getFineDate', async (startDate, endDate, cb) => {
         try{
             let start = moment(startDate).toDate();
             let end =  moment(endDate).toDate();
             let data = await db.collection('fines').find({dateD: {$gte: start, $lte: end}}).toArray();
+            cb({status:200, msg: 'Найдено!', arr: data});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
+
+    //Премия по дате
+    socket.on('getPrizeDate', async (startDate, endDate, cb) => {
+        try{
+            let start = moment(startDate).toDate();
+            let end =  moment(endDate).toDate();
+            let data = await db.collection('prizes').find({dateD: {$gte: start, $lte: end}}).toArray();
             cb({status:200, msg: 'Найдено!', arr: data});
         }catch(err){
             cb({status:500, msg: err});
@@ -979,5 +1075,66 @@ module.exports.init = function(socket){
         }
     });
 
+    //Часть оплаты на карту
+    socket.on('savePartNoCash', async (data, cb) => {
+        try{
+            await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {partNoCash: data.price}});
+            let partCashToDay = await db.collection('boxes').aggregate([
+                {
+                  $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $group: {_id: null, part: {$sum: '$partNoCash'}}
+                }
+            ]).toArray();
+            if(partCashToDay[0].hasOwnProperty('part')){
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {partencashment: partCashToDay[0].part}});
+            }else{
+                throw ('Инкассация не обновлена!');
+            }
+            cb({status:200, msg: 'Обновлено'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
 
+    //Отложенная оплата
+    socket.on('deferCash', async (data, cb) => {
+        try{
+            console.log(data);
+            await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {deferCash: data.val}});
+            if(data.val){
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$inc: {deferCash: data.price}});
+            }else{
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$inc: {deferCash: -data.price}});
+            }
+            cb({status:200, msg: 'Обновлено'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Подтверждение отложенной оплаты
+    socket.on('statusDefer', async (data, cb) => {
+        try{
+            console.log(data);
+            await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {deferCash: false}});
+            await db.collection('cashboxes').updateOne({date: data.date}, {$inc: {deferCash: -data.price}});
+            cb({status:200, msg: 'Обновлено'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Save discount
+    socket.on('saveDiscount', async (data, cb) => {
+        try{
+            console.log(data);
+            await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {discount: data.discount}});
+            // await db.collection('cashboxes').updateOne({date: data.date}, {$inc: {deferCash: -data.price}});
+            cb({status:200, msg: 'Обновлено'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
 };

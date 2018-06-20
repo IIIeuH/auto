@@ -17,33 +17,36 @@ block content
                 button.btn.btn-outline-info(type='button', id="lookCashboxDate") Показать
         .row.print
             .col-md
-                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
-                    thead.thead-dark
-                        th Дата
-                        th Магазин(доход)
-                        th Магазин(расход)
-                        th Мойка(услуги)
-                        th Основные расходы
-                        th Дополнительные расходы
-                        th Чай(расходы)
-                        th Кофе(расходы)
-                        th Кофемашина(доход)
-                        th Авансы
-                        th Инкассация
-                        th Штрафы
-                    tbody.cashbox
-                        each item in price
-                            tr
-                                td=item.date
-                                td=item.cashScore || 0
-                                td=item.cashStore || 0
-                                td=item.cashCar || 0
-                                td=item.cashCosts || 0
-                                td=item.cashDops || 0
-                                td=item.cashTea || 0
-                                td=item.cashCoffee || 0
-                                td=item.cashCoffeeMachine || 0
-                                td=item.cashPrepaid || 0
-                                td=item.encashment || 0
-                                td=item.cashFine || 0
+                .table-responsive
+                    table.table.table-striped.table-bordered.table-hover
+                        thead.thead-dark
+                            th Дата
+                            th Магазин(доход)
+                            th Магазин(расход)
+                            th Мойка(услуги)
+                            th Основные расходы
+                            th Дополнительные расходы
+                            th Чай(расходы)
+                            th Кофе(расходы)
+                            th Кофемашина(доход)
+                            th Авансы
+                            th Инкассация
+                            th Инкассация (часть олпаты)
+                            th Штрафы
+                        tbody.cashbox
+                            each item in price
+                                tr
+                                    td=item.date
+                                    td=item.cashScore || 0
+                                    td=item.cashStore || 0
+                                    td=item.cashCar || 0
+                                    td=item.cashCosts || 0
+                                    td=item.cashDops || 0
+                                    td=item.cashTea || 0
+                                    td=item.cashCoffee || 0
+                                    td=item.cashCoffeeMachine || 0
+                                    td=item.cashPrepaid || 0
+                                    td=item.encashment || 0
+                                    td=item.partencashment || 0
+                                    td=item.cashFine || 0
                 button.btn.btn-outline-dark.no-print(type="button", id="print") Печать

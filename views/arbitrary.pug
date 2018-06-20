@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            .col-md-3
+                input#arbitrary-name.form-control(type='text', placeholder="Название")
+            .col-md-3
+                input#arbitrary-price.form-control(type='number', placeholder='Цена')
+            .col-md-3
+                button.btn.btn-outline-info(type='button', id="saveArbitrary") Добавить
+        .row.mt-3
+            .col-md
+                table.table.product-arbitrary-table.table-hover
+                    thead
+                        th Наименование услуги
+                        th Цена
+                    tbody.product-arbitrary-body
+                        each item in productReady
+                            tr.arbitrary-table
+                                td.arbitrary-name=item.name
+                                td.arbitrary-price=item.price
+        .row
+            .col-md
+                button.btn.btn-outline-info.float-right(type='button', id="saveProductArbitrary") Сохранить

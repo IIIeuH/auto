@@ -1,5 +1,5 @@
 'use strict';
-var socket = io.connect('http://192.168.1.70:3000');
+var socket = io.connect('http://localhost:3000');
 $(function(){
     socket.on('connect', function() {
     });
@@ -25,7 +25,31 @@ $(function(){
         window.print();
     });
     nonСash();
+    partnocash();
+    deferCash();
+    let washerSelect = get_cookie('washer');
+    if(washerSelect){
+        $('#washer').val(get_cookie('washer'));
+    }
+    discount();
 });
+
+function get_cookie ( cookie_name )
+{
+    var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+    if ( results )
+        return ( results[2]);
+    else
+        return null;
+}
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        return false;
+    }
+    return true;
+}
 
 
 //получение все услуг при клике на тип авто
@@ -233,6 +257,8 @@ function save(){
         data.dopPrice = 0;
         data.nonCash = false;
         data.administrator = $('#administrator').val();
+        document.cookie = "washer="+data.washer;
+        data.client = JSON.parse(get_cookie("client")) || {};
         if($('#vip').prop('checked')){
             data.vip = true;
             socket.emit('saveServices', data, function (res) {
@@ -265,6 +291,16 @@ function save(){
                         data.price +
                         '</td>' +
                         '<td>' +
+                        '<input class="checkbox checkbox-non-cash" type="checkbox" disabled>' +
+                        '</td>' +
+                        '<td class="part">' +
+                        '<input class="form-control part-noCash" type="number" value="0" disabled>' +
+                        '</td>' +
+                        '<td class="defer">' +
+                        '<input class="checkbox defer-cash" type="checkbox" disabled>' +
+                        '</td>' +
+                        '<td class="discount">' +
+                        '<input class="checkbox checkbox-discount" type="checkbox" disabled>' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
                         '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
@@ -306,7 +342,7 @@ function save(){
                         actionText: null
                     });
                     tbody.append('' +
-                        '<tr class="str" data-typeauto="'+data.typeAuto+'" data-id="'+res.id+'">' +
+                        '<tr class="str" data-typeauto="'+data.typeAuto+'" data-id="'+res.id+'" data-discount="'+JSON.parse(get_cookie('client')).discount+'" data-proc="'+JSON.parse(get_cookie('client')).proc+'">' +
                         '<td class="time" data-minutes="' +data.time +'">' +
                         getTimeFromMins(data.time)  +
                         '</td>' +
@@ -328,7 +364,16 @@ function save(){
                         data.price +
                         '</td>' +
                         '<td>' +
-                        '<input class="checkbox-non-cash" type="checkbox">' +
+                        '<input class="checkbox checkbox-non-cash" type="checkbox">' +
+                        '</td>' +
+                        '<td class="part">' +
+                        '<input class="form-control part-noCash" type="number" value="0">' +
+                        '</td>' +
+                        '<td class="defer">' +
+                        '<input class="checkbox defer-cash" type="checkbox">' +
+                        '</td>' +
+                        '<td class="discount">' +
+                        '<input class="checkbox checkbox-discount" type="checkbox">' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
                         '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
@@ -343,6 +388,7 @@ function save(){
                         '</tr>'
                     );
                     $('#modalService').modal('hide');
+                    $('.checkbox-discount').last().prop("disabled", isEmpty(data.client));
                     socket.emit('cachbox',function (res) {
                         if(res.status === 500){
                             Snackbar.show({
@@ -842,6 +888,7 @@ function autoNumber() {
                     let res =  data.map(function (item) {
                         return item.number;
                     });
+                    document.cookie = "client={};";
                     response(res);
                 });
             },
@@ -849,7 +896,8 @@ function autoNumber() {
                 socket.emit('autocomplete', ui.item.value, function (data) {
                     if(data.length){
                         $('#marka').val(data[0].marka);
-                        if(data[0].balance){
+                        document.cookie = "client="+JSON.stringify(data[0]);
+                        if(data[0].vip){
                             Snackbar.show({
                                 text: 'Баланс клиента составляет: ' + data[0].balance + ' руб.',
                                 pos: 'top-center',
@@ -858,10 +906,12 @@ function autoNumber() {
                             });
                             $('#vip').trigger('click');
                             $('.vip').append('<div class="alert alert-warning" role="alert"> VIP - клиент</div>')
-                        }else{
-                            $('#vip').trigger('click');
-                            $('.vip').empty();
                         }
+                        // else{
+                        //     console.log('no', data[0]);
+                        //     $('#vip').trigger('click');
+                        //     $('.vip').empty();
+                        // }
                     }
                 });
             }
@@ -871,7 +921,7 @@ function autoNumber() {
 
 //безнал
 function nonСash(){
-    $(document).on('click', '.checkbox-non-cash', function () {
+    $(document).on('click', '.checkbox-non-cash', function (e) {
         var p = confirm('Подтвердите свои действия!');
         if(p){
             var id = $(this).parents('tr').data('id');
@@ -901,6 +951,125 @@ function nonСash(){
                     });
                 }
             });
+        }else{
+            e.preventDefault();
+        }
+    })
+}
+
+function partnocash(){
+    $(document).on('change', '.part-noCash', function(){
+        let data = {};
+        data.price = +$(this).val();
+        data.id = $(this).parents('tr').data('id');
+        socket.emit('savePartNoCash', data ,function (res) {
+            if(res.status === 200) {
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        });
+    });
+}
+
+//Частичная оплата
+function deferCash(){
+    $(document).on('click', '.defer-cash', function(e){
+        let p = confirm('Подтвердите свои действия!');
+        if(p){
+            let data = {};
+            data.id = $(this).parents('tr').data('id');
+            data.val = $(this).is(":checked");
+            data.price = +$(this).parents('tr').find('.price').text();
+            socket.emit('deferCash', data ,function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            e.preventDefault();
+        }
+    });
+}
+
+//Скидка
+function discount() {
+    $(document).on('click', '.checkbox-discount', function (e) {
+        var p = confirm('Подтвердите свое действие');
+        if(p){
+            let data = {};
+            data.price = +$(this).parents('tr').data('discount');
+            data.proc = $(this).parents('tr').data('proc');
+            console.log(data);
+            if(data.proc === undefined || data.proc === false){
+                data.proc = false;
+            }else{
+                data.proc = true;
+            }
+            if($(this).prop("checked")){
+                if(data.proc){
+                    let main = +$(this).parents('tr').find('td.service-main').data('price');
+                    let dop = +$(this).parents('tr').find('td.dop').data('price');
+                    let price = main+dop;
+                    $(this).parents('tr').find('td.price').text( Math.round(((100 - data.price) * price)/ 100) );
+                    $(this).parents('tr').data('discountEn', Math.round((price - ((100 - data.price) * price)/ 100)) );
+                }else{
+                    let main = +$(this).parents('tr').find('td.service-main').data('price');
+                    let dop = +$(this).parents('tr').find('td.dop').data('price');
+                    let price = main+dop;
+                    $(this).parents('tr').find('td.price').text( price - data.price  );
+                    $(this).parents('tr').data('discountEn', data.price);
+                }
+                let src = {
+                    id: $(this).parents('tr').data('id'),
+                    discount: $(this).parents('tr').data('discountEn')
+                };
+                console.log(src);
+                socket.emit('saveDiscount', src, function (res) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                })
+            }else{
+                let main = +$(this).parents('tr').find('td.service-main').data('price');
+                let dop = +$(this).parents('tr').find('td.dop').data('price');
+                let price = main+dop;
+                $(this).parents('tr').find('td.price').text( price );
+                $(this).parents('tr').data('discountEn', 0);
+                let src = {
+                    id: $(this).parents('tr').data('id'),
+                    discount: $(this).parents('tr').data('discountEn')
+                };
+                socket.emit('saveDiscount', src, function (res) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                })
+            }
+        }else{
+            e.preventDefault();
         }
     })
 }
