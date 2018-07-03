@@ -128,4 +128,112 @@ module.exports.encashment = async function(req, res, next) {
     res.render('admin/encashment', {title: "Инкассация", encahment: encahment})
 };
 
+module.exports.report = async function(req, res, next) {
+    let data = {};
+    data.washers = await model.getWashers();
+
+    let carPromise = data.washers.map( (item) => {
+        return model.getCountCar(item.fio);
+    });
+
+    data.cars = await Promise.all(carPromise);
+
+    let sumPromise = data.washers.map( (item) => {
+        return model.getSum(item.fio);
+    });
+
+    data.sum = await Promise.all(sumPromise);
+
+    let mainCostsPromise = data.washers.map( (item) => {
+        return model.getCosts(item.fio);
+    });
+
+    data.costs = await Promise.all(mainCostsPromise);
+
+    let dopCostsPromise = data.washers.map( (item) => {
+        return model.getDopCosts(item.fio);
+    });
+
+    data.dopCosts = await Promise.all(dopCostsPromise);
+
+    let arbitrarysPromise = data.washers.map( (item) => {
+        return model.getArbitrarys(item.fio);
+    });
+
+    data.arbitrars = await Promise.all(arbitrarysPromise);
+
+    let discountPromise = data.washers.map( (item) => {
+        return model.getDiscount(item.fio);
+    });
+
+    data.discount = await Promise.all(discountPromise);
+
+
+    let scoresPromise = data.washers.map( (item) => {
+        return model.getScores(item.fio);
+    });
+
+    data.scores = await Promise.all(scoresPromise);
+
+    let cardPromise = data.washers.map( (item) => {
+        return model.getCard(item.fio);
+    });
+
+    data.cards = await Promise.all(cardPromise);
+
+    let deferPromise = data.washers.map( (item) => {
+        return model.getDefer(item.fio);
+    });
+
+    data.deferCash = await Promise.all(deferPromise);
+
+    let vipPromise = data.washers.map( (item) => {
+        return model.getVip(item.fio);
+    });
+
+    data.vip = await Promise.all(vipPromise);
+
+    let prevDeferCashPromise = data.washers.map( (item) => {
+        return model.getPrevDeferCash(item.fio);
+    });
+
+    data.prevDeferCash = await Promise.all(prevDeferCashPromise);
+
+
+    data.cashboxAll = await model.getCashboxes();
+
+
+    let vipSum = 0;
+    data.vip.forEach((item) =>{
+       if(item.length){
+           vipSum += item[0].sum;
+       }
+    });
+
+    if(data.cashboxAll.length){
+        let p = 0;
+        data.cashbox = data.cashboxAll.reduce((accum, current) =>{
+            return accum + current.all;
+        }, p);
+        data.prepaid = data.cashboxAll.reduce((accum, current) =>{
+            return accum + current.prepaid;
+        }, p);
+        data.coffee = data.cashboxAll.reduce((accum, current) =>{
+            return accum + current.coffee;
+        }, p);
+        data.tea = data.cashboxAll.reduce((accum, current) =>{
+            return accum + current.tea;
+        }, p);
+        data.coffeeT = data.cashboxAll.reduce((accum, current) =>{
+            return accum + current.coffeeT;
+        }, p);
+    }else{
+        data.cashbox = 0;
+    }
+    data.cashbox -= vipSum;
+
+
+    res.render('admin/report', {title: "Отчетность", data })
+};
+
 

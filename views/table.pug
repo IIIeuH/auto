@@ -56,7 +56,10 @@
                                     td.service-main(data-price=item.mainPrice, data-time=item.mainTime)=item.services
                                     td.dop(data-price=item.dopPrice, data-time=item.dopTime)=item.dopServices
                                     td=item.washer
-                                    td.price=(item.dopPrice + item.mainPrice) - item.discount
+                                    if(item.discount)
+                                        td.price=(item.dopPrice + item.mainPrice) - item.discount
+                                    else
+                                        td.price=(item.dopPrice + item.mainPrice) - 0
                                     td.non-cash
                                         if item.nonCash
                                             input.checkbox.checkbox-non-cash(type="checkbox", checked)

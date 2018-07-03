@@ -78,3 +78,271 @@ function getMonthDateRange(year, month) {
     let endDate = moment(startDate).endOf('month');
     return { start: startDate, end: endDate };
 }
+
+
+//Reports
+
+module.exports.getWashers = async() => {
+    try{
+        return await db.collection('persons').find({administrator: false}, {_id: 0, administrator: 0}).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getCountCar = async(washer) => {
+    try{
+        return await db.collection('boxes').count({washer: washer, status: 'ready'});
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getSum = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, status: 'ready'}
+            },
+            {
+                $project: {_id: 0, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getCosts = async(washer) => {
+    try{
+        return await db.collection('costs').aggregate(
+            {
+                $match: {name: washer}
+            },
+            {
+              $unwind: "$costs"
+            },
+            {
+                $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getDopCosts = async(washer) => {
+    try{
+        return await db.collection('dops').aggregate(
+            {
+                $match: {name: washer}
+            },
+            {
+                $unwind: "$costs"
+            },
+            {
+                $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getArbitrarys = async(washer) => {
+    try{
+        return await db.collection('arbitrarys').aggregate(
+            {
+                $match: {name: washer}
+            },
+            {
+                $unwind: "$costs"
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$costs.price'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getDiscount = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, status: 'ready'}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$discount'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getScores = async(washer) => {
+    try{
+        return await db.collection('scores').aggregate(
+            {
+                $match: {name: washer}
+            },
+            {
+                $unwind: "$costs"
+            },
+            {
+                $group: {_id: null, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getCard = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, nonCash: true, status: 'ready'}
+            },
+            {
+              $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getDefer = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, deferCash: true, status: 'ready'}
+            },
+            {
+                $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+
+
+
+module.exports.getDeferCash = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, deferCash: true, status: 'ready'}
+            },
+            {
+                $project: {_id: null, sum: {$subtract: [{$sum: ['$mainPrice', '$dopPrice']}, '$discount']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+module.exports.getVip = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, vip: true, status: 'ready'}
+            },
+            {
+              $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+
+
+module.exports.getPrevDeferCash = async(washer) => {
+    try{
+        return await db.collection('boxes').aggregate(
+            {
+                $match: {washer: washer, deferCash: false, status: 'ready'}
+            },
+            {
+                $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getCashboxes = async() => {
+    try{
+        return await db.collection('cashboxes').aggregate(
+            {
+                $match: {}
+            },
+            {
+                $project: {_id: null, prepaid: {$sum: ['$cashPrepaid']}, coffee: {$sum: ['$cashCoffeeMachine']}, tea: {$sum: ['$cashTea']}, coffeeT: {$sum: ['$cashCoffee']}, all: {$sum: ['$encashment', '$cashPrepaid', '$cashCar', '$discountCash', '$cashCosts', '$cashDops', '$arbitrary', '$cashScore', '$cashCoffeeMachine', '$deferCash', '$cashTea', '$cashCoffee']}}
+            },
+            {
+                $group: {_id: null, all: {$sum: ['$all']}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};

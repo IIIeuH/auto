@@ -47,7 +47,7 @@ module.exports.init = function(socket){
     //save dopServices
     socket.on('saveDopServices', async (data, query, cb) => {
         try{
-            await db.collection('boxes').updateOne(query, {$set: {dopServices: data.services, dopPrice:  data.price, dopTime: data.time}, $inc: {price: data.price, time: data.time}});
+            await db.collection('boxes').updateOne({_id: ObjectId(query)}, {$set: {dopServices: data.services, dopPrice:  data.price, dopTime: data.time}, $inc: {price: data.price, time: data.time}});
             cb({status:200, msg: 'Доп. услуги сохранены!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -101,7 +101,7 @@ module.exports.init = function(socket){
 
     socket.on('setCosts', async (data,name, cb) => {
         try{
-            await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data } }, {upsert: true});
+            await db.collection('scores').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data , dateD: new Date()} }, {upsert: true});
             let price = await db.collection('scores').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -130,7 +130,7 @@ module.exports.init = function(socket){
 
     socket.on('saveProductDop', async (data,name, cb) => {
         try{
-            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data } }, {upsert: true});
+            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data, dateD: new Date() } }, {upsert: true});
             let price = await db.collection('dops').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -159,7 +159,7 @@ module.exports.init = function(socket){
 
     socket.on('saveProductMain', async (data,name,  cb) => {
         try{
-            await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data} }, {upsert: true});
+            await db.collection('costs').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data, dateD: new Date()} }, {upsert: true});
             let price = await db.collection('costs').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -189,8 +189,7 @@ module.exports.init = function(socket){
     //Save arbitrary
     socket.on('saveArbitrary', async (data,name,  cb) => {
         try{
-            console.log(data, name);
-            await db.collection('arbitrarys').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data} }, {upsert: true});
+            await db.collection('arbitrarys').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {name: name, costs: data, dateD: new Date()} }, {upsert: true});
             let price = await db.collection('arbitrarys').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -531,7 +530,6 @@ module.exports.init = function(socket){
     //Админка Сохранение полей услуг
     socket.on('saveField', async (collection,type, data, cb) => {
         try{
-            console.log(collection,type, data);
             await db.collection(collection).updateOne({name: type}, {$addToSet: {service: data}});
             cb({status:200, msg: 'Добавлено!'});
         }catch(err){
@@ -1065,7 +1063,6 @@ module.exports.init = function(socket){
     socket.on('chackCashVIP', async (number, car, price, cb) => {
         try{
             let balance = await db.collection('clients').findOne({number: number, marka: car}, {balance: 1});
-            console.log(balance.balance, +price);
             if(+balance.balance <  +price){
                 cb({status:500, msg: 'У клиента не достаточно средств! Баланс клиента составляет: ' + balance.balance + 'руб.'});
             }else{
@@ -1102,12 +1099,11 @@ module.exports.init = function(socket){
     //Отложенная оплата
     socket.on('deferCash', async (data, cb) => {
         try{
-            console.log(data);
             await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {deferCash: data.val}});
             if(data.val){
-                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$inc: {deferCash: data.price}});
-            }else{
                 await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$inc: {deferCash: -data.price}});
+            }else{
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$inc: {deferCash: data.price}});
             }
             cb({status:200, msg: 'Обновлено'});
         }catch(err){
@@ -1118,9 +1114,8 @@ module.exports.init = function(socket){
     //Подтверждение отложенной оплаты
     socket.on('statusDefer', async (data, cb) => {
         try{
-            console.log(data);
             await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {deferCash: false}});
-            await db.collection('cashboxes').updateOne({date: data.date}, {$inc: {deferCash: -data.price}});
+            await db.collection('cashboxes').updateOne({date: data.date}, {$inc: {deferCash: data.price}});
             cb({status:200, msg: 'Обновлено'});
         }catch(err){
             cb({status:500, msg: err});
@@ -1130,10 +1125,357 @@ module.exports.init = function(socket){
     //Save discount
     socket.on('saveDiscount', async (data, cb) => {
         try{
-            console.log(data);
             await db.collection('boxes').updateOne({_id: ObjectId(data.id)}, {$set: {discount: data.discount}});
-            // await db.collection('cashboxes').updateOne({date: data.date}, {$inc: {deferCash: -data.price}});
+            let discount = await db.collection('boxes').aggregate([
+                {
+                    $match: {date: moment().format('DD.MM.YYYY')}
+                },
+                {
+                    $group: {_id: null, discount: {$sum: '$discount'}}
+                }
+            ]).toArray();
+            if(discount[0].hasOwnProperty('discount')){
+                await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {discountCash: -discount[0].discount}});
+            }else{
+                throw ('Скидка не обновлена!');
+            }
             cb({status:200, msg: 'Обновлено'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+
+    //Report по дате
+    socket.on('getReportDate', async (startDate, endDate, cb) => {
+        try{
+            let start = moment(startDate, 'YYYY-MM-DD').add(1, 'days').toDate();
+            let end =  moment(endDate, 'YYYY-MM-DD').add(1, 'days').toDate();
+
+
+
+            let data = {};
+            data.washers = await db.collection('persons').find({administrator: false}, {_id: 0, administrator: 0}).toArray();
+
+            let carPromise = data.washers.map( async (item) => {
+                return db.collection('boxes').count({washer: item.fio, status: 'ready', dateD: {$gte: start, $lte: end}});
+            });
+
+            data.cars = await Promise.all(carPromise);
+
+            let sumPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $project: {_id: 0, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.sum = await Promise.all(sumPromise);
+
+            data.sumArr = data.sum.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+            let mainCostsPromise = data.washers.map( (item) => {
+                return db.collection('costs').aggregate(
+                    {
+                        $match: {name: item.fio, dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $unwind: "$costs"
+                    },
+                    {
+                        $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.costs = await Promise.all(mainCostsPromise);
+
+            data.costsArr = data.costs.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            let dopCostsPromise = data.washers.map( (item) => {
+                return db.collection('dops').aggregate(
+                    {
+                        $match: {name: item.fio, dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $unwind: "$costs"
+                    },
+                    {
+                        $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.dopCosts = await Promise.all(dopCostsPromise);
+
+            data.dopCostsArr = data.dopCosts.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+
+            let arbitrarysPromise = data.washers.map( (item) => {
+                return db.collection('arbitrarys').aggregate(
+                    {
+                        $match: {name: item.fio, dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $unwind: "$costs"
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$costs.price'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.arbitrars = await Promise.all(arbitrarysPromise);
+
+            data.arbitrarsArr = data.arbitrars.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            let discountPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$discount'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.discount = await Promise.all(discountPromise);
+
+
+            data.discountArr = data.discount.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            let scoresPromise = data.washers.map( (item) => {
+                return db.collection('scores').aggregate(
+                    {
+                        $match: {name: item.fio, dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $unwind: "$costs"
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.scores = await Promise.all(scoresPromise);
+
+
+            data.scoresArr = data.scores.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            let cardPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, nonCash: true, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.cards = await Promise.all(cardPromise);
+
+            data.cardsArr = data.cards.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+            let deferPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, deferCash: true, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.deferCash = await Promise.all(deferPromise);
+
+
+            data.deferCashArr = data.deferCash.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            let vipPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, vip: true, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.vip = await Promise.all(vipPromise);
+
+            data.vipArr = data.vip.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+            let prevDeferCashPromise = data.washers.map( (item) => {
+                return db.collection('boxes').aggregate(
+                    {
+                        $match: {washer: item.fio, deferCash: false, status: 'ready', dateD: {$gte: start, $lte: end}}
+                    },
+                    {
+                        $project: {_id: null, sum: {$sum: ['$mainPrice', '$dopPrice']}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.prevDeferCash = await Promise.all(prevDeferCashPromise);
+
+            data.prevDeferCashArr = data.prevDeferCash.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
+
+            data.cashboxAll = await db.collection('cashboxes').aggregate(
+                {
+                    $match: {dateD: {$gte: start, $lte: end}}
+                },
+                {
+                    $project: {_id: null, prepaid: {$sum: ['$cashPrepaid']}, coffee: {$sum: ['$cashCoffeeMachine']}, tea: {$sum: ['$cashTea']}, coffeeT: {$sum: ['$cashCoffee']}, all: {$sum: ['$encashment', '$cashPrepaid', '$cashCar', '$discountCash', '$cashCosts', '$cashDops', '$arbitrary', '$cashScore', '$cashCoffeeMachine', '$deferCash', '$cashTea']}}
+                },
+                {
+                    $group: {_id: null, all: {$sum: ['$all']}}
+                }).toArray();
+
+            let vipSum = 0;
+            data.vip.forEach((item) =>{
+                if(item.length){
+                    vipSum += item[0].sum;
+                }
+            });
+
+
+            if(data.cashboxAll.length){
+                let p = 0;
+                data.cashbox = data.cashboxAll.reduce((accum, current) =>{
+                    return accum + current.all;
+                }, p);
+                data.prepaid = data.cashboxAll.reduce((accum, current) =>{
+                    return accum + current.prepaid;
+                }, p);
+                data.coffee = data.cashboxAll.reduce((accum, current) =>{
+                    return accum + current.coffee;
+                }, p);
+                data.tea = data.cashboxAll.reduce((accum, current) =>{
+                    return accum + current.tea;
+                }, p);
+                data.coffeeT = data.cashboxAll.reduce((accum, current) =>{
+                    return accum + current.coffeeT;
+                }, p);
+            }else{
+                data.cashbox = 0;
+            }
+            data.cashbox -= vipSum;
+
+            cb({status:200, msg: 'Найдено!', arr: data});
         }catch(err){
             cb({status:500, msg: err});
         }

@@ -3,7 +3,7 @@ extends layout
 block content
     .container-fluid
         .row
-            .col-lg-3.col-md-6
+            .col-md
                 .input-group.mb-3
                     .input-group-prepend
                         label.input-group-text(for='personsPrepaid') Персонал
@@ -13,9 +13,8 @@ block content
                             option(value=item.fio)=item.fio
                 button.btn.btn-outline-info(type='button', id="prepaidTo") Выдать аванс
                 button.btn.btn-outline-info.ml-3(type='button', id="prepaidToDay") Выдать Ежедневный аванс
-            .col-lg-3.col-md-6
+            .col-md
                 p.lead.cashWasher
-            .col-lg-3.col-md-6
         .row(style="margin-top:20px")
             .col-md-4
                 .input-group.mb-3

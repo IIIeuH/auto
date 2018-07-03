@@ -524,7 +524,6 @@ function addArbitrary() {
         data.name = $('#arbitrary-name').val();
         data.price = $('#arbitrary-price').val();
         let table = $('.product-arbitrary-body');
-        console.log(data);
         table.append(
             '<tr class="arbitrary-table">' +
             '<td class="arbitrary-name">' +

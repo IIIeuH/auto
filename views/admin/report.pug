@@ -1,0 +1,95 @@
+extends layout
+
+block content
+    .container-fluid
+        .row(style="margin-top:20px")
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDateReport.form-control(type='date')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDateReport.form-control(type='date')
+            .col-md
+                p.h4 Касса на данный момент:
+                    span.cashReport=data.cashbox
+        .row
+            .col-md
+                button.btn.btn-outline-info(type='button', id="lookReportDate") Показать
+        .row.mt-3
+            .col-md-3
+                p.h4 Аванс:
+                    span.avansReport=data.prepaid
+            .col-md-3
+                p.h4 Кофемашина:
+                    span.coffeReport=data.coffee
+            .col-md-3
+                p.h4 Чай:
+                    span.teaReport=data.tea
+            .col-md-3
+                p.h4 Кофе:
+                    span.coffeTReport=data.coffeeT
+        .row
+            .col-md
+                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                    thead.thead-dark
+                        th Мойщик
+                        th Машин
+                        th Сумма
+                        th Основные расходы(Потрачено)
+                        th Дополнительные расходы(Потрачено)
+                        th Произвольные расходы(Потрачено)
+                        th Сделано скидок на сумму
+                        th Магазин
+                        th Заплачено на карту
+                        th Неоплаченные услуги
+                        th Оказаные вип на сумму
+                        th Услуги с предыдущей смены
+                    tbody.reports
+                        each item, i in data.washers
+                            tr
+                                td=item.fio
+                                td=data.cars[i]
+                                if(!data.sum[i].length)
+                                    td=0
+                                else
+                                    td=data.sum[i][0].sum
+                                if(!data.costs[i].length)
+                                    td=0
+                                else
+                                    td=data.costs[i][0].sum
+                                if(!data.dopCosts[i].length)
+                                    td=0
+                                else
+                                    td=data.dopCosts[i][0].sum
+                                if(!data.arbitrars[i].length)
+                                    td=0
+                                else
+                                    td=data.arbitrars[i][0].sum
+                                if(!data.discount[i].length)
+                                    td=0
+                                else
+                                    td=data.discount[i][0].sum
+                                if(!data.scores[i].length)
+                                    td=0
+                                else
+                                    td=data.scores[i][0].sum
+                                if(!data.cards[i].length)
+                                    td=0
+                                else
+                                    td=data.cards[i][0].sum - data.discount[i][0].sum
+                                if(!data.deferCash[i].length)
+                                    td=0
+                                else
+                                    td=data.deferCash[i][0].sum
+                                if(!data.vip[i].length)
+                                    td=0
+                                else
+                                    td=data.vip[i][0].sum
+                                if(!data.prevDeferCash[i].length)
+                                    td=0
+                                else
+                                    td=data.prevDeferCash[i][0].sum

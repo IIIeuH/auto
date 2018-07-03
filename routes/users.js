@@ -23,5 +23,6 @@ router.get('/add/dop',  ctrl.addDop);
 router.get('/add/score',  ctrl.addScore);
 router.get('/graphicjob',  ctrl.graphicjob);
 router.get('/encashment',  ctrl.encashment);
+router.get('/report',  ctrl.report);
 
 module.exports = router;
