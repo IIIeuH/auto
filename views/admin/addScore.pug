@@ -2,13 +2,14 @@ extends layout
 
 block content
     .container-fluid
-        .row
+        .row.no-print
             .col-lg-3.col-md-3
                 .input-group.mb-3
                     .input-group-prepend
                         label.input-group-text(for='addScoreName') Наименование
                     input.form-control(type='text', id="addScoreName")
                 button.btn.btn-outline-info(type='button', id="btnAddScore") Добавить
+                button.btn.btn-outline-info.ml-3(type='button', id="print") Печать
             .col-lg-3.col-md-3
                 .input-group.mb-3
                     .input-group-prepend
@@ -24,7 +25,7 @@ block content
                     .input-group-prepend
                         label.input-group-text(for='addScoreWarehouse') Кол-во
                     input.form-control(type='number', id="addScoreWarehouse")
-        .row
+        .row.print
             .col-md
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
@@ -32,7 +33,7 @@ block content
                         th Цена закупочная
                         th Цена продажи
                         th Кол-во
-                        th Действие
+                        th.no-print Действие
                     tbody.addScore
                         each item in product
                             tr
@@ -40,5 +41,20 @@ block content
                                 td.redactaddScore.salePriceAddScore(contenteditable="true")=item.salePrice
                                 td.redactaddScore.priceAddScore(contenteditable="true")=item.price
                                 td.redactaddScore.warehouseAddScore(contenteditable="true")=item.warehouse
-                                td
+                                td.no-print
                                     button#delAddScore.btn.btn-outline-dark(type='button', data-id=item._id) Удалить
+    //.container-fluid.print(style="display: none;")
+    //    table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+    //        thead.thead-dark
+    //            th Наименовение
+    //            th Цена закупочная
+    //            th Цена продажи
+    //            th Кол-во
+    //        tbody
+    //            each item in product
+    //                tr
+    //                    td.redactaddScore.nameAddScore(contenteditable="true")=item.name
+    //                    td.redactaddScore.salePriceAddScore(contenteditable="true")=item.salePrice
+    //                    td.redactaddScore.priceAddScore(contenteditable="true")=item.price
+    //                    td.redactaddScore.warehouseAddScore(contenteditable="true")=item.warehouse
+

@@ -128,6 +128,7 @@ module.exports.encashment = async function(req, res, next) {
     res.render('admin/encashment', {title: "Инкассация", encahment: encahment})
 };
 
+
 module.exports.report = async function(req, res, next) {
     let data = {};
     data.washers = await model.getWashers();

@@ -217,9 +217,17 @@ function btnActive() {
             btn.removeAttr('disabled');
         }
     });
-    $(document).on('click', '#modalService', function(){
-        var readyService = $('.service-ready');
-        if(readyService.length){
+
+    // $(document).on('click', '#modalService', function(){
+    //     var readyService = $('.service-ready');
+    //     if(readyService.length){
+    //         btnSave.removeAttr('disabled');
+    //     }else{
+    //         btnSave.attr('disabled', 'disabled');
+    //     }
+    // });
+    $(document).on('click', '.activeType', function(){
+        if($(this).hasClass('activeType')){
             btnSave.removeAttr('disabled');
         }else{
             btnSave.attr('disabled', 'disabled');
@@ -623,6 +631,7 @@ function statusBtnWash(){
         var marka = $(this).parents('.str').find('.car').text();
         var number = $(this).parents('.str').find('.number').text();
         var services = $(this).parents('.str').find('.service-main').text();
+        var id = $(this).parents('.str').data('id');
         var box = window.location.search.substr(8);
         var that = $(this);
         var p = confirm('Загнать машину ' + marka + ' с номером ' + number +' в бокс ' + box + '?');
@@ -658,7 +667,7 @@ function statusBtnWash(){
                     }
                 });
             }else{
-                socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
+                socket.emit('setStatus', id, 'wash', function (res) {
                     if(res.status === 200) {
                         Snackbar.show({
                             text: res.msg,
@@ -686,6 +695,7 @@ function statusBtnReady(){
         var marka = $(this).parents('.str').find('.car').text();
         var number = $(this).parents('.str').find('.number').text();
         var services = $(this).parents('.str').find('.service-main').text();
+        var id = $(this).parents('.str').data('id');
         var box = window.location.search.substr(8);
         var that = $(this);
         var p = confirm('Машина ' + marka + ' с номером ' + number +' готова?');
@@ -725,7 +735,7 @@ function statusBtnReady(){
                     }
                 });
             }else{
-                socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
+                socket.emit('setStatus', id, 'ready', function (res) {
                     if(res.status === 200) {
                         Snackbar.show({
                             text: res.msg,
@@ -753,11 +763,12 @@ function statusBtnAwait(){
         var marka = $(this).parents('.str').find('.car').text();
         var number = $(this).parents('.str').find('.number').text();
         var services = $(this).parents('.str').find('.service-main').text();
+        var id = $(this).parents('.str').data('id');
         var box = window.location.search.substr(8);
         var that = $(this);
         var p = confirm('Отменить машину ' + marka + ' с номером ' + number +'?');
         if(p){
-            socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'await', function (res) {
+            socket.emit('setStatus', id, 'await', function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -1018,7 +1029,6 @@ function discount() {
             let data = {};
             data.price = +$(this).parents('tr').data('discount');
             data.proc = $(this).parents('tr').data('proc');
-            console.log(data);
             if(data.proc === undefined || data.proc === false){
                 data.proc = false;
             }else{
@@ -1042,7 +1052,6 @@ function discount() {
                     id: $(this).parents('tr').data('id'),
                     discount: $(this).parents('tr').data('discountEn')
                 };
-                console.log(src);
                 socket.emit('saveDiscount', src, function (res) {
                     Snackbar.show({
                         text: res.msg,

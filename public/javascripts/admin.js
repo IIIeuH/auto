@@ -149,7 +149,6 @@ function addFiled(parent, btnRemoveName, btnSaveField, btn) {
 function saveFiled(btn, parent1, parent2, collection, typeFiled){
     $(document).on('click', btn, function () {
         let el = $(this).parents(parent1);
-        console.log($(this).parents(parent2).find(typeFiled).val());
         let type = $(this).parents(parent2).find(typeFiled).val();
         let obj = {};
         let that = $(this);

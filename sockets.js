@@ -80,9 +80,9 @@ module.exports.init = function(socket){
 
 
     //Установка статуса при клике на кнопку
-    socket.on('setStatus', async (data, status, cb) => {
+    socket.on('setStatus', async (id, status, cb) => {
         try{
-            await db.collection('boxes').updateOne(data, {$set: {status: status}});
+            await db.collection('boxes').updateOne({_id: ObjectId(id)}, {$set: {status: status}});
             cb({status:200, msg: 'Статус изменен!'});
         }catch(err){
             cb({status:500, msg: err});
@@ -646,9 +646,8 @@ module.exports.init = function(socket){
 
 
     //При клике на кнопку выдать ежедневный аванс
-    socket.on('cashPrepaidDay', async (person, cb) => {
+    socket.on('cashPrepaidDay', async (person, cash, cb) => {
         try{
-            let cash = 400;
             let id = await db.collection('prepaides').insert({person: person, date: moment().format('DD.MM.YYYY'), dateD: new Date(), prepaid: Math.round(cash)});
             let cashReal = await db.collection('prepaides').aggregate([
                 {

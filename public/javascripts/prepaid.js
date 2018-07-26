@@ -4,6 +4,7 @@ $(function() {
     prepaidTo();
     delPrepaid();
     prepaidToDay();
+    prepaidAdvance()
     datePrep();
     validBtnPrepaid();
 });
@@ -17,6 +18,44 @@ function getCash() {
             }
         })
     })
+}
+
+function prepaidAdvance(){
+    var btn = $('#prepaidAdvance');
+    btn.click(function(){
+        var cash =  $('#prepaidAdv').val();
+        socket.emit('cashPrepaidDay', $('#personsPrepaid').val(), cash, function (res) {
+            if(res.status === 200){
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                $('.prepaid').append(
+                    '<tr class="tr-prep">' +
+                    '<td class="date-prep">' +
+                    moment().format('DD.MM.YYYY') +
+                    '</td>' +
+                    '<td>' +
+                    $('#personsPrepaid').val() +
+                    '</td>' +
+                    '<td class="pricePrepTable">' +
+                    cash+
+                    '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn btn-outline-dark del-prepaid" id="'+res.id.insertedIds[0]+'">Удалить</button>'+
+                    '</td>' +
+                    '</tr>'
+                );
+            }else{
+                Snackbar.show({
+                    text: res.msg,
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+            }
+        })
+    });
 }
 
 function prepaidTo(){
@@ -58,7 +97,8 @@ function prepaidTo(){
 
 function prepaidToDay(){
     $(document).on('click', '#prepaidToDay', function () {
-        socket.emit('cashPrepaidDay', $('#personsPrepaid').val(), function (res) {
+        let cash = 400;
+        socket.emit('cashPrepaidDay', $('#personsPrepaid').val(), cash, function (res) {
             if(res.status === 200){
                 Snackbar.show({
                     text: res.msg,
@@ -151,15 +191,19 @@ function datePrep() {
 function validBtnPrepaid(){
     let btn1 = $('#prepaidTo');
     let btn2 = $('#prepaidToDay');
+    let btn3 = $('#prepaidAdvance');
     btn1.prop('disabled', true);
     btn2.prop('disabled', true);
+    btn3.prop('disabled', true);
     $(document).on('change', '#personsPrepaid', function () {
         if($(this).val() !== ''){
             btn1.prop('disabled', false);
             btn2.prop('disabled', false);
+            btn3.prop('disabled', false);
         }else{
             btn1.prop('disabled', true);
             btn2.prop('disabled', true);
+            btn3.prop('disabled', true);
         }
     })
 }

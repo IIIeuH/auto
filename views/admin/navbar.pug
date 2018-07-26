@@ -4,12 +4,6 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.mb-3
         span.navbar-toggler-icon
     #navbarText.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
-            li.nav-item.active
-                a.nav-link(href='/admin/persons') Персонал
-            li.nav-item
-                a.nav-link(href='/admin/marks') Марки машин
-            li.nav-item
-                a.nav-link(href='/admin/clients') База клиентов
             li.nav-item.dropdown
                 a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Расходы
                 .dropdown-menu
@@ -18,19 +12,18 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.mb-3
                     a.dropdown-item(href='/admin/tea') Расходы на чай
                     a.dropdown-item(href='/admin/coffee') Расходы на кофе
                     a.dropdown-item(href='/admin/prize') Расходы на премии
-            li.nav-item
-                a.nav-link(href='/admin/services') Услуги
-            li.nav-item
-                a.nav-link(href='/admin/dopservices') Доп. услуги
-            li.nav-item
-                a.nav-link(href='/admin/prepaid') Аванс
-            li.nav-item
-                a.nav-link(href='/admin/fine') Штраф
             li.nav-item.dropdown
                 a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Добавить
                 .dropdown-menu
-                    a.dropdown-item(href='/admin/add/costs') Основные
-                    a.dropdown-item(href='/admin/add/dop') Дополнительные услуги
+                    a.dropdown-item(href='/admin/services') Услуги
+                    a.dropdown-item(href='/admin/dopservices') Доп. услуги
+                    a.dropdown-item(href='/admin/prepaid') Аванс
+                    a.dropdown-item(href='/admin/fine') Штраф
+                    a.dropdown-item(href='/admin/persons') Персонал
+                    a.dropdown-item(href='/admin/marks') Марки машин
+                    a.dropdown-item(href='/admin/clients') База клиентов
+                    a.dropdown-item(href='/admin/add/costs') Основные расходы
+                    a.dropdown-item(href='/admin/add/dop') Расходы на доп. услуги
                     a.dropdown-item(href='/admin/add/score') Магазин
             li.nav-item
                 a.nav-link(href='/admin/cashbox') Касса
@@ -40,5 +33,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.mb-3
                 a.nav-link(href='/admin/encashment') Инкассация
             li.nav-item
                 a.nav-link(href='/admin/report') Отчетность
+            li.nav-item
+                a.nav-link(href='/admin/stock') Склад
         button.btn.btn-outline-light(onclick="window.location.href='/'; return false;") Выход
 
