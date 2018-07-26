@@ -83,7 +83,7 @@ module.exports.timer = async() => {
 
 module.exports.product = async() => {
     try {
-        return await db.collection('products').find({}).toArray();
+        return await db.collection('products').find({warehouse: {$gt: 0}}).toArray();
     }catch(err){
         return err;
     }

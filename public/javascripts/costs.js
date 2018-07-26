@@ -125,34 +125,117 @@ $(function(){
 
 function saveCosts(){
     let btn = $('#saveCosts');
+    let btnNoCash = $('#saveCostsNoCash');
+    let btnPerson = $('#saveCostsPerson');
+    btnPerson.click(function () {
+        let conf = confirm("Подтвердите действия!");
+        if(conf){
+            let mas = [];
+            let tr = $('.product-body').find('tr');
+            let name = get_cookie('washer');
+            let noCashe = false;
+            let person = true;
+            tr.each(function () {
+                let obj = {};
+                obj.warehouse = $(this).find('.warehouse-table').text();
+                obj.name = $(this).find('.product-name').text();
+                obj.price = +$(this).find('.product-price').text();
+                obj.quantity = +$(this).find('.quantity').text();
+                obj.remainder = +$(this).find('.remainder').text();
+                mas.push(obj);
+            });
+            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            return false;
+        }
+    });
+
+    btnNoCash.click(function () {
+        let conf = confirm("Подтвердите действия!");
+        if(conf){
+            let mas = [];
+            let tr = $('.product-body').find('tr');
+            let name = get_cookie('washer');
+            let noCashe = true;
+            let person = false;
+            tr.each(function () {
+                let obj = {};
+                obj.warehouse = $(this).find('.warehouse-table').text();
+                obj.name = $(this).find('.product-name').text();
+                obj.price = +$(this).find('.product-price').text();
+                obj.quantity = +$(this).find('.quantity').text();
+                obj.remainder = +$(this).find('.remainder').text();
+                mas.push(obj);
+            });
+            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            return false;
+        }
+    });
+
     btn.click(function () {
-        let mas = [];
-        let tr = $('.product-body').find('tr');
-        let name = get_cookie('washer');
-        tr.each(function () {
-            let obj = {};
-            obj.warehouse = $(this).find('.warehouse-table').text();
-            obj.name = $(this).find('.product-name').text();
-            obj.price = +$(this).find('.product-price').text();
-            obj.quantity = +$(this).find('.quantity').text();
-            obj.remainder = +$(this).find('.remainder').text();
-            mas.push(obj);
-        });
-        socket.emit('setCosts', mas,name,  function (res) {
-            if(res.status === 200) {
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-            }else{
-                Snackbar.show({
-                    text: res.msg,
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-            }
-        });
+        let conf = confirm("Подтвердите действия!");
+        if(conf){
+            let mas = [];
+            let tr = $('.product-body').find('tr');
+            let name = get_cookie('washer');
+            let noCashe = false;
+            let person = false;
+            tr.each(function () {
+                let obj = {};
+                obj.warehouse = $(this).find('.warehouse-table').text();
+                obj.name = $(this).find('.product-name').text();
+                obj.price = +$(this).find('.product-price').text();
+                obj.quantity = +$(this).find('.quantity').text();
+                obj.remainder = +$(this).find('.remainder').text();
+                mas.push(obj);
+            });
+            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+                if(res.status === 200) {
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }else{
+                    Snackbar.show({
+                        text: res.msg,
+                        pos: 'bottom-right',
+                        actionText: null
+                    });
+                }
+            });
+        }else{
+            return false;
+        }
     })
 }
 

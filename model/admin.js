@@ -209,7 +209,7 @@ module.exports.getScores = async(washer) => {
     try{
         return await db.collection('scores').aggregate(
             {
-                $match: {name: washer}
+                $match: {name: washer, $and: [ {$or:[{noCashe: {$exists: false}}, {noCashe: false}]}, {$or:[{person: {$exists: false}}, {person: false}]} ]}
             },
             {
                 $unwind: "$costs"
@@ -224,6 +224,49 @@ module.exports.getScores = async(washer) => {
         console.log(err);
     }
 };
+
+
+
+module.exports.getScoresNoCashe = async(washer) => {
+    try{
+        return await db.collection('scores').aggregate(
+            {
+                $match: {name: washer, noCashe: true}
+            },
+            {
+                $unwind: "$costs"
+            },
+            {
+                $group: {_id: null, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
+module.exports.getScoresPerson = async(washer) => {
+    try{
+        return await db.collection('scores').aggregate(
+            {
+                $match: {name: washer, person: true}
+            },
+            {
+                $unwind: "$costs"
+            },
+            {
+                $group: {_id: null, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+            },
+            {
+                $group: {_id: null, sum: {$sum: '$sum'}}
+            }).toArray();
+    }catch (err){
+        console.log(err);
+    }
+};
+
 
 module.exports.getCard = async(washer) => {
     try{
@@ -337,7 +380,7 @@ module.exports.getCashboxes = async() => {
                 $match: {}
             },
             {
-                $project: {_id: null, prepaid: {$sum: ['$cashPrepaid']}, coffee: {$sum: ['$cashCoffeeMachine']}, tea: {$sum: ['$cashTea']}, coffeeT: {$sum: ['$cashCoffee']}, all: {$sum: ['$encashment', '$cashPrepaid', '$cashCar', '$discountCash', '$cashCosts', '$cashDops', '$arbitrary', '$cashScore', '$cashCoffeeMachine', '$deferCash', '$cashTea', '$cashCoffee']}}
+                $project: {_id: null, prepaid: {$sum: ['$cashPrepaid']}, coffee: {$sum: ['$cashCoffeeMachine']}, tea: {$sum: ['$cashTea']}, coffeeT: {$sum: ['$cashCoffee']}, all: {$sum: ['$encashment', '$cashPrepaid', '$cashCar', '$discountCash', '$cashCosts', '$cashDops', '$arbitrary', '$cashScore', '$cashCoffeeMachine', '$deferCash', '$cashTea', '$cashCoffee', '$noCashScore', '$personCasheScore']}}
             },
             {
                 $group: {_id: null, all: {$sum: ['$all']}}

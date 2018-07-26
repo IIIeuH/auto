@@ -34,7 +34,7 @@ block content
                     span.coffeTReport=data.coffeeT
         .row
             .col-md
-                table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
+                table.table.table-striped.table-bordered.table-hover.table-responsive(style="margin-top: 20px")
                     thead.thead-dark
                         th Мойщик
                         th Машин
@@ -44,6 +44,8 @@ block content
                         th Произвольные расходы(Потрачено)
                         th Сделано скидок на сумму
                         th Магазин
+                        th Магазин(безнал)
+                        th Магазин(сотрудник)
                         th Заплачено на карту
                         th Неоплаченные услуги
                         th Оказаные вип на сумму
@@ -77,6 +79,18 @@ block content
                                     td=0
                                 else
                                     td=data.scores[i][0].sum
+                                //score no cashe
+                                if(!data.scoresNoCashe[i].length)
+                                    td=0
+                                else
+                                    td=data.scoresNoCashe[i][0].sum
+                                //
+                                //score no cashe
+                                if(!data.scoresPerson[i].length)
+                                    td=0
+                                else
+                                    td=data.scoresPerson[i][0].sum
+                                //
                                 if(!data.cards[i].length)
                                     td=0
                                 else

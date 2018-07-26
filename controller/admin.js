@@ -176,6 +176,22 @@ module.exports.report = async function(req, res, next) {
 
     data.scores = await Promise.all(scoresPromise);
 
+
+    let scoresNoCashePromise = data.washers.map( (item) => {
+        return model.getScoresNoCashe(item.fio);
+    });
+
+    data.scoresNoCashe = await Promise.all(scoresNoCashePromise);
+
+
+
+    let scoresPersonPromise = data.washers.map( (item) => {
+        return model.getScoresPerson(item.fio);
+    });
+
+    data.scoresPerson = await Promise.all(scoresPersonPromise);
+
+
     let cardPromise = data.washers.map( (item) => {
         return model.getCard(item.fio);
     });
