@@ -122,3 +122,9 @@ module.exports.arbitrary = async (req, res, next) => {
     res.render('arbitrary', { title: 'Расходы', user: req.user, productReady: table});
 };
 
+
+module.exports.listCar = async (req, res, next) => {
+    let table = await model.listCar();
+    res.render('listCar', { title: 'Список машин', car: table});
+};
+

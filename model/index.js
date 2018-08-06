@@ -113,3 +113,11 @@ module.exports.productReady = async(collection) => {
         return err;
     }
 };
+
+module.exports.listCar = async() => {
+    try {
+        return await db.collection('boxes').find({date: moment().format('DD.MM.YYYY'), status: {$ne: "ready"}}, {sort: {box: 1}}).toArray();
+    }catch(err){
+        return err;
+    }
+};

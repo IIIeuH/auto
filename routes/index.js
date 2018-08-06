@@ -13,6 +13,7 @@ router.get('/defer', checkAuth, ctrl.defer);
 router.get('/costs', checkAuth, ctrl.costs);
 router.get('/dop', checkAuth, ctrl.dop);
 router.get('/arbitrary', checkAuth, ctrl.arbitrary);
+router.get('/listCar', checkAuth, ctrl.listCar);
 //auth
 router.get('/login', (req, res, next) => {
     res.render('login', {title: 'Авторизация', message: req.flash('message')});

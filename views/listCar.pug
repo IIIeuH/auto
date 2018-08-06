@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    .container-fluid
+        .row
+            table.table
+                thead.thead-dark
+                    th Бокс
+                    th Время
+                    th Машина
+                    th Номер
+                    th Цена
+                    th Статус
+                tbody
+                    each item in car
+                        tr
+                            td=item.box
+                            td=getTimeFromMins(item.dopTime + item.mainTime)
+                            td=item.car
+                            td=item.number
+                            td=item.mainPrice+ item.dopPrice
+                            td=(item.status == 'await') ? 'Ожидание' : 'Моется'

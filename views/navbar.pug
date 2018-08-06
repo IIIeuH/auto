@@ -22,6 +22,9 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
             li.nav-item.active
                 a.nav-link(href='/arbitrary')
                     |  Произвольные расходы
+            li.nav-item.active
+                a.nav-link(href='/listCar')
+                    |  Список машин
         .form-inline.my-2.my-lg-0
             if(user && user.username === 'AndryAdmin')
                 button.btn.btn-outline-info.my-2.my-sm-0(type='submit', style="margin-right: 20px;", onclick="window.location.href='/admin'; return false;") Админка
