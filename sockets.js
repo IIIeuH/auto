@@ -1533,4 +1533,14 @@ module.exports.init = function(socket){
             cb({status:500, msg: err});
         }
     });
+
+    //Смена боксов
+    socket.on('changeBox', async (data, cb) => {
+        try{
+            await db.collection('boxes').update({_id: ObjectId(data._id)}, {$set: {box: data.box}});
+            cb({status:200, msg: 'Бокс изменен!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
 };
