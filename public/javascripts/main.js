@@ -211,7 +211,7 @@ function btnActive() {
     var washer = $('#washer');
     var btnSave = $('#save');
     $('.valid-btn').change(function(){
-        if(car.val() === '' || number.val() === '' || washer.val() === ''){
+        if(car.val() === '' || number.val() === ''){
             btn.attr('disabled', 'disabled');
         }else{
             btn.removeAttr('disabled');

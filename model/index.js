@@ -121,3 +121,11 @@ module.exports.listCar = async() => {
         return err;
     }
 };
+
+module.exports.getWashers = async() => {
+    try {
+        return await db.collection('persons').find({}).toArray();
+    }catch(err){
+        return err;
+    }
+};

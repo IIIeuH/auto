@@ -132,9 +132,19 @@ function saveCosts(){
         if(conf){
             let mas = [];
             let tr = $('.product-body').find('tr');
-            let name = get_cookie('washer');
+            let name = $('#washer-score').val();
             let noCashe = false;
             let person = true;
+
+            if(name === ''){
+                Snackbar.show({
+                    text: 'Выберете сотрудника!',
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                return false;
+            }
+
             tr.each(function () {
                 let obj = {};
                 obj.warehouse = $(this).find('.warehouse-table').text();
@@ -169,9 +179,19 @@ function saveCosts(){
         if(conf){
             let mas = [];
             let tr = $('.product-body').find('tr');
-            let name = get_cookie('washer');
+            let name = $('#washer-score').val();
             let noCashe = true;
             let person = false;
+
+            if(name === ''){
+                Snackbar.show({
+                    text: 'Выберете сотрудника!',
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                return false;
+            }
+
             tr.each(function () {
                 let obj = {};
                 obj.warehouse = $(this).find('.warehouse-table').text();
@@ -206,9 +226,19 @@ function saveCosts(){
         if(conf){
             let mas = [];
             let tr = $('.product-body').find('tr');
-            let name = get_cookie('washer');
+            let name = $('#washer-score').val();
             let noCashe = false;
             let person = false;
+
+            if(name === ''){
+                Snackbar.show({
+                    text: 'Выберете сотрудника!',
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                return false;
+            }
+
             tr.each(function () {
                 let obj = {};
                 obj.warehouse = $(this).find('.warehouse-table').text();

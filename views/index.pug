@@ -18,6 +18,7 @@ block content
       .col-md
         .form-group
           select#washer.custom-select.valid-btn
+            option(value="")
             if data.length
               option(value=data[0].washer selected)=data[0].washer
             else

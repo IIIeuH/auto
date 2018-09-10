@@ -59,6 +59,7 @@ module.exports.other = async (req, res, next) => {
 module.exports.score = async (req, res, next) => {
     let data = await model.product();
     let table = await model.productReady('scores');
+    let washer = await model.getWashers();
     let startCoffee = await model.startCoffee();
     let endCoffee = await model.coffee();
     if(table.length){
@@ -76,7 +77,7 @@ module.exports.score = async (req, res, next) => {
     }else{
         endCoffee = 0;
     }
-    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: startCoffee, endCoffee: endCoffee});
+    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: startCoffee, endCoffee: endCoffee, washer:washer});
 };
 
 module.exports.getJson = async (req, res, next) => {
@@ -125,6 +126,7 @@ module.exports.arbitrary = async (req, res, next) => {
 
 module.exports.listCar = async (req, res, next) => {
     let table = await model.listCar();
-    res.render('listCar', { title: 'Список машин', car: table});
+    let washers = await model.getWashers();
+    res.render('listCar', { title: 'Список машин', car: table, washers: washers});
 };
 

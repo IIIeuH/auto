@@ -142,7 +142,6 @@ module.exports.init = function(socket){
                             $group: {_id: null, cash: {$sum: '$cash'}}
                         }
                     ]).toArray();
-                    console.log(price);
                     if(price.length){
                         price = price[0].cash;
                     }else{
@@ -1539,6 +1538,16 @@ module.exports.init = function(socket){
         try{
             await db.collection('boxes').update({_id: ObjectId(data._id)}, {$set: {box: data.box}});
             cb({status:200, msg: 'Бокс изменен!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //Смена washer
+    socket.on('changeWasher', async (data, cb) => {
+        try{
+            await db.collection('boxes').update({_id: ObjectId(data._id)}, {$set: {washer: data.washer}});
+            cb({status:200, msg: 'Сохранено!'});
         }catch(err){
             cb({status:500, msg: err});
         }

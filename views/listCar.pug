@@ -6,6 +6,7 @@ block content
             table.table
                 thead.thead-dark
                     th Бокс
+                    th Мойщик
                     th Время
                     th Машина
                     th Номер
@@ -22,6 +23,11 @@ block content
                                     option(value="3") 3
                                     option(value="4") 4
                                     option(value="5") 5
+                            td
+                                select.change-washer.form-control
+                                    option(selected, value=item.washer)=item.washer
+                                    each item in washers
+                                        option(value=item.fio)=item.fio
                             td=getTimeFromMins(item.dopTime + item.mainTime)
                             td=item.car
                             td=item.number
