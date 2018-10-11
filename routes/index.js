@@ -30,7 +30,12 @@ router.post('/login',
 
 router.get('/logout', (req, res, next) => {
     req.logout();
-    res.redirect('/login');
+    req.session.destroy(function (err) {
+        res.clearCookie('administrator', {path: '/'});
+        res.clearCookie('connect.sid', {path: '/'});
+        res.clearCookie('io', {path: '/'});
+        res.redirect('/login');
+    });
 });
 
 function checkAuth(req, res, next){

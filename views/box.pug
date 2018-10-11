@@ -39,3 +39,18 @@ block content
                         p.card-text.lead
                             | 5 бокс
                         p.time.card-text.h1(data-time=box5)=getTimeFromMins(box5)
+
+
+        .row
+            .modal(tabindex='-1', role='dialog' data-backdrop="static" data-keyboard="false")
+                .modal-dialog(role='document')
+                    .modal-content
+                        .modal-header
+                            h5.modal-title Администратор
+                        .modal-body
+                            select.form-control.check-admin
+                                option(value="" disabled, selected) Выберите администатора
+                                each item in admin
+                                    option(value=item.fio)=item.fio
+                        .modal-footer
+                            button.btn.btn-primary(type='button', id="saveAdministrator") Сохранить

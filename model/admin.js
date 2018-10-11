@@ -39,7 +39,7 @@ module.exports.getCollectionsMonth = async function(persons){
 
 module.exports.getGraphicJob = async function(){
     let date = getMonthDateRange(moment().year(), moment().month());
-    return await db.collection('boxes').find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1}).toArray();
+    return await db.collection('boxes').find({dateD: {$gte: date.start.toDate(), $lte: date.end.toDate()}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1, car: 1, number: 1}).toArray();
 };
 
 module.exports.mainPrice = async function(){
@@ -143,28 +143,28 @@ module.exports.getCosts = async(washer) => {
 };
 
 
-module.exports.getDopCosts = async(washer) => {
-    try{
-        return await db.collection('dops').aggregate(
-            {
-                $match: {name: washer}
-            },
-            {
-                $unwind: "$costs"
-            },
-            {
-                $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
-            },
-            {
-                $group: {_id: null, sum: {$sum: '$sum'}}
-            },
-            {
-                $group: {_id: null, sum: {$sum: '$sum'}}
-            }).toArray();
-    }catch (err){
-        console.log(err);
-    }
-};
+// module.exports.getDopCosts = async(washer) => {
+//     try{
+//         return await db.collection('dops').aggregate(
+//             {
+//                 $match: {name: washer}
+//             },
+//             {
+//                 $unwind: "$costs"
+//             },
+//             {
+//                 $project: {_id: 0, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+//             },
+//             {
+//                 $group: {_id: null, sum: {$sum: '$sum'}}
+//             },
+//             {
+//                 $group: {_id: null, sum: {$sum: '$sum'}}
+//             }).toArray();
+//     }catch (err){
+//         console.log(err);
+//     }
+// };
 
 
 module.exports.getArbitrarys = async(washer) => {

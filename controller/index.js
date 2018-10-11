@@ -35,7 +35,8 @@ module.exports.main = async (req, res, next) => {
     }else{
         box5 = 0;
     }
-    res.render('box', { title: 'Express', user: req.user, box1: box1, box2: box2, box3: box3, box4: box4, box5: box5});
+    let admin = await model.administrator();
+    res.render('box', { title: 'Express', user: req.user, box1: box1, box2: box2, box3: box3, box4: box4, box5: box5, admin:admin});
 };
 
 module.exports.box = async (req, res, next) => {

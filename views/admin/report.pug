@@ -40,7 +40,7 @@ block content
                         th Машин
                         th Сумма
                         th Основные расходы(Потрачено)
-                        th Дополнительные расходы(Потрачено)
+                        //th Дополнительные расходы(Потрачено)
                         th Произвольные расходы(Потрачено)
                         th Сделано скидок на сумму
                         th Магазин
@@ -63,10 +63,10 @@ block content
                                     td=0
                                 else
                                     td=data.costs[i][0].sum
-                                if(!data.dopCosts[i].length)
-                                    td=0
-                                else
-                                    td=data.dopCosts[i][0].sum
+                                //if(!data.dopCosts[i].length)
+                                //    td=0
+                                //else
+                                //    td=data.dopCosts[i][0].sum
                                 if(!data.arbitrars[i].length)
                                     td=0
                                 else

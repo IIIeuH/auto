@@ -135,6 +135,7 @@ function saveCosts(){
             let name = $('#washer-score').val();
             let noCashe = false;
             let person = true;
+            let admin = get_cookie('administrator');
 
             if(name === ''){
                 Snackbar.show({
@@ -154,7 +155,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+            socket.emit('setCosts', mas,name,noCashe, person,admin,  function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -179,18 +180,10 @@ function saveCosts(){
         if(conf){
             let mas = [];
             let tr = $('.product-body').find('tr');
-            let name = $('#washer-score').val();
+            //let name = $('#washer-score').val();
             let noCashe = true;
             let person = false;
-
-            if(name === ''){
-                Snackbar.show({
-                    text: 'Выберете сотрудника!',
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-                return false;
-            }
+            let admin = get_cookie('administrator');
 
             tr.each(function () {
                 let obj = {};
@@ -201,7 +194,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+            socket.emit('setCosts', mas, '', noCashe, person, admin,  function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -226,18 +219,9 @@ function saveCosts(){
         if(conf){
             let mas = [];
             let tr = $('.product-body').find('tr');
-            let name = $('#washer-score').val();
             let noCashe = false;
             let person = false;
-
-            if(name === ''){
-                Snackbar.show({
-                    text: 'Выберете сотрудника!',
-                    pos: 'bottom-right',
-                    actionText: null
-                });
-                return false;
-            }
+            let admin = get_cookie('administrator');
 
             tr.each(function () {
                 let obj = {};
@@ -248,7 +232,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas,name,noCashe, person,  function (res) {
+            socket.emit('setCosts', mas, '', noCashe, person, admin, function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -275,7 +259,6 @@ function saveProductDop(){
     btn.click(function () {
         let mas = [];
         let tr = $('.product-dop-body').find('tr');
-        let name = get_cookie('washer');
         tr.each(function () {
             let obj = {};
             obj.name = $(this).find('.product-dop-name').text();
@@ -283,7 +266,7 @@ function saveProductDop(){
             obj.quantity = +$(this).find('.quantity-dop').text();
             mas.push(obj);
         });
-        socket.emit('saveProductDop', mas,name, function (res) {
+        socket.emit('saveProductDop', mas, function (res) {
             if(res.status === 200) {
                 Snackbar.show({
                     text: res.msg,

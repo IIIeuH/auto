@@ -37,7 +37,7 @@ block content
                             each item in price
                                 tr
                                     td=item.date
-                                    td=item.cashScore || 0
+                                    td=((item.cashScore || 0) + (item.noCashScore || 0)) || 0
                                     td=item.cashStore || 0
                                     td=item.cashCar || 0
                                     td=item.cashCosts || 0

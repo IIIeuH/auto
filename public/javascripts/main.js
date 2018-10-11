@@ -3,6 +3,21 @@ var socket = io.connect('http://localhost:3000');
 $(function(){
     socket.on('connect', function() {
     });
+
+
+    var administrator = get_cookie('administrator');
+    if(administrator && administrator !== ''){
+    }else{
+        $('.modal').modal('show')
+    }
+
+    $(document).on('click', '#saveAdministrator', function(){
+        let admin = $('.check-admin').val();
+        document.cookie = "administrator="+admin;
+        $('.modal').modal('hide')
+    });
+
+
     statusColor();
     btnActive();
     service();
@@ -32,6 +47,7 @@ $(function(){
         $('#washer').val(get_cookie('washer'));
     }
     discount();
+
 });
 
 function get_cookie ( cookie_name )

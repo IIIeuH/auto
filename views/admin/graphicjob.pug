@@ -2,7 +2,7 @@ extends layout
 
 block content
     .container-fluid
-        .row(style="margin-top:20px")
+        .row(style="margin-top:20px").no-print
             .col-md
                 .input-group.mb-3
                     .input-group-prepend
@@ -15,10 +15,10 @@ block content
                     input#endDateJob.form-control(type='date')
             .col-md
                 button.btn.btn-outline-info(type='button', id="lookJobDate") Показать
-        .row
+        .row.no-print
             .col-md
                 h3.h3 Фильтры
-        .row
+        .row.no-print
             .col-md
 
                 .form-group
@@ -34,25 +34,28 @@ block content
                         option
                         each item in persons
                             option(value=item.fio)=item.fio
-        .row
+        .row.print
             .col-md
                 table.table.table-striped.table-bordered.table-hover(style="margin-top: 20px")
                     thead.thead-dark
                         th Дата
                         th Администратор
+                        th Марка
+                        th Номер
                         th Мойщик
                         th Услуги
-                        th Цена за услуги
-                        th Доп. услуги
-                        th Цена за доп. услуги
+                        th Сумма
                     tbody.graphicJob
                         each item in personsJob
                             tr
                                 td=item.date
                                 td.fieldSearchAdmin=item.administrator
+                                td=item.car
+                                td=item.number
                                 td.fieldSearchWasher=item.washer
-                                td=item.services
-                                td=item.mainPrice
-                                td=item.dopServices
-                                td=item.dopPrice
+                                td #{item.services} #{item.dopServices}
+                                td=item.mainPrice + item.dopPrice
+        .row.no-print
+            .col-md
+                btn.btn.btn-outline-info(id="print") Печать
 

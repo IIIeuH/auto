@@ -99,82 +99,87 @@ module.exports.init = function(socket){
         }
     });
 
-    socket.on('setCosts', async (data,name,cash, person, cb) => {
+    socket.on('setCosts', async (data,name, cash, person,admin, cb) => {
         try{
             if(data.length){
-                await db.collection('products').updateOne({name: data[0].name}, {$set: {warehouse: data[0].remainder}});
-                await db.collection('scores').insertOne({date: moment().format('DD.MM.YYYY'), name: name, costs: data, noCashe: cash, person: person, dateD: new Date()});
-                if(!cash && !person){
-                    let price = await db.collection('scores').aggregate([
-                        {
-                            $match: {date: moment().format('DD.MM.YYYY')}
-                        },
-                        {
-                            $unwind: "$costs"
-                        },
-                        {
-                            $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
-                        },
-                        {
-                            $group: {_id: null, cash: {$sum: '$cash'}}
-                        }
-                    ]).toArray();
-                    if(price.length){
-                        price = price[0].cash;
-                    }else{
-                        price = 0;
-                    }
-                    await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashScore: price}}, {upsert: true});
-                    cb({status:200, msg: 'Сохранено!'});
-                }
-                if(cash){
-                    let price = await db.collection('scores').aggregate([
-                        {
-                            $match: {date: moment().format('DD.MM.YYYY'), noCashe: true}
-                        },
-                        {
-                            $unwind: "$costs"
-                        },
-                        {
-                            $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
-                        },
-                        {
-                            $group: {_id: null, cash: {$sum: '$cash'}}
-                        }
-                    ]).toArray();
-                    if(price.length){
-                        price = price[0].cash;
-                    }else{
-                        price = 0;
-                    }
-                    await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), noCashScore: price}}, {upsert: true});
-                    cb({status:200, msg: 'Сохранено!'});
-                }
+                let spisanie = data.map( async(item) =>{
+                    await db.collection('products').updateOne({name: item.name}, {$set: {warehouse: item.remainder}});
+                });
 
-                if(person){
-                    let price = await db.collection('scores').aggregate([
-                        {
-                            $match: {date: moment().format('DD.MM.YYYY'), person: true}
-                        },
-                        {
-                            $unwind: "$costs"
-                        },
-                        {
-                            $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
-                        },
-                        {
-                            $group: {_id: null, cash: {$sum: '$cash'}}
+                Promise.all(spisanie).then( async()=>{
+                    await db.collection('scores').insertOne({date: moment().format('DD.MM.YYYY'), costs: data,name: name, noCashe: cash, person: person, admin: admin, dateD: new Date()});
+                    if(!cash && !person){
+                        let price = await db.collection('scores').aggregate([
+                            {
+                                $match: {date: moment().format('DD.MM.YYYY'), noCashe: cash, person: person}
+                            },
+                            {
+                                $unwind: "$costs"
+                            },
+                            {
+                                $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                            },
+                            {
+                                $group: {_id: null, cash: {$sum: '$cash'}}
+                            }
+                        ]).toArray();
+                        if(price.length){
+                            price = price[0].cash;
+                        }else{
+                            price = 0;
                         }
-                    ]).toArray();
-                    if(price.length){
-                        price = price[0].cash;
-                    }else{
-                        price = 0;
+                        console.log(price);
+                        await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashScore: price}}, {upsert: true});
+                        cb({status:200, msg: 'Сохранено!'});
                     }
-                    await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), personCasheScore: price}}, {upsert: true});
-                    cb({status:200, msg: 'Сохранено!'});
-                }
+                    if(cash){
+                        let price = await db.collection('scores').aggregate([
+                            {
+                                $match: {date: moment().format('DD.MM.YYYY'), noCashe: true}
+                            },
+                            {
+                                $unwind: "$costs"
+                            },
+                            {
+                                $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                            },
+                            {
+                                $group: {_id: null, cash: {$sum: '$cash'}}
+                            }
+                        ]).toArray();
+                        if(price.length){
+                            price = price[0].cash;
+                        }else{
+                            price = 0;
+                        }
+                        await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), noCashScore: price}}, {upsert: true});
+                        cb({status:200, msg: 'Сохранено!'});
+                    }
 
+                    if(person){
+                        let price = await db.collection('scores').aggregate([
+                            {
+                                $match: {date: moment().format('DD.MM.YYYY'), person: true}
+                            },
+                            {
+                                $unwind: "$costs"
+                            },
+                            {
+                                $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                            },
+                            {
+                                $group: {_id: null, cash: {$sum: '$cash'}}
+                            }
+                        ]).toArray();
+                        if(price.length){
+                            price = price[0].cash;
+                        }else{
+                            price = 0;
+                        }
+                        await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), personCasheScore: -price}}, {upsert: true});
+                        cb({status:200, msg: 'Сохранено!'});
+                    }
+                });
             }
         }catch(err){
             cb({status:500, msg: err});
@@ -183,7 +188,7 @@ module.exports.init = function(socket){
 
     socket.on('saveProductDop', async (data,name, cb) => {
         try{
-            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), name: name, costs: data, dateD: new Date() } }, {upsert: true});
+            await db.collection('dops').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), costs: data, dateD: new Date() } }, {upsert: true});
             let price = await db.collection('dops').aggregate([
                 {
                     $match: {date: moment().format('DD.MM.YYYY')}
@@ -1075,7 +1080,7 @@ module.exports.init = function(socket){
         try{
             let start = moment(startDate).toDate();
             let end =  moment(endDate).toDate();
-            let data = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1}).toArray();
+            let data = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1, number: 1, car: 1}).toArray();
             cb({status:200, msg: 'Найдено!', arr: data});
         }catch(err){
             cb({status:500, msg: err});
@@ -1548,6 +1553,28 @@ module.exports.init = function(socket){
         try{
             await db.collection('boxes').update({_id: ObjectId(data._id)}, {$set: {washer: data.washer}});
             cb({status:200, msg: 'Сохранено!'});
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
+    //отчет магазина
+    socket.on('getReportScore', async (start, end, admin, cb) => {
+        try{
+            let res =  await db.collection('scores').aggregate(
+                {
+                    $match: {dateD: {$gte: new Date(moment(start).startOf('day')), $lte: new Date(moment(end).endOf('day'))}, admin: admin}
+                },
+                {
+                    $unwind: "$costs"
+                },
+                {
+                    $project: {_id: 0, name: '$costs.name', count: '$costs.quantity', price: '$costs.price', date: 1}
+                },
+                {
+                    $group: {_id: '$costs.name', count: '$costs.quantity', price: '$costs.price'}
+                }).toArray();
+            cb({status:200, result: res});
         }catch(err){
             cb({status:500, msg: err});
         }

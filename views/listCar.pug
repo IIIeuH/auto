@@ -7,6 +7,7 @@ block content
                 thead.thead-dark
                     th Бокс
                     th Мойщик
+                    th Время записи
                     th Время
                     th Машина
                     th Номер
@@ -28,6 +29,7 @@ block content
                                     option(selected, value=item.washer)=item.washer
                                     each item in washers
                                         option(value=item.fio)=item.fio
+                            td=moment(item.dateD).format("YYYY.MM.DD HH:mm")
                             td=getTimeFromMins(item.dopTime + item.mainTime)
                             td=item.car
                             td=item.number

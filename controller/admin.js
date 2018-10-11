@@ -1,6 +1,6 @@
 const model = require('../model/admin');
 
-module.exports.main = function(req, res, next) {
+module.exports.main = async function(req, res, next) {
     res.render('admin/index', {title: "Админ-панель"})
 };
 
@@ -128,6 +128,10 @@ module.exports.encashment = async function(req, res, next) {
     res.render('admin/encashment', {title: "Инкассация", encahment: encahment})
 };
 
+module.exports.reportScore = async (req, res, next) =>{
+    let admin = await model.administrator();
+    res.render('admin/report-score', {title: "Отчет магазин", admin: admin});
+};
 
 module.exports.report = async function(req, res, next) {
     let data = {};
@@ -151,11 +155,11 @@ module.exports.report = async function(req, res, next) {
 
     data.costs = await Promise.all(mainCostsPromise);
 
-    let dopCostsPromise = data.washers.map( (item) => {
-        return model.getDopCosts(item.fio);
-    });
-
-    data.dopCosts = await Promise.all(dopCostsPromise);
+    // let dopCostsPromise = data.washers.map( (item) => {
+    //     return model.getDopCosts(item.fio);
+    // });
+    //
+    // data.dopCosts = await Promise.all(dopCostsPromise);
 
     let arbitrarysPromise = data.washers.map( (item) => {
         return model.getArbitrarys(item.fio);

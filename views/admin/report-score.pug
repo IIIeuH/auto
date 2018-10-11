@@ -1,0 +1,35 @@
+extends layout
+
+block content
+    .container-fluid
+        .row(style="margin-top:20px").no-print
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startScore.form-control(type='date')
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endScore.form-control(type='date')
+            .col-md
+                .input-group
+                    select.form-control#adminScore
+                        option(value="" selected disabled) Администратор
+                        each item in admin
+                            option(value=item.fio)=item.fio
+            .col-md
+                button.btn.btn-outline-info(type='button', id="lookScore") Показать
+        .row.print
+            .col-md-12
+                table.table-bordered.table
+                    thead.thead-dark
+                        th Дата
+                        th Товар
+                        th Кол-во
+                        th Сумма
+                    tbody.report-score
+        .row.no-print
+            .col-md
+                button.btn.btn-outline-info(id="print") Печать

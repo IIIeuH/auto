@@ -23,20 +23,20 @@ function dateJob() {
                         '<td class="fieldSearchAdmin">' +
                         item.administrator +
                         '</td>' +
+                        '<td >' +
+                        item.car +
+                        '</td>' +
+                        '<td >' +
+                        item.number +
+                        '</td>' +
                         '<td class="fieldSearchWasher">' +
                         item.washer +
                         '</td>' +
                         '<td >' +
-                        item.services +
+                        item.services + ' ' + item.dopServices +
                         '</td>' +
                         '<td >' +
-                        item.mainPrice +
-                        '</td>' +
-                        '<td >' +
-                        item.dopServices +
-                        '</td>' +
-                        '<td >' +
-                        item.dopPrice +
+                        (item.mainPrice + item.dopPrice) +
                         '</td>' +
                         '</tr>'
                     );

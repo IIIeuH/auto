@@ -3,9 +3,10 @@ extends layout
 block content
     .container-fluid
         .row
-            .d-inline-flex.p-2
-                each item in product
-                    .product-dop.p-2(data-price=item.price)=item.name
+            .col-md
+                .d-inline-flex.p-2
+                    each item in product
+                        .product-dop.p-2(data-price=item.price)=item.name
         .row
             .col-md
                 table.table.product-dop-table.table-hover
