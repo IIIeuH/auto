@@ -25,5 +25,7 @@ router.get('/graphicjob',  ctrl.graphicjob);
 router.get('/encashment',  ctrl.encashment);
 router.get('/report',  ctrl.report);
 router.get('/report-score',  ctrl.reportScore);
+router.get('/salary-washer',  ctrl.salaryWasher);
+router.get('/salary-administrator',  ctrl.salaryAdministrator);
 
 module.exports = router;

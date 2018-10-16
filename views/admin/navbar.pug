@@ -34,8 +34,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.mb-3
             li.nav-item
                 a.nav-link(href='/admin/report') Отчетность
             li.nav-item
-                a.nav-link(href='/admin/stock') Склад
-            li.nav-item
                 a.nav-link(href='/admin/report-score') Магазин отчет
+            li.nav-item.dropdown
+                a.nav-link.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false') Зарплата
+                .dropdown-menu
+                    a.dropdown-item(href='/admin/salary-washer') Мойщика
+                    a.dropdown-item(href='/admin/salary-administrator') Администратор
         button.btn.btn-outline-light(onclick="window.location.href='/'; return false;") Выход
 

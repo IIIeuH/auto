@@ -133,6 +133,7 @@ module.exports.reportScore = async (req, res, next) =>{
     res.render('admin/report-score', {title: "Отчет магазин", admin: admin});
 };
 
+
 module.exports.report = async function(req, res, next) {
     let data = {};
     data.washers = await model.getWashers();
@@ -257,4 +258,11 @@ module.exports.report = async function(req, res, next) {
     res.render('admin/report', {title: "Отчетность", data })
 };
 
+module.exports.salaryWasher = async (req, res, next) =>{
+    res.render('admin/salary-washer', {title: "Зарпалата мойщик"});
+};
 
+
+module.exports.salaryAdministrator = async (req, res, next) =>{
+    res.render('admin/salary-administrator', {title: "Зарпалата Администратор"});
+};

@@ -1579,4 +1579,167 @@ module.exports.init = function(socket){
             cb({status:500, msg: err});
         }
     });
+
+    //Зп мойщика
+    socket.on('getSalaryWasher', async (data, cb) => {
+        try{
+            let start = new Date(moment(data.start, "YYYY-MM-DD").startOf('week'));
+            let end = new Date(moment(data.start, "YYYY-MM-DD").endOf('week'));
+
+            let washers = await db.collection('persons').distinct('fio', {administrator: false});
+
+            let result = washers.map( async(item, i) =>{
+                let obj = {
+                    washer: item
+                };
+                let price = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: 'ready', washer: item}, {mainPrice:1, dopPrice: 1, _id: 0}).toArray();
+
+                let sum = 0;
+                if(price.length){
+                    price.forEach( (o) => {
+                        sum += o.mainPrice + o.dopPrice;
+                    });
+                }else{
+                    sum = 0;
+                }
+
+                obj.price = sum * 0.3;
+
+                let fine = await db.collection('fines').find({dateD: {$gte: start, $lte: end}, person: item}, {fine:1, _id: 0}).toArray();
+
+                let fineSum = 0;
+
+                if(fine.length){
+                    fine.forEach( (o) => {
+                        fineSum += o.fine;
+                    });
+                }else{
+                    fineSum = 0;
+                }
+
+                obj.fine = fineSum;
+
+                let score = await db.collection('scores').find({dateD: {$gte: start, $lte: end}, name: item, person: true}, {costs:1, _id: 0}).toArray();
+
+                let scoreSum = 0;
+                if(score.length){
+                    score.forEach( (o) =>{
+                        if(o.costs.length){
+                            o.costs.forEach( (item) =>{
+                                scoreSum += item.price * item.quantity;
+                            })
+                        }
+                    });
+                }
+
+                obj.score = scoreSum;
+
+
+                let prepaid = await db.collection('prepaides').find({dateD: {$gte: start, $lte: end}, person: item}, {prepaid:1, _id: 0}).toArray();
+
+                let prepaidSum = 0;
+
+                if(prepaid.length){
+                    prepaid.forEach( (o) => {
+                        prepaidSum += o.prepaid;
+                    });
+                }else{
+                    prepaidSum = 0;
+                }
+
+                obj.prepaid = prepaidSum;
+
+                obj.sum = obj.price - obj.fine - obj.score - obj.prepaid;
+                return obj;
+            });
+            Promise.all(result).then( (data) =>{
+                cb({status:200, wash: data});
+            });
+        }catch(err){
+            console.log(err);
+            cb({status:500, msg: err});
+        }
+    });
+
+
+    //Зп администратора
+    socket.on('getSalaryAdministrator', async (data, cb) => {
+        try{
+            let start = new Date(moment(data.start, "YYYY-MM-DD").startOf('week'));
+            let end = new Date(moment(data.start, "YYYY-MM-DD").endOf('week'));
+
+            let admins = await db.collection('persons').distinct('fio', {administrator: true});
+
+            let result = admins.map( async(item, i) =>{
+                let obj = {
+                    admin: item
+                };
+                let price = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: 'ready'}, {mainPrice:1, dopPrice: 1, _id: 0}).toArray();
+
+                let sum = 0;
+                if(price.length){
+                    price.forEach( (o) => {
+                        sum += o.mainPrice + o.dopPrice;
+                    });
+                }else{
+                    sum = 0;
+                }
+
+                obj.price = sum * 0.1;
+
+                let fine = await db.collection('fines').find({dateD: {$gte: start, $lte: end}, person: item}, {fine:1, _id: 0}).toArray();
+
+                let fineSum = 0;
+
+                if(fine.length){
+                    fine.forEach( (o) => {
+                        fineSum += o.fine;
+                    });
+                }else{
+                    fineSum = 0;
+                }
+
+                obj.fine = fineSum;
+
+                let score = await db.collection('scores').find({dateD: {$gte: start, $lte: end}, name: item, person: true}, {costs:1, _id: 0}).toArray();
+
+                let scoreSum = 0;
+                if(score.length){
+                    score.forEach( (o) =>{
+                        if(o.costs.length){
+                            o.costs.forEach( (item) =>{
+                                scoreSum += item.price * item.quantity;
+                            })
+                        }
+                    });
+                }
+
+                obj.score = scoreSum;
+
+
+                let prepaid = await db.collection('prepaides').find({dateD: {$gte: start, $lte: end}, person: item}, {prepaid:1, _id: 0}).toArray();
+
+                let prepaidSum = 0;
+
+                if(prepaid.length){
+                    prepaid.forEach( (o) => {
+                        prepaidSum += o.prepaid;
+                    });
+                }else{
+                    prepaidSum = 0;
+                }
+
+                obj.prepaid = prepaidSum;
+
+                obj.sum = obj.price - obj.fine - obj.score - obj.prepaid;
+                return obj;
+            });
+            Promise.all(result).then( (data) =>{
+                cb({status:200, admin: data});
+            });
+        }catch(err){
+            cb({status:500, msg: err});
+        }
+    });
+
 };

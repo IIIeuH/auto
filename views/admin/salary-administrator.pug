@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    .container-fluid
+        .row(style="margin-top:20px")
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text С
+                    input#startDateSaleryAdministrator.form-control(type='date' value=moment().startOf('week').format('YYYY-MM-DD'))
+            .col-md
+                .input-group.mb-3
+                    .input-group-prepend
+                        span.input-group-text По
+                    input#endDateSaleryAdministrator.form-control(type='date' value=moment().endOf('week').format('YYYY-MM-DD'))
+            .col-md
+                button.btn.btn-outline-info(type='button', id="lookSalaryAdmin") Показать
+        .row
+            .col-md
+                table.table.table-bordered
+                    thead.thead-dark
+                        th Мойщик
+                        th Мойка
+                        th Штрафы
+                        th Магазин
+                        th Аванс
+                        th Итог
+                    tbody.salary-administrator
