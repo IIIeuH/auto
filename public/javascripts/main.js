@@ -1,5 +1,5 @@
 'use strict';
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect();
 $(function(){
     socket.on('connect', function() {
     });
@@ -327,12 +327,12 @@ function save(){
                         '<input class="checkbox checkbox-discount" type="checkbox" disabled>' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
-                        '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
-                        '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
-                        '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
-                        '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
-                        '  <button type="button" class="btn btn-danger status-await">Отмена</button>\n' +
-                        '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
+                        '  <button type="button" class="btn btn-primary status-wash btn-sm">Заехать</button>\n' +
+                        '  <button type="button" class="btn btn-success status-ready btn-sm">Готово</button>\n' +
+                        '  <button type="button" class="btn btn-warning redact btn-sm">Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-info modalTwo btn-sm">Доп. Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-danger status-await btn-sm">Отмена</button>\n' +
+                        '  <button type="button" class="btn btn-dark delete btn-sm">Удалить</button>\n' +
                         '</td>' +
                         '</i>' +
                         '</td>' +
@@ -400,12 +400,12 @@ function save(){
                         '<input class="checkbox checkbox-discount" type="checkbox">' +
                         '</td>' +
                         '<td class="d-flex justify-content-center">\n' +
-                        '  <button type="button" class="btn btn-primary status-wash">Заехать</button>\n' +
-                        '  <button type="button" class="btn btn-success status-ready">Готово</button>\n' +
-                        '  <button type="button" class="btn btn-warning redact">Услуги</button>\n' +
-                        '  <button type="button" class="btn btn-info modalTwo">Доп. Услуги</button>\n' +
-                        '  <button type="button" class="btn btn-danger">Отмена</button>\n' +
-                        '  <button type="button" class="btn btn-dark delete">Удалить</button>\n' +
+                        '  <button type="button" class="btn btn-primary status-wash btn-sm">Заехать</button>\n' +
+                        '  <button type="button" class="btn btn-success status-ready btn-sm">Готово</button>\n' +
+                        '  <button type="button" class="btn btn-warning redact btn-sm">Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-info modalTwo btn-sm">Доп. Услуги</button>\n' +
+                        '  <button type="button" class="btn btn-danger btn-sm">Отмена</button>\n' +
+                        '  <button type="button" class="btn btn-dark delete btn-sm">Удалить</button>\n' +
                         '</td>' +
                         '</i>' +
                         '</td>' +
@@ -655,7 +655,7 @@ function statusBtnWash(){
             if(that.parents('tr').data('vip')){
                 socket.emit('chackCashVIP', that.parents('.str').find('.number').text(), that.parents('.str').find('.car').text(), that.parents('.str').find('.price').text(),function (res) {
                     if(res.status === 200) {
-                        socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'wash', function (res) {
+                        socket.emit('setStatus', id, 'wash', function (res) {
                             if(res.status === 200) {
                                 Snackbar.show({
                                     text: res.msg,
@@ -712,6 +712,12 @@ function statusBtnReady(){
         var number = $(this).parents('.str').find('.number').text();
         var services = $(this).parents('.str').find('.service-main').text();
         var id = $(this).parents('.str').data('id');
+        var btnGo = $(this).parents('.str').find('.status-wash');
+        var btnRedact = $(this).parents('.str').find('.redact');
+        var btnReady = $(this).parents('.str').find('.status-ready');
+        var btnDanger = $(this).parents('.str').find('.status-danger');
+        var btnModalTwo = $(this).parents('.str').find('.modalTwo');
+        var btnAwait = $(this).parents('.str').find('.status-await');
         var box = window.location.search.substr(8);
         var that = $(this);
         var p = confirm('Машина ' + marka + ' с номером ' + number +' готова?');
@@ -724,8 +730,14 @@ function statusBtnReady(){
                             pos: 'bottom-right',
                             actionText: null
                         });
-                        socket.emit('setStatus', {car: marka, number: number, services: services, box: box}, 'ready', function (res) {
+                        socket.emit('setStatus', id, 'ready', function (res) {
                             if(res.status === 200) {
+                                btnGo.remove();
+                                btnRedact.remove();
+                                btnModalTwo.remove();
+                                btnAwait.remove();
+                                btnReady.remove();
+                                btnDanger.remove();
                                 Snackbar.show({
                                     text: res.msg,
                                     pos: 'bottom-right',
@@ -753,6 +765,12 @@ function statusBtnReady(){
             }else{
                 socket.emit('setStatus', id, 'ready', function (res) {
                     if(res.status === 200) {
+                        btnGo.remove();
+                        btnRedact.remove();
+                        btnModalTwo.remove();
+                        btnAwait.remove();
+                        btnReady.remove();
+                        btnDanger.remove();
                         Snackbar.show({
                             text: res.msg,
                             pos: 'bottom-right',

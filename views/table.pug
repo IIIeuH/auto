@@ -42,12 +42,15 @@
                                     td.discount
                                             input.checkbox.checkbox-discount(type="checkbox" disabled)
                                     td.d-flex.justify-content-center
-                                        button.btn.btn-primary.status-wash(type='button') Заехать
-                                        button.btn.btn-success.status-ready(type='button') Готово
-                                        button.btn.btn-warning.redact(type='button') Услуги
-                                        button.btn.btn-info.modalTwo(type='button') Доп. Услуги
-                                        button.btn.btn-danger.status-await(type='button') Отмена
-                                        button.btn.btn-dark.delete(type='button') Удалить
+                                        if item.status === 'ready'
+                                            button.btn.btn-dark.delete.btn-sm(type='button') Удалить
+                                        else
+                                            button.btn.btn-primary.status-wash.btn-sm(type='button' disabled) Заехать
+                                            button.btn.btn-success.status-ready.btn-sm(type='button' disabled) Готово
+                                            button.btn.btn-warning.redact.btn-sm(type='button' disabled) Услуги
+                                            button.btn.btn-info.modalTwo.btn-sm(type='button' disabled) Доп. Услуги
+                                            button.btn.btn-danger.status-await.btn-sm(type='button' disabled    ) Отмена
+                                            button.btn.btn-dark.delete.btn-sm(type='button') Удалить
                             else
                                 tr.str(data-status=item.status, data-typeauto=item.typeAuto, data-vip=item.vip, data-id=item._id, data-discount=item.client.discount, data-proc=item.client.proc)
                                     td(data-minutes=item.time).time=getTimeFromMins(item.dopTime + item.mainTime)
@@ -61,30 +64,57 @@
                                     else
                                         td.price=(item.dopPrice + item.mainPrice) - 0
                                     td.non-cash
-                                        if item.nonCash
-                                            input.checkbox.checkbox-non-cash(type="checkbox", checked)
-                                        else
-                                            input.checkbox.checkbox-non-cash(type="checkbox")
-                                    td.part
-                                        input.form-control.part-noCash(type="number" value=item.partNoCash || 0)
-                                    td.defer
-                                        if item.deferCash
-                                            input.checkbox.defer-cash(type="checkbox", checked)
-                                        else
-                                            input.checkbox.defer-cash(type="checkbox")
-                                    td.discount
-                                        if item.client._id
-                                            if item.discount
-                                                input.checkbox.checkbox-discount(type="checkbox" checked)
+                                        if item.status === 'ready'
+                                            if item.nonCash
+                                                input.checkbox.checkbox-non-cash(type="checkbox", disabled, checked)
                                             else
-                                                input.checkbox.checkbox-discount(type="checkbox" )
+                                                input.checkbox.checkbox-non-cash(type="checkbox", disabled)
                                         else
-                                            input.checkbox.checkbox-discount(type="checkbox" disabled)
+                                            if item.nonCash
+                                                input.checkbox.checkbox-non-cash(type="checkbox", checked)
+                                            else
+                                                input.checkbox.checkbox-non-cash(type="checkbox")
+                                    td.part
+                                        if item.status === 'ready'
+                                            input.form-control.part-noCash(type="number" value=item.partNoCash || 0 disabled)
+                                        else
+                                            input.form-control.part-noCash(type="number" value=item.partNoCash || 0)
+                                    td.defer
+                                        if item.status === 'ready'
+                                            if item.deferCash
+                                                input.checkbox.defer-cash(type="checkbox", disabled, checked)
+                                            else
+                                                input.checkbox.defer-cash(type="checkbox", disabled)
+                                        else
+                                            if item.deferCash
+                                                input.checkbox.defer-cash(type="checkbox", checked)
+                                            else
+                                                input.checkbox.defer-cash(type="checkbox")
+                                    td.discount
+                                        if item.status === 'ready'
+                                            if item.client._id
+                                                if item.discount
+                                                    input.checkbox.checkbox-discount(type="checkbox" checked disabled)
+                                                else
+                                                    input.checkbox.checkbox-discount(type="checkbox" disabled)
+                                            else
+                                                input.checkbox.checkbox-discount(type="checkbox" disabled)
+                                        else
+                                            if item.client._id
+                                                if item.discount
+                                                    input.checkbox.checkbox-discount(type="checkbox" checked)
+                                                else
+                                                    input.checkbox.checkbox-discount(type="checkbox" )
+                                            else
+                                                input.checkbox.checkbox-discount(type="checkbox" disabled)
                                     td.d-flex.justify-content-center
-                                        button.p-2.btn.btn-primary.status-wash.btn-sm(type='button') Заехать
-                                        button.p-2.btn.btn-success.status-ready.btn-sm(type='button') Готово
-                                        button.p-2.btn.btn-warning.redact.btn-sm(type='button') Услуги
-                                        button.p-2.btn.btn-info.modalTwo.btn-sm(type='button') Доп. Услуги
-                                        button.p-2.btn.btn-danger.status-await.btn-sm(type='button') Отмена
-                                        button.p-2.btn.btn-dark.delete.btn-sm(type='button') Удалить
+                                        if item.status === 'ready'
+                                            button.btn.btn-dark.delete.btn-sm(type='button') Удалить
+                                        else
+                                            button.p-2.btn.btn-primary.status-wash.btn-sm(type='button') Заехать
+                                            button.p-2.btn.btn-success.status-ready.btn-sm(type='button') Готово
+                                            button.p-2.btn.btn-warning.redact.btn-sm(type='button') Услуги
+                                            button.p-2.btn.btn-info.modalTwo.btn-sm(type='button') Доп. Услуги
+                                            button.p-2.btn.btn-danger.status-await.btn-sm(type='button') Отмена
+                                            button.p-2.btn.btn-dark.delete.btn-sm(type='button') Удалить
 

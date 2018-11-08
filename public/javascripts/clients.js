@@ -68,7 +68,8 @@ function refactorClietns() {
             fio : $(this).parents('tr').find('.fio').text(),
             birthday : $(this).parents('tr').find('.birthday').text(),
             phone : $(this).parents('tr').find('.phone').text(),
-            balance : +$(this).parents('tr').find('.balance').text()
+            balance : +$(this).parents('tr').find('.balance').text(),
+            vip : ($(this).parents('tr').find('.vip').text() === 'Да' || $(this).parents('tr').find('.vip').text() === 'да') ? true : false
         };
         socket.emit('updateClients', $(this).data('id'), data, function (res) {
             Snackbar.show({
