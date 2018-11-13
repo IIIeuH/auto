@@ -26,7 +26,7 @@ module.exports.productReady = async(collection) => {
 };
 
 module.exports.getCollections = async function(persons){
-    return await db.collection(persons).find({}).toArray();
+    return await db.collection(persons).find({}).sort({vip: -1}).toArray();
 };
 module.exports.getType = async function(){
     return await db.collection('services').distinct("name");

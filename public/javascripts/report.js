@@ -24,15 +24,18 @@ function dateReport() {
                         '<td>' +
                         res.arr.costsArr[i] +
                         '</td>' +
-                        '<td>' +
-                        res.arr.dopCostsArr[i] +
-                        '</td>' +
+                        // '<td>' +
+                        // res.arr.dopCostsArr[i] +
+                        // '</td>' +
                         '<td>' +
                         res.arr.arbitrarsArr[i] +
                         '</td>' +
-                        '<td>' +
-                        res.arr.scoresArr[i] +
-                        '</td>' +
+                        // '<td>' +
+                        // res.arr.scoresArr[i] +
+                        // '</td>' +
+                        // '<td>' +
+                        // res.arr.scoresNoCasheArr[i] +
+                        // '</td>' +
                         '<td>' +
                         res.arr.discountArr[i] +
                         '</td>' +

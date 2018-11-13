@@ -254,7 +254,6 @@ module.exports.report = async function(req, res, next) {
     }
     data.cashbox -= vipSum;
 
-
     res.render('admin/report', {title: "Отчетность", data })
 };
 

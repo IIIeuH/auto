@@ -32,7 +32,15 @@ $(function(){
                         res.result.forEach( function(item) {
                             sum += (item.price * item.count);
                         });
-                        res.result.forEach( function(item) {
+                        var resGroupByName = _.chain(res.result).groupBy("name").map(function(v, i) {
+                            return {
+                                date: _.get(_.find(v, 'date'), 'date'),
+                                name: _.get(_.find(v, 'name'), 'name'),
+                                count: _.map(v, 'count').reduce( function(accum, item) { return (accum + item)}, 0),
+                                price: _.get(_.find(v, 'price'), 'price'),
+                            }
+                        }).value();
+                        resGroupByName.forEach( function(item) {
                             table.append(
                                 '<tr>' +
                                 '<td>'+item.date+'</td>' +

@@ -35,12 +35,19 @@ function dateJob() {
                         '<td >' +
                         item.services + ' ' + item.dopServices +
                         '</td>' +
-                        '<td >' +
+                        '<td class="graphicjob-sum-item">' +
                         (item.mainPrice + item.dopPrice) +
                         '</td>' +
                         '</tr>'
                     );
                 });
+
+                $('.graphicJob').append(
+                    '<tr>' +
+                    '  <td colspan="6">Итого:</td>' +
+                    '  <td class="graphicjob-sum">' + res.arr.reduce( function(acum, item) { return acum + (item.mainPrice + item.dopPrice) }, 0) + '</td>' +
+                    '</tr>'
+                )
             }
         })
     })
@@ -50,6 +57,7 @@ function dateJob() {
 function filterSearch(item, field){
     $(document).on('change', item, function () {
         let that = $(this);
+        var sum = 0;
         if(that.val() === ''){
             $('.graphicJob').find('tr').show('fast');
         }
@@ -57,8 +65,10 @@ function filterSearch(item, field){
             if(!~$(this).text().indexOf(that.val())){
                 $(this).parents('tr').hide('fast');
             }else{
+                sum += +$(this).parents('tr').find('.graphicjob-sum-item').text();
                 $(this).parents('tr').show('fast');
             }
-        })
+        });
+        $('.graphicjob-sum').text(sum);
     })
 }

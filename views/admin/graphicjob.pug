@@ -54,7 +54,10 @@ block content
                                 td=item.number
                                 td.fieldSearchWasher=item.washer
                                 td #{item.services} #{item.dopServices}
-                                td=item.mainPrice + item.dopPrice
+                                td.graphicjob-sum-item=item.mainPrice + item.dopPrice
+                        tr
+                            td(colspan="6") Итого:
+                            td.graphicjob-sum=personsJob.reduce( function(acum, item) { return acum + (item.mainPrice + item.dopPrice) }, 0)
         .row.no-print
             .col-md
                 btn.btn.btn-outline-info(id="print") Печать

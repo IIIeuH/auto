@@ -157,26 +157,26 @@ module.exports.init = function(socket){
                     }
 
                     if(person){
-                        let price = await db.collection('scores').aggregate([
-                            {
-                                $match: {date: moment().format('DD.MM.YYYY'), person: true}
-                            },
-                            {
-                                $unwind: "$costs"
-                            },
-                            {
-                                $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
-                            },
-                            {
-                                $group: {_id: null, cash: {$sum: '$cash'}}
-                            }
-                        ]).toArray();
-                        if(price.length){
-                            price = price[0].cash;
-                        }else{
-                            price = 0;
-                        }
-                        await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), personCasheScore: -price}}, {upsert: true});
+                        // let price = await db.collection('scores').aggregate([
+                        //     {
+                        //         $match: {date: moment().format('DD.MM.YYYY'), person: true}
+                        //     },
+                        //     {
+                        //         $unwind: "$costs"
+                        //     },
+                        //     {
+                        //         $project: {_id: 0, cash: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                        //     },
+                        //     {
+                        //         $group: {_id: null, cash: {$sum: '$cash'}}
+                        //     }
+                        // ]).toArray();
+                        // if(price.length){
+                        //     price = price[0].cash;
+                        // }else{
+                        //     price = 0;
+                        // }
+                        // await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), personCasheScore: -price}}, {upsert: true});
                         cb({status:200, msg: 'Сохранено!'});
                     }
                 });
@@ -1078,8 +1078,9 @@ module.exports.init = function(socket){
     //График работ по дате
     socket.on('getJobDate', async (startDate, endDate, cb) => {
         try{
-            let start = moment(startDate).toDate();
-            let end =  moment(endDate).toDate();
+            let start = moment(startDate).startOf('day').toDate();
+            let end =  moment(endDate).endOf('day').toDate();
+            console.log(start, end);
             let data = await db.collection('boxes').find({dateD: {$gte: start, $lte: end}, status: "ready"}, {date: 1, administrator: 1, washer: 1, services: 1, mainPrice: 1, dopServices: 1, dopPrice: 1, number: 1, car: 1}).toArray();
             cb({status:200, msg: 'Найдено!', arr: data});
         }catch(err){
@@ -1206,8 +1207,8 @@ module.exports.init = function(socket){
     //Report по дате
     socket.on('getReportDate', async (startDate, endDate, cb) => {
         try{
-            let start = moment(startDate, 'YYYY-MM-DD').add(1, 'days').toDate();
-            let end =  moment(endDate, 'YYYY-MM-DD').add(1, 'days').toDate();
+            let start = moment(startDate, 'YYYY-MM-DD').startOf('day').toDate();
+            let end =  moment(endDate, 'YYYY-MM-DD').endOf('day').toDate();
 
 
 
@@ -1387,6 +1388,32 @@ module.exports.init = function(socket){
             });
 
 
+            let scoresNoCashePromise = data.washers.map( (item) => {
+                return db.collection('scores').aggregate(
+                    {
+                        $match: {name: item.fio, dateD: {$gte: start, $lte: end}, noCashe: true}
+                    },
+                    {
+                        $unwind: "$costs"
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: {$multiply: ['$costs.price', '$costs.quantity']}}}
+                    },
+                    {
+                        $group: {_id: null, sum: {$sum: '$sum'}}
+                    }).toArray();
+            });
+
+            data.scoresNoCashe = await Promise.all(scoresNoCashePromise);
+
+            data.scoresNoCasheArr = data.scoresNoCashe.map((item) => {
+                if(item[0]){
+                    return item[0].sum;
+                }else{
+                    return 0;
+                }
+            });
+
             let cardPromise = data.washers.map( (item) => {
                 return db.collection('boxes').aggregate(
                     {
@@ -1531,6 +1558,7 @@ module.exports.init = function(socket){
                 data.cashbox = 0;
             }
             data.cashbox -= vipSum;
+
 
             cb({status:200, msg: 'Найдено!', arr: data});
         }catch(err){

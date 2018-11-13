@@ -37,7 +37,8 @@ gulp.task('scriptOther', () => {
         'node_modules/socket.io-client/dist/socket.io.js',
         'bower_components/moment/moment.js',
         'autocomplete/jquery-ui.js',
-        'bower_components/snackbar/dist/snackbar.js'
+        'bower_components/snackbar/dist/snackbar.js',
+        'node_modules/lodash/lodash.min.js'
 
     ])
         .pipe(concat('other.min.js'))
