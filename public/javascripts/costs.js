@@ -107,6 +107,13 @@ $(function(){
             );
         }
     });
+
+    $('#clientsVip-score').change(function(){
+        let balance = $('#clientsVip-score option:selected').data('balance');
+        $('#vip-balance-score').text(balance || 0);
+    });
+
+
     saveCosts();
     saveProductDop();
     saveProductMain();
@@ -127,6 +134,73 @@ function saveCosts(){
     let btn = $('#saveCosts');
     let btnNoCash = $('#saveCostsNoCash');
     let btnPerson = $('#saveCostsPerson');
+    let btnClientsVip = $('#saveClientsVip');
+
+
+    btnClientsVip.click(function(){
+        let conf = confirm("Подтвердите действия!");
+        if(conf){
+            let mas = [];
+            let tr = $('.product-body').find('tr');
+            let name = $('#clientsVip-score option:selected').text();
+            let vipId = $('#clientsVip-score').val();
+            let vipBalance = +$('#vip-balance-score').text();
+            let noCashe = false;
+            let person = false;
+            let vip = true;
+            let admin = get_cookie('administrator');
+            if(name === ''){
+                Snackbar.show({
+                    text: 'Выберете VIP клиента!',
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                return false;
+            }
+
+            tr.each(function () {
+                let obj = {};
+                obj.warehouse = $(this).find('.warehouse-table').text();
+                obj.name = $(this).find('.product-name').text();
+                obj.price = +$(this).find('.product-price').text();
+                obj.quantity = +$(this).find('.quantity').text();
+                obj.remainder = +$(this).find('.remainder').text();
+                mas.push(obj);
+            });
+
+
+            let balanceOrder = mas.reduce( (accum, item) => accum + (item.price * item.quantity), 0);
+            if(balanceOrder > vipBalance){
+                Snackbar.show({
+                    text: 'У клиента не достаточно средств',
+                    pos: 'bottom-right',
+                    actionText: null
+                });
+                return false;
+            }else{
+                socket.emit('setCosts', mas, name, noCashe, person, admin, vip, vipId, function (res) {
+                    if(res.status === 200) {
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }else{
+                        Snackbar.show({
+                            text: res.msg,
+                            pos: 'bottom-right',
+                            actionText: null
+                        });
+                    }
+                });
+            }
+
+        }else{
+            return false;
+        }
+    });
+
+
     btnPerson.click(function () {
         let conf = confirm("Подтвердите действия!");
         if(conf){
@@ -135,6 +209,7 @@ function saveCosts(){
             let name = $('#washer-score').val();
             let noCashe = false;
             let person = true;
+            let vip = false;
             let admin = get_cookie('administrator');
 
             if(name === ''){
@@ -155,7 +230,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas,name,noCashe, person,admin,  function (res) {
+            socket.emit('setCosts', mas,name,noCashe, person,admin, vip, null, function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -183,6 +258,7 @@ function saveCosts(){
             //let name = $('#washer-score').val();
             let noCashe = true;
             let person = false;
+            let vip = false;
             let admin = get_cookie('administrator');
 
             tr.each(function () {
@@ -194,7 +270,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas, '', noCashe, person, admin,  function (res) {
+            socket.emit('setCosts', mas, '', noCashe, person, admin, vip, null, function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,
@@ -232,7 +308,7 @@ function saveCosts(){
                 obj.remainder = +$(this).find('.remainder').text();
                 mas.push(obj);
             });
-            socket.emit('setCosts', mas, '', noCashe, person, admin, function (res) {
+            socket.emit('setCosts', mas, '', noCashe, person, admin, false, null, function (res) {
                 if(res.status === 200) {
                     Snackbar.show({
                         text: res.msg,

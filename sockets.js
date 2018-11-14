@@ -99,7 +99,7 @@ module.exports.init = function(socket){
         }
     });
 
-    socket.on('setCosts', async (data,name, cash, person,admin, cb) => {
+    socket.on('setCosts', async (data,name, cash, person,admin, vip, vipId, cb) => {
         try{
             if(data.length){
                 let spisanie = data.map( async(item) =>{
@@ -107,8 +107,14 @@ module.exports.init = function(socket){
                 });
 
                 Promise.all(spisanie).then( async()=>{
-                    await db.collection('scores').insertOne({date: moment().format('DD.MM.YYYY'), costs: data,name: name, noCashe: cash, person: person, admin: admin, dateD: new Date()});
-                    if(!cash && !person){
+                    await db.collection('scores').insertOne({date: moment().format('DD.MM.YYYY'), costs: data,name: name, noCashe: cash, person: person, admin: admin, dateD: new Date(), vip:vip});
+                    if(vip){
+                        let balance = data.reduce( (accum, item) => accum + (item.price * item.quantity), 0);
+                        console.log(balance);
+                        await db.collection('clients').updateOne({_id: ObjectId(vipId)}, {$inc: {balance: -balance}});
+                        cb({status:200, msg: 'Сохранено!'});
+                    }
+                    if(!cash && !person && !vip){
                         let price = await db.collection('scores').aggregate([
                             {
                                 $match: {date: moment().format('DD.MM.YYYY'), noCashe: cash, person: person}
@@ -128,11 +134,10 @@ module.exports.init = function(socket){
                         }else{
                             price = 0;
                         }
-                        console.log(price);
                         await db.collection('cashboxes').updateOne({date: moment().format('DD.MM.YYYY')}, {$set: {date: moment().format('DD.MM.YYYY'), dateD: new Date(), cashScore: price}}, {upsert: true});
                         cb({status:200, msg: 'Сохранено!'});
                     }
-                    if(cash){
+                    if(cash && !vip){
                         let price = await db.collection('scores').aggregate([
                             {
                                 $match: {date: moment().format('DD.MM.YYYY'), noCashe: true}
@@ -156,7 +161,7 @@ module.exports.init = function(socket){
                         cb({status:200, msg: 'Сохранено!'});
                     }
 
-                    if(person){
+                    if(person && !vip){
                         // let price = await db.collection('scores').aggregate([
                         //     {
                         //         $match: {date: moment().format('DD.MM.YYYY'), person: true}

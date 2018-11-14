@@ -63,6 +63,7 @@ module.exports.score = async (req, res, next) => {
     let washer = await model.getWashers();
     let startCoffee = await model.startCoffee();
     let endCoffee = await model.coffee();
+    let clientsVip = await model.clientsVip();
     if(table.length){
         table = table[0].costs;
     }else{
@@ -78,7 +79,7 @@ module.exports.score = async (req, res, next) => {
     }else{
         endCoffee = 0;
     }
-    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: startCoffee, endCoffee: endCoffee, washer:washer});
+    res.render('scores', { title: 'Расходы', user: req.user, product: data, productReady: table, startCoffee: startCoffee, endCoffee: endCoffee, washer:washer, clientsVip:clientsVip});
 };
 
 module.exports.getJson = async (req, res, next) => {

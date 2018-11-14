@@ -33,14 +33,24 @@ block content
                         th Остаток на витрине
                     tbody.product-body
         .row
-            .col-md
+            .col-md-2
                 .form-group
                     select#washer-score.custom-select.valid-btn
                         option(value="") Сотрудник
                         each item in washer
                             option(value=item.fio)=item.fio
+            .col-md-2
+                .form-group
+                    select#clientsVip-score.custom-select.valid-btn
+                        option(value="") Vip клиент
+                        each item in clientsVip
+                            option(value=item._id, data-balance=item.balance)=item.fio
+            .col-md-2
+                h4 VIP баланс:
+                    span#vip-balance-score
             .col-md
                 button.btn.btn-outline-info.float-right.ml-3(type='button', id="saveCosts") Наличный расчет
                 button.btn.btn-outline-info.float-right.ml-3(type='button', id="saveCostsNoCash") Безналичный расчет
                 button.btn.btn-outline-info.float-right(type='button', id="saveCostsPerson") Сотрудник
+                button.btn.btn-outline-info.float-right.mr-3(type='button', id="saveClientsVip") Vip клиент
 

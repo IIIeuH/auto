@@ -106,6 +106,14 @@ module.exports.coffee = async() => {
     }
 };
 
+module.exports.clientsVip = async() => {
+    try {
+        return await db.collection('clients').find({ $and: [{ vip: {$exists: true}}, {vip: true}] }).toArray();
+    }catch(err){
+        return err;
+    }
+};
+
 module.exports.productReady = async(collection) => {
     try {
         return await db.collection(collection).find({date: moment().format('DD.MM.YYYY')}, {costs: 1}).toArray();
